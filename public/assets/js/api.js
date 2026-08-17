@@ -32,7 +32,7 @@ class ApiClient {
             if (response.status === 401) {
                 // Unauthorized - clear token and redirect to login
                 localStorage.removeItem('auth_token');
-                window.location.hash = '#/login';
+                window.router.navigate('/login');
                 return { success: false, message: 'Session expired' };
             }
 

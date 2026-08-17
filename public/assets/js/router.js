@@ -3,8 +3,8 @@ class Router {
         this.routes = {};
         this.appContainer = document.getElementById('app');
         
-        // Listen to hash changes
-        window.addEventListener('hashchange', () => this.handleRoute());
+        // Listen to history changes
+        window.addEventListener('popstate', () => this.handleRoute());
     }
 
     addRoute(path, renderFunction, requireAuth = true) {
@@ -12,7 +12,7 @@ class Router {
     }
 
     async handleRoute() {
-        let path = window.location.hash.slice(1) || '/';
+        let path = window.location.pathname || '/';
         
         // Match route
         const route = this.routes[path];
@@ -26,12 +26,12 @@ class Router {
         const isAuthenticated = !!localStorage.getItem('auth_token');
         
         if (route.requireAuth && !isAuthenticated) {
-            window.location.hash = '#/login';
+            this.navigate('/login');
             return;
         }
 
         if (path === '/login' && isAuthenticated) {
-            window.location.hash = '#/';
+            this.navigate('/');
             return;
         }
 
@@ -48,7 +48,8 @@ class Router {
     }
 
     navigate(path) {
-        window.location.hash = `#${path}`;
+        window.history.pushState(null, '', path);
+        this.handleRoute();
     }
 }
 

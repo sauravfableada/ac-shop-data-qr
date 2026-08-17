@@ -21,10 +21,10 @@ window.renderLayout = (content) => {
             <aside class="sidebar">
                 <h2 class="gradient-text" style="margin-bottom: 40px; font-size: 24px;">AC Service Pro</h2>
                 <nav>
-                    <a href="#/" class="nav-link">Dashboard</a>
-                    <a href="#/customers" class="nav-link">Customers</a>
-                    <a href="#/ac-units" class="nav-link">AC Units</a>
-                    <a href="#/services" class="nav-link">Services</a>
+                    <a href="/" class="nav-link" data-link>Dashboard</a>
+                    <a href="/customers" class="nav-link" data-link>Customers</a>
+                    <a href="/ac-units" class="nav-link" data-link>AC Units</a>
+                    <a href="/services" class="nav-link" data-link>Services</a>
                 </nav>
                 <div style="margin-top: auto;">
                     <button id="logoutBtn" class="btn btn-primary" style="width: 100%; background: rgba(255,255,255,0.1); box-shadow: none;">Logout</button>
@@ -37,8 +37,16 @@ window.renderLayout = (content) => {
     `;
 };
 
-// Global Logout Handler
+// Global Click Interceptor for SPA navigation
 document.addEventListener('click', async (e) => {
+    // Intercept clicks on links with data-link attribute
+    if (e.target.matches('[data-link]') || e.target.closest('a[data-link]')) {
+        e.preventDefault();
+        const link = e.target.matches('[data-link]') ? e.target : e.target.closest('a[data-link]');
+        window.router.navigate(link.getAttribute('href'));
+        return;
+    }
+
     if (e.target && e.target.id === 'logoutBtn') {
         await window.api.post('/auth/logout', {});
         localStorage.removeItem('auth_token');

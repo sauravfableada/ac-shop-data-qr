@@ -7,7 +7,7 @@ window.ServiceList = {
             return;
         }
 
-        const services = response.data || [];
+        const services = response.data?.data || response.data || [];
 
         let tableRows = services.length ? services.map(s => `
             <tr style="border-bottom: 1px solid var(--border-glass);">

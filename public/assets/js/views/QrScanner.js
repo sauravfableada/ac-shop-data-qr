@@ -32,7 +32,7 @@ window.QrScanner = {
                             <h3 style="color: #10B981; margin-bottom: 12px;">Match Found!</h3>
                             <p style="margin-bottom: 8px;"><strong>Brand:</strong> ${ac.brand} ${ac.model}</p>
                             <p style="margin-bottom: 8px;"><strong>Customer:</strong> ${ac.customer ? ac.customer.full_name : 'N/A'}</p>
-                            <a href="#/services/new?ac_id=${ac.id}" class="btn btn-primary" style="margin-top: 16px;">Create Service Request</a>
+                            <a href="/services/new?ac_id=${ac.id}" data-link class="btn btn-primary" style="margin-top: 16px;">Create Service Request</a>
                         </div>
                     `;
                 } else {

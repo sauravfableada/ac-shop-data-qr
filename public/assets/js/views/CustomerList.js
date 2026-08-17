@@ -7,7 +7,7 @@ window.CustomerList = {
             return;
         }
 
-        const customers = response.data || [];
+        const customers = response.data?.data || response.data || [];
 
         let tableRows = customers.length ? customers.map(c => `
             <tr style="border-bottom: 1px solid var(--border-glass);">

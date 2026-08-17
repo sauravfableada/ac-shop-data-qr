@@ -7,7 +7,7 @@ window.AcUnitList = {
             return;
         }
 
-        const acUnits = response.data || [];
+        const acUnits = response.data?.data || response.data || [];
 
         let tableRows = acUnits.length ? acUnits.map(ac => `
             <tr style="border-bottom: 1px solid var(--border-glass);">
@@ -15,7 +15,7 @@ window.AcUnitList = {
                 <td style="padding: 16px;">${ac.brand || '-'} ${ac.model || ''}</td>
                 <td style="padding: 16px;">${ac.customer ? ac.customer.full_name : 'N/A'}</td>
                 <td style="padding: 16px;">
-                    <a href="#/scanner?token=${ac.qr_token}" style="color: var(--primary); text-decoration: none;">View QR</a>
+                    <a href="/scanner?token=${ac.qr_token}" data-link style="color: var(--primary); text-decoration: none;">View QR</a>
                 </td>
                 <td style="padding: 16px;">
                     <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: ${ac.status === 'active' ? 'rgba(16,185,129,0.2)' : 'rgba(244,63,94,0.2)'}; color: ${ac.status === 'active' ? '#10B981' : '#F43F5E'};">${ac.status}</span>
@@ -28,7 +28,7 @@ window.AcUnitList = {
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
                     <h1 style="font-size: 32px;">AC Units</h1>
                     <div style="display: flex; gap: 12px;">
-                        <a href="#/scanner" class="btn" style="background: rgba(255,255,255,0.1); color: white;">Scan QR</a>
+                        <a href="/scanner" data-link class="btn" style="background: rgba(255,255,255,0.1); color: white;">Scan QR</a>
                         <button class="btn btn-primary">+ Add AC Unit</button>
                     </div>
                 </div>
