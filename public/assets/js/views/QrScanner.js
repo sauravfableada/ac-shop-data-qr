@@ -2,18 +2,29 @@ window.QrScanner = {
     render: async (container) => {
         const content = `
             <style>
-                /* ── Hide all default html5-qrcode UI ── */
+                /* Minimal overrides for html5-qrcode UI */
                 #reader { border: none !important; background: transparent !important; }
-                #reader__header_message,
-                #reader__status_span,
-                #reader__dashboard_section_swaplink,
-                #reader__filescan_input,
-                #reader__dashboard_section_csr span,
-                #reader__camera_selection { display: none !important; }
+                #reader__header_message { display: none !important; }
 
-                /* Camera select dropdown */
+                /* Swap link (Camera <-> File) */
+                #reader__dashboard_section_swaplink {
+                    display: inline-block !important;
+                    margin: 12px 0;
+                    color: #3b82f6;
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+
+                /* Camera select dropdown styling */
                 #reader select {
-                    display: none !important;
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                    border: 1px solid #e2e8f0;
+                    margin-bottom: 12px;
+                    font-size: 13px;
+                    color: #475569;
+                    background: white;
+                    outline: none;
                 }
                 /* Override the library button */
                 #reader button {
@@ -28,7 +39,9 @@ window.QrScanner = {
                     font-size: 14px !important;
                     display: inline-flex !important;
                     align-items: center !important;
+                    justify-content: center !important;
                     gap: 8px !important;
+                    margin: 4px !important;
                 }
                 #reader button::before {
                     content: "\\f093";
@@ -126,9 +139,8 @@ window.QrScanner = {
                                 <div style="text-align: center;">
                                     <div class="scanner-idle-icon"><i class="fa-solid fa-qrcode"></i></div>
                                     <div style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">Ready to Scan</div>
-                                    <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">Position the QR code within the frame</div>
+                                    <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">Follow the prompts below</div>
                                 </div>
-                                <div class="scanner-or-divider">— OR —</div>
                             </div>
                             <div id="reader" style="width: 100%; max-width: 360px;"></div>
                         </div>
