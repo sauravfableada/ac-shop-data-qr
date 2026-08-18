@@ -26,6 +26,11 @@ window.QrScanner = {
                     background: white;
                     outline: none;
                 }
+                #reader select:disabled {
+                    background: #f1f5f9;
+                    cursor: not-allowed;
+                    opacity: 0.7;
+                }
                 /* Override the library button */
                 #reader button {
                     background: transparent !important;
@@ -290,6 +295,9 @@ window.QrScanner = {
             fps: 10,
             qrbox: { width: 220, height: 220 },
             rememberLastUsedCamera: true,
+            videoConstraints: {
+                facingMode: "environment"
+            }
         }, false);
         scanner.render(onScanSuccess);
     }
