@@ -363,7 +363,7 @@ h4 {
 /* Header Styles */
 .top-header {
     height: 70px;
-    padding: 0 20px;
+    padding: 15px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
