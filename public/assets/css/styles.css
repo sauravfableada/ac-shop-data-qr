@@ -614,3 +614,10 @@ body.light-mode {
 .choices[data-type*="select-one"].is-open::after {
     border-color: transparent transparent var(--text-muted) transparent !important;
 }
+
+/* Profile Page */
+@media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
