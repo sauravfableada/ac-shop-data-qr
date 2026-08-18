@@ -70,7 +70,7 @@ window.renderLayout = (content) => {
                 <!-- Top Header -->
                 <div class="top-header" style="background-color: var(--bg-glass); border-bottom: 1px solid var(--border-glass);">
                     <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
-                        <i class="fa-solid fa-shield-halved" style="color: #3b82f6; font-size: 24px; margin-left: 20px;"></i>
+                        <img src="/public/assets/logos/crmfavicon.png" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; margin-left: 20px;">
                         <span style="font-weight: 700; font-size: 18px; color: var(--text-main); margin-right: 20px;">Maimoon Sales</span>
                     </div>
                     

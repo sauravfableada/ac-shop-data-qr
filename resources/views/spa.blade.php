@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maimoon Sales - AC Service Management</title>
-    <link rel="icon" type="image/png" href="/assets/logos/crmfavicon.png">
-    <link rel="shortcut icon" type="image/png" href="/assets/logos/crmfavicon.png">
+    <link rel="icon" type="image/png" href="/public/assets/logos/crmfavicon.png">
+    <link rel="shortcut icon" type="image/png" href="/public/assets/logos/crmfavicon.png">
     
     <!-- Google Fonts for Premium Look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

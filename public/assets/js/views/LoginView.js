@@ -6,7 +6,7 @@ window.LoginView = {
 
                     <!-- Logo -->
                     <div style="text-align: center; margin-bottom: 20px;">
-                        <img src="/assets/logos/fableadLogo.jpg" alt="Fablead Logo" style="max-width: 160px; height: auto; border-radius: 8px;">
+                        <img src="/public/assets/logos/fableadLogo.jpg" alt="Fablead Logo" style="max-width: 160px; height: auto; border-radius: 8px;">
                     </div>
 
                     <h1 class="gradient-text" style="font-size: 2rem; margin-bottom: 8px;">Login</h1>
