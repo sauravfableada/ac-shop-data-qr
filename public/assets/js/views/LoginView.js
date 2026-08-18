@@ -4,7 +4,7 @@ window.LoginView = {
             <div class="auth-layout">
                 <div class="glass-panel auth-box">
                     <h1 class="gradient-text" style="font-size: 2.5rem; margin-bottom: 8px;">Welcome Back</h1>
-                    <p style="color: var(--text-muted); margin-bottom: 32px;">Sign in to AC Service Pro</p>
+                    <p style="color: var(--text-muted); margin-bottom: 32px;">Sign in to Maimoon Sales</p>
                     
                     <form id="loginForm">
                         <div class="input-group" style="text-align: left;">
@@ -33,13 +33,13 @@ window.LoginView = {
             const password = document.getElementById('password').value;
             const btn = document.getElementById('loginBtn');
             const errorDiv = document.getElementById('loginError');
-            
+
             btn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div>';
             btn.disabled = true;
             errorDiv.style.display = 'none';
 
             const response = await window.api.post('/auth/login', { email, password });
-            
+
             if (response.success) {
                 localStorage.setItem('auth_token', response.data.token);
                 window.router.navigate('/customers');

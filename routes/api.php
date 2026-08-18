@@ -13,6 +13,8 @@ Route::middleware('auth:api')->group(function () {
     // Auth
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthController::class, 'me']);
+    Route::put('/auth/me', [AuthController::class, 'updateProfile']);
+    Route::post('/auth/me/avatar', [AuthController::class, 'uploadAvatar']);
 
     // Customers
     Route::get('/customers/next-code', [\App\Http\Controllers\CustomerController::class, 'getNextCode']);
