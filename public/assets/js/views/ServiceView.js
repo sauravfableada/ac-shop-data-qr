@@ -155,18 +155,28 @@ window.ServiceView = {
     },
 
     delete: async (id) => {
-        if (!confirm('Are you sure you want to delete this maintenance record?')) return;
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete this maintenance record?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Yes, delete it!'
+        });
+
+        if (!result.isConfirmed) return;
         
         try {
             const res = await window.api.request(`/services/${id}`, { method: 'DELETE' });
             if (res.success) {
-                window.showToast('Maintenance record deleted successfully', 'success');
+                Swal.fire('Deleted!', 'Maintenance record deleted successfully', 'success');
                 window.history.back(); // Go back to history
             } else {
-                window.showToast(res.message || 'Error deleting record', 'error');
+                Swal.fire('Error', res.message || 'Error deleting record', 'error');
             }
         } catch (e) {
-            window.showToast('Failed to delete maintenance record', 'error');
+            Swal.fire('Error', 'Failed to delete maintenance record', 'error');
         }
     }
 };

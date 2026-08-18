@@ -64,43 +64,23 @@ window.CustomerForm = {
                             </div>
                         </div>
 
+
+
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Email Address</label>
-                                <input type="email" id="cEmail" value="${customer?.email || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
-                                <div id="err_cEmail" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Customer Photo</label>
+                                ${customer?.image ? `<div style="margin-bottom: 12px;"><img src="${customer.image}" style="height: 64px; border-radius: 8px; border: 1px solid var(--border-glass);"></div>` : ''}
+                                <input type="file" id="cImage" accept="image/*" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                             </div>
+
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Date of Birth</label>
-                                <input type="date" id="cDob" value="${customer?.dob || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
-                                <div id="err_cDob" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Full Address</label>
+                                <textarea id="cAddress" rows="3" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit;">${customer?.address || ''}</textarea>
+                                <div id="err_cAddress" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                         </div>
 
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Customer Photo</label>
-                            ${customer?.image ? `<div style="margin-bottom: 12px;"><img src="${customer.image}" style="height: 64px; border-radius: 8px; border: 1px solid var(--border-glass);"></div>` : ''}
-                            <input type="file" id="cImage" accept="image/*" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
-                        </div>
 
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Full Address</label>
-                            <textarea id="cAddress" rows="3" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit;">${customer?.address || ''}</textarea>
-                            <div id="err_cAddress" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
-                        </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
-                            <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">City</label>
-                                <input type="text" id="cCity" value="${customer?.city || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
-                                <div id="err_cCity" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
-                            </div>
-                            <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Country</label>
-                                <input type="text" id="cCountry" value="${customer?.country || 'India'}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
-                                <div id="err_cCountry" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
-                            </div>
-                        </div>
 
                         <div style="display: flex; justify-content: flex-end; gap: 16px;">
                             <button type="button" onclick="window.router.navigate('/customers')" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
@@ -121,11 +101,7 @@ window.CustomerForm = {
             payload.append('full_name', document.getElementById('cName').value);
             payload.append('mobile', document.getElementById('cMobile').value);
             payload.append('whatsapp_no', document.getElementById('cWhatsapp').value);
-            payload.append('email', document.getElementById('cEmail').value);
-            payload.append('dob', document.getElementById('cDob').value);
             payload.append('address', document.getElementById('cAddress').value);
-            payload.append('city', document.getElementById('cCity').value);
-            payload.append('country', document.getElementById('cCountry').value);
             payload.append('status', 'active');
 
             const fileInput = document.getElementById('cImage');

@@ -234,18 +234,28 @@ window.AcUnitList = {
     },
 
     deleteUnit: async (id) => {
-        if (!confirm('Are you sure you want to delete this AC Unit? This will also remove its QR code.')) return;
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "This will delete the AC Unit and its QR code.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Yes, delete it!'
+        });
+        
+        if (!result.isConfirmed) return;
 
         try {
             const res = await window.api.delete(`/ac-units/${id}`);
             if (res.success) {
-                window.showToast('AC Unit deleted successfully', 'success');
+                Swal.fire('Deleted!', 'AC Unit deleted successfully.', 'success');
                 window.router.navigate('/ac-units');
             } else {
-                window.showToast('Failed to delete AC Unit', 'error');
+                Swal.fire('Error', 'Failed to delete AC Unit', 'error');
             }
         } catch (err) {
-            window.showToast('Error deleting AC Unit', 'error');
+            Swal.fire('Error', 'Error deleting AC Unit', 'error');
         }
     },
 

@@ -39,7 +39,6 @@ window.CustomerList = {
                 <tr style="border-bottom: 1px solid var(--border-glass);">
                     <td style="padding: 16px; font-size: 14px; font-weight: 600;">${c.full_name}<br><span style="font-size: 12px; color: var(--text-muted); font-weight: 400;">${c.customer_code}</span></td>
                     <td style="padding: 16px; font-size: 14px; font-weight: 500; color: var(--text-main);">${c.mobile}</td>
-                    <td class="hide-on-mobile" style="padding: 16px; font-size: 14px;">${c.email || '--'}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; font-weight: 600;">${new Date(c.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" data-id="${c.id}"><i class="fa-solid fa-plus"></i></button>
@@ -54,10 +53,6 @@ window.CustomerList = {
                 <tr id="mobile-expand-${c.id}" class="mobile-expanded-row">
                     <td colspan="3" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
                         <div style="background: #ffffff; border-radius: 12px; border-left: 4px solid #0f172a; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
-                                <div><i class="fa-solid fa-envelope" style="margin-right: 8px;"></i> EMAIL :</div>
-                                <div style="font-weight: 400; color: #64748b;">${c.email || '--'}</div>
-                            </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-calendar-days" style="margin-right: 8px;"></i> CREATED :</div>
                                 <div style="font-weight: 400; color: #64748b;">${new Date(c.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
@@ -152,7 +147,6 @@ window.CustomerList = {
                                     <tr style="border-bottom: 2px solid var(--border-glass); color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 700;">
                                         <th style="padding: 12px 16px;">Customer Name</th>
                                         <th style="padding: 12px 16px;">Mobile</th>
-                                        <th class="hide-on-mobile" style="padding: 12px 16px;">Email</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">Created At</th>
                                         <th style="padding: 12px 16px;">Actions</th>
                                     </tr>
@@ -210,15 +204,25 @@ window.CustomerList = {
 
             document.querySelectorAll('.delete-customer-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
-                    if (confirm('Are you sure you want to delete this customer?')) {
-                        const id = e.currentTarget.dataset.id;
+                    const id = e.currentTarget.dataset.id;
+                    const result = await Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You want to delete this customer?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#64748b',
+                        confirmButtonText: 'Yes, delete it!'
+                    });
+                    
+                    if (result.isConfirmed) {
                         const response = await window.api.delete('/customers/' + id);
                         if (response.success) {
-                            window.showToast('Customer deleted successfully!', 'success');
+                            Swal.fire('Deleted!', 'Customer has been deleted.', 'success');
                             await fetchCustomers();
                             updateTable();
                         } else {
-                            window.showToast(response.message || 'Error deleting customer', 'error');
+                            Swal.fire('Error', response.message || 'Error deleting customer', 'error');
                         }
                     }
                 });

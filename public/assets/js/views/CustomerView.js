@@ -85,15 +85,9 @@ window.CustomerView = {
                                 <div style="font-size: 15px; font-weight: 500;">${c.whatsapp_no || '<span style="color:var(--text-muted);">N/A</span>'}</div>
                             </div>
                             
-                            <div style="margin-bottom: 16px;">
-                                <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Email Address</label>
-                                <div style="font-size: 15px; font-weight: 500;">${c.email || '<span style="color:var(--text-muted);">N/A</span>'}</div>
-                            </div>
+
                             
-                            <div style="margin-bottom: 16px;">
-                                <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Date of Birth</label>
-                                <div style="font-size: 15px; font-weight: 500;">${c.dob ? new Date(c.dob).toLocaleDateString() : '<span style="color:var(--text-muted);">N/A</span>'}</div>
-                            </div>
+
                         </div>
 
                         <div>
@@ -104,15 +98,7 @@ window.CustomerView = {
                                 <div style="font-size: 15px; font-weight: 500; line-height: 1.5;">${c.address || '<span style="color:var(--text-muted);">N/A</span>'}</div>
                             </div>
                             
-                            <div style="margin-bottom: 16px;">
-                                <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">City</label>
-                                <div style="font-size: 15px; font-weight: 500;">${c.city || '<span style="color:var(--text-muted);">N/A</span>'}</div>
-                            </div>
-                            
-                            <div style="margin-bottom: 16px;">
-                                <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Country</label>
-                                <div style="font-size: 15px; font-weight: 500;">${c.country || '<span style="color:var(--text-muted);">N/A</span>'}</div>
-                            </div>
+
 
                             <div style="margin-bottom: 16px;">
                                 <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Registered On</label>

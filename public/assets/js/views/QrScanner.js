@@ -123,13 +123,12 @@ window.QrScanner = {
 
             <div>
                 <!-- Header -->
-                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 28px;">
-                    <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(59,130,246,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #3b82f6; flex-shrink: 0;">
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 15px;">
+                    <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(59,130,246,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #3b82f6; flex-shrink: 0;">
                         <i class="fa-solid fa-qrcode"></i>
                     </div>
                     <div>
-                        <h1 style="font-size: 26px; font-weight: 800; color: #0f172a; margin-bottom: 2px;">Scanner Mode</h1>
-                        <p style="color: #64748b; font-size: 14px;">Point your camera at the AC Unit's QR code or upload an image.</p>
+                        <h1 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 2px;">Scanner Mode</h1>
                     </div>
                 </div>
 
