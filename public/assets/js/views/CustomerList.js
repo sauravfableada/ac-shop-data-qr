@@ -37,17 +37,16 @@ window.CustomerList = {
 
             return state.customers.map((c, index) => `
                 <tr style="border-bottom: 1px solid var(--border-glass);">
-                    <td style="padding: 16px; font-size: 14px; color: var(--text-muted);">${startIndex + index + 1}</td>
                     <td style="padding: 16px; font-size: 14px; font-weight: 600;">${c.full_name}<br><span style="font-size: 12px; color: var(--text-muted); font-weight: 400;">${c.customer_code}</span></td>
+                    <td style="padding: 16px; font-size: 14px; font-weight: 500; color: var(--text-main);">${c.mobile}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px;">${c.email || '--'}</td>
-                    <td class="hide-on-mobile" style="padding: 16px; font-size: 14px;">${c.mobile}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; font-weight: 600;">${new Date(c.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" data-id="${c.id}"><i class="fa-solid fa-plus"></i></button>
                         <div class="desktop-only" style="display: flex; gap: 8px;">
-                            <button class="view-customer-btn" data-id="${c.id}" style="background: transparent; border: 1px solid #bfdbfe; color: #3b82f6; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="View"><i class="fa-regular fa-eye"></i> View</button>
-                            <button class="edit-customer-btn" data-id="${c.id}" style="background: transparent; border: 1px solid #bfdbfe; color: #3b82f6; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Edit"><i class="fa-solid fa-pencil"></i> Edit</button>
-                            <button class="delete-customer-btn" data-id="${c.id}" style="background: transparent; border: 1px solid #fecaca; color: #ef4444; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Delete"><i class="fa-regular fa-trash-can"></i> Delete</button>
+                            <button class="view-customer-btn" data-id="${c.id}" style="background: #3b82f6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="View"><i class="fa-regular fa-eye"></i> View</button>
+                            <button class="edit-customer-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Edit"><i class="fa-solid fa-pencil"></i> Edit</button>
+                            <button class="delete-customer-btn" data-id="${c.id}" style="background: #ef4444; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Delete"><i class="fa-regular fa-trash-can"></i> Delete</button>
                         </div>
                     </td>
                 </tr>
@@ -57,10 +56,6 @@ window.CustomerList = {
                             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-envelope" style="margin-right: 8px;"></i> EMAIL :</div>
                                 <div style="font-weight: 400; color: #64748b;">${c.email || '--'}</div>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
-                                <div><i class="fa-solid fa-phone" style="margin-right: 8px;"></i> PHONE :</div>
-                                <div style="font-weight: 400; color: #64748b;">${c.mobile}</div>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-calendar-days" style="margin-right: 8px;"></i> CREATED :</div>
@@ -72,9 +67,9 @@ window.CustomerList = {
                             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-gear" style="margin-right: 8px;"></i> ACTIONS :</div>
                                 <div style="display: flex; gap: 8px;">
-                                    <button class="view-customer-btn" data-id="${c.id}" style="background: #ffffff; border: 1px solid #e2e8f0; color: #3b82f6; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-eye"></i></button>
-                                    <button class="edit-customer-btn" data-id="${c.id}" style="background: #ffffff; border: 1px solid #e2e8f0; color: #f59e0b; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-pencil"></i></button>
-                                    <button class="delete-customer-btn" data-id="${c.id}" style="background: #ffffff; border: 1px solid #e2e8f0; color: #ef4444; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-trash-can"></i></button>
+                                    <button class="view-customer-btn" data-id="${c.id}" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-eye"></i></button>
+                                    <button class="edit-customer-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-pencil"></i></button>
+                                    <button class="delete-customer-btn" data-id="${c.id}" style="background: #ef4444; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-trash-can"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +113,7 @@ window.CustomerList = {
                     <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                         <div>
                             <h1 style="font-size: 24px; margin-bottom: 4px; color: #0f172a;">Manage Customers</h1>
-                            <p style="color: #64748b; font-size: 14px;">View and manage your customer database and communication history.</p>
+                            
                         </div>
                         <div style="display: flex; gap: 12px;">
                             <button onclick="window.router.navigate('/customers/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
@@ -153,10 +148,9 @@ window.CustomerList = {
                             <table style="width: 100%; border-collapse: collapse; text-align: left;">
                                 <thead>
                                     <tr style="border-bottom: 2px solid var(--border-glass); color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 700;">
-                                        <th style="padding: 12px 16px;">SR.NO</th>
                                         <th style="padding: 12px 16px;">Customer Name</th>
+                                        <th style="padding: 12px 16px;">Mobile</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">Email</th>
-                                        <th class="hide-on-mobile" style="padding: 12px 16px;">Phone</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">Created At</th>
                                         <th style="padding: 12px 16px;">Actions</th>
                                     </tr>

@@ -44,10 +44,10 @@ window.AcUnitList = {
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" onclick="window.AcUnitList.toggleMobileRow(${ac.id}, this)"><i class="fa-solid fa-plus"></i></button>
                         <div class="desktop-only" style="display: flex; gap: 8px; justify-content: flex-end;">
-                            <button onclick="window.AcUnitList.printAcUnit(${ac.id})" title="Print QR" style="background: transparent; border: 1px solid #bfdbfe; color: #3b82f6; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-print"></i></button>
-                            <button onclick="window.router.navigate('/ac-units/view/${ac.id}')" title="View" style="background: transparent; border: 1px solid #bfdbfe; color: #3b82f6; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-eye"></i></button>
-                            <button onclick="window.router.navigate('/ac-units/edit/${ac.id}')" title="Edit" style="background: transparent; border: 1px solid #bfdbfe; color: #3b82f6; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="window.AcUnitList.deleteUnit(${ac.id})" title="Delete" style="background: transparent; border: 1px solid #fecaca; color: #ef4444; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="window.AcUnitList.printAcUnit(${ac.id})" title="Print QR" style="background: #0f172a; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-print"></i> Print</button>
+                            <button onclick="window.router.navigate('/ac-units/view/${ac.id}')" title="View" style="background: #3b82f6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-eye"></i> View</button>
+                            <button onclick="window.router.navigate('/ac-units/edit/${ac.id}')" title="Edit" style="background: #f59e0b; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                            <button onclick="window.AcUnitList.deleteUnit(${ac.id})" title="Delete" style="background: #ef4444; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-trash"></i> Delete</button>
                         </div>
                     </td>
                 </tr>
@@ -76,9 +76,10 @@ window.AcUnitList = {
                             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-gear" style="margin-right: 8px;"></i> ACTIONS :</div>
                                 <div style="display: flex; gap: 8px;">
-                                    <button onclick="window.router.navigate('/ac-units/view/${ac.id}')" style="background: #ffffff; border: 1px solid #e2e8f0; color: #3b82f6; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-eye"></i></button>
-                                    <button onclick="window.router.navigate('/ac-units/edit/${ac.id}')" style="background: #ffffff; border: 1px solid #e2e8f0; color: #f59e0b; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-pencil"></i></button>
-                                    <button onclick="window.AcUnitList.deleteUnit(${ac.id})" style="background: #ffffff; border: 1px solid #e2e8f0; color: #ef4444; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-trash-can"></i></button>
+                                    <button onclick="window.AcUnitList.printAcUnit(${ac.id})" style="background: #0f172a; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-print"></i></button>
+                                    <button onclick="window.router.navigate('/ac-units/view/${ac.id}')" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-eye"></i></button>
+                                    <button onclick="window.router.navigate('/ac-units/edit/${ac.id}')" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-pencil"></i></button>
+                                    <button onclick="window.AcUnitList.deleteUnit(${ac.id})" style="background: #ef4444; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-trash-can"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -121,7 +122,7 @@ window.AcUnitList = {
                     <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                         <div>
                             <h1 style="font-size: 24px; margin-bottom: 4px; color: #0f172a;">AC Units</h1>
-                            <p style="color: #64748b; font-size: 14px;">Manage all customer air conditioning units.</p>
+                            
                         </div>
                         <div style="display: flex; gap: 12px;">
                             <button onclick="window.router.navigate('/scanner')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">

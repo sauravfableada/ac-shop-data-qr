@@ -44,8 +44,8 @@ window.ServiceList = {
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" onclick="window.ServiceList.toggleMobileRow(${s.id}, this)"><i class="fa-solid fa-plus"></i></button>
                         <div class="desktop-only" style="display: flex; gap: 8px; justify-content: flex-end;">
-                            <button onclick="window.router.navigate('/services/view/${s.id}')" title="View" style="background: transparent; border: 1px solid #bfdbfe; color: #3b82f6; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-eye"></i></button>
-                            <button onclick="window.router.navigate('/services/edit/${s.id}')" title="Edit" style="background: transparent; border: 1px solid #bfdbfe; color: #3b82f6; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="window.router.navigate('/services/view/${s.id}')" title="View" style="background: #3b82f6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-eye"></i> View</button>
+                            <button onclick="window.router.navigate('/services/edit/${s.id}')" title="Edit" style="background: #f59e0b; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
                         </div>
                     </td>
                 </tr>
@@ -74,8 +74,8 @@ window.ServiceList = {
                             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-gear" style="margin-right: 8px;"></i> ACTIONS :</div>
                                 <div style="display: flex; gap: 8px;">
-                                    <button onclick="window.router.navigate('/services/view/${s.id}')" style="background: #ffffff; border: 1px solid #e2e8f0; color: #3b82f6; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-eye"></i></button>
-                                    <button onclick="window.router.navigate('/services/edit/${s.id}')" style="background: #ffffff; border: 1px solid #e2e8f0; color: #f59e0b; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-pencil"></i></button>
+                                    <button onclick="window.router.navigate('/services/view/${s.id}')" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-eye"></i></button>
+                                    <button onclick="window.router.navigate('/services/edit/${s.id}')" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-pencil"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +118,7 @@ window.ServiceList = {
                     <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                         <div>
                             <h1 style="font-size: 24px; margin-bottom: 4px; color: #0f172a;">Maintenance Services</h1>
-                            <p style="color: #64748b; font-size: 14px;">Manage all service records and maintenance history.</p>
+                            
                         </div>
                         <div style="display: flex; gap: 12px;">
                             <button onclick="window.router.navigate('/services/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">

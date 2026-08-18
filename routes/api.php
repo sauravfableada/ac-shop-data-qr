@@ -51,7 +51,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/services/{service}/assign-staff', [\App\Http\Controllers\ServiceController::class, 'assignStaff'])->middleware('permission:service.assign');
     Route::post('/services/{service}/images', [\App\Http\Controllers\ServiceController::class, 'uploadImages'])->middleware('permission:service.edit');
     Route::get('/ac-units/{id}/service-history', [\App\Http\Controllers\ServiceController::class, 'acServiceHistory'])->middleware('permission:service.view');
-
+    Route::get('/customers/{id}/service-history', [\App\Http\Controllers\ServiceController::class, 'customerServiceHistory'])->middleware('permission:service.view');
     // Dashboards
     Route::get('/admin/dashboard', [\App\Http\Controllers\DashboardController::class, 'adminDashboard'])->middleware('permission:dashboard.admin');
     Route::get('/staff/dashboard', [\App\Http\Controllers\DashboardController::class, 'staffDashboard'])->middleware('permission:dashboard.staff');

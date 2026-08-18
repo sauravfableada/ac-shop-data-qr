@@ -42,7 +42,7 @@ window.ServiceForm = {
                 <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin: 0 auto 24px auto;">
                     <div>
                         <h1 style="font-size: 24px; color: #0f172a; margin-bottom: 4px;">${isEdit ? 'Edit Maintenance Record' : 'Add Maintenance'}</h1>
-                        <p style="color: #64748b; font-size: 14px;">Log a new service, repair, or maintenance check.</p>
+                       
                     </div>
                     <div>
                         <button onclick="window.history.back()" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
@@ -197,7 +197,7 @@ window.ServiceForm = {
                     for (const [key, messages] of Object.entries(res.errors)) {
                         let input = form.querySelector(`[name="${key}"]`);
                         if (input) input.style.borderColor = '#ef4444';
-                        
+
                         let errDiv = document.getElementById('err_' + key);
                         if (errDiv) {
                             errDiv.innerText = messages[0];

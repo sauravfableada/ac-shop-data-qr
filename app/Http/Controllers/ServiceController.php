@@ -124,4 +124,15 @@ class ServiceController extends Controller
             
         return $this->success($history, 'AC service history retrieved successfully.');
     }
+
+    // Service Timeline (Customer History)
+    public function customerServiceHistory($id)
+    {
+        $history = ServiceRecord::where('customer_id', $id)
+            ->with(['acUnit', 'technician', 'parts.sparePart', 'images'])
+            ->orderBy('service_date', 'desc')
+            ->get();
+            
+        return $this->success($history, 'Customer service history retrieved successfully.');
+    }
 }

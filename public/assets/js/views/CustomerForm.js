@@ -27,7 +27,7 @@ window.CustomerForm = {
                 <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <div>
                         <h1 style="font-size: 24px; margin-bottom: 4px; color: #0f172a;">${title}</h1>
-                        <p style="color: #64748b; font-size: 14px;">Fill out the information below to ${isEdit ? 'update the' : 'create a new'} customer profile.</p>
+                        
                     </div>
                     <div>
                         <button onclick="window.router.navigate('/customers')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
@@ -171,12 +171,12 @@ window.CustomerForm = {
                         'city': 'cCity',
                         'country': 'cCountry'
                     };
-                    
+
                     for (const [key, messages] of Object.entries(res.errors)) {
                         if (fieldMap[key]) {
                             const input = document.getElementById(fieldMap[key]);
                             if (input) input.style.borderColor = '#ef4444';
-                            
+
                             const errDiv = document.getElementById('err_' + fieldMap[key]);
                             if (errDiv) {
                                 errDiv.innerText = messages[0];

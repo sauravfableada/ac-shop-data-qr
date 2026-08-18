@@ -113,7 +113,7 @@ window.renderLayout = (content) => {
                                     <i class="fa-solid fa-fan"></i> AC Units
                                 </a>
                                 <a href="/services" class="dropdown-item desktop-only" data-link>
-                                    <i class="fa-solid fa-clipboard-list"></i> Maintenance
+                                    <i class="fa-solid fa-clipboard-list"></i> Services
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a href="#" id="topLogoutBtn" class="dropdown-item" style="color: #ef4444;">

@@ -33,7 +33,7 @@ window.AcUnitView = {
                             <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: ${record.status === 'completed' ? 'rgba(16,185,129,0.1)' : 'rgba(244,63,94,0.1)'}; color: ${record.status === 'completed' ? '#10B981' : '#F43F5E'};">${(record.status || 'pending').toUpperCase()}</span>
                         </td>
                         <td style="padding: 16px; text-align: right;">
-                            <button onclick="window.router.navigate('/services/view/${record.id}')" style="background: transparent; border: none; color: #3b82f6; cursor: pointer;" title="View Details"><i class="fa-solid fa-eye"></i></button>
+                            <button onclick="window.router.navigate('/services/view/${record.id}')" style="background: #3b82f6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="View Details"><i class="fa-solid fa-eye"></i> View</button>
                         </td>
                     </tr>
                 `).join('');
@@ -50,13 +50,13 @@ window.AcUnitView = {
                         <p style="color: #64748b; font-size: 14px;">Customer: ${ac.customer ? ac.customer.full_name : 'Unknown'}</p>
                     </div>
                     <div style="display: flex; gap: 12px;">
-                        <button onclick="window.history.back()" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                        <button onclick="window.history.back()" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #ffffff; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                             <i class="fa-solid fa-arrow-left"></i> <span class="hide-on-mobile">Back</span>
                         </button>
-                        <button onclick="window.router.navigate('/ac-units/edit/${ac.id}')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                        <button onclick="window.router.navigate('/ac-units/edit/${ac.id}')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #f59e0b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                             <i class="fa-solid fa-pencil"></i> <span class="hide-on-mobile">Edit Unit</span>
                         </button>
-                        <button onclick="window.router.navigate('/services/add?ac_id=${ac.id}')" class="btn" style="padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                        <button onclick="window.router.navigate('/services/add?ac_id=${ac.id}')" class="btn" style="padding: 8px 16px; background: #16b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                             <i class="fa-solid fa-plus"></i> <span class="hide-on-mobile">Add Maintenance</span>
                         </button>
                     </div>

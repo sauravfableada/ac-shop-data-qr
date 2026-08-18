@@ -49,13 +49,13 @@ window.ServiceView = {
                         <p style="color: #64748b; font-size: 14px;">Date: ${new Date(service.service_date).toLocaleDateString()}</p>
                     </div>
                     <div style="display: flex; gap: 12px;">
-                        <button onclick="window.history.back()" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                        <button onclick="window.history.back()" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #ffffff; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                             <i class="fa-solid fa-arrow-left"></i> <span class="hide-on-mobile">Back</span>
                         </button>
-                        <button onclick="window.router.navigate('/services/edit/${service.id}')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                        <button onclick="window.router.navigate('/services/edit/${service.id}')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #f59e0b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                             <i class="fa-solid fa-pen-to-square"></i> <span class="hide-on-mobile">Edit Service</span>
                         </button>
-                        <button onclick="window.ServiceView.delete(${service.id})" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(244,63,94,0.1); color: #F43F5E; border: 1px solid rgba(244,63,94,0.2); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                        <button onclick="window.ServiceView.delete(${service.id})" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                             <i class="fa-solid fa-trash-can"></i> <span class="hide-on-mobile">Delete</span>
                         </button>
                     </div>

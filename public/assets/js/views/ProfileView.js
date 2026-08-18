@@ -1,13 +1,13 @@
 window.ProfileView = {
     render: async (container) => {
         // We provide a premium static UI for the profile page
-        
+
         const content = `
             <div>
                 <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <div>
                         <h1 style="font-size: 28px; margin-bottom: 8px;">My Profile</h1>
-                        <p style="color: var(--text-muted);">Manage your account settings and preferences.</p>
+                        
                     </div>
                 </div>
 
@@ -72,7 +72,7 @@ window.ProfileView = {
                 </div>
             </div>
         `;
-        
+
         container.innerHTML = window.renderLayout(content);
     }
 };

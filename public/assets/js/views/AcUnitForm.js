@@ -46,7 +46,7 @@ window.AcUnitForm = {
                 <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin: 0 auto 24px auto;">
                     <div>
                         <h1 style="font-size: 24px; color: #0f172a; margin-bottom: 4px;">${isEdit ? 'Edit AC Unit' : 'Add New AC Unit'}</h1>
-                        <p style="color: #64748b; font-size: 14px;">Fill in the details below to ${isEdit ? 'update the' : 'register a new'} air conditioning unit.</p>
+                        
                     </div>
                     <div>
                         <button onclick="window.history.back()" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
@@ -200,7 +200,7 @@ window.AcUnitForm = {
             if (res.success) {
                 document.getElementById('qcCode').value = res.code;
             }
-        } catch(e) {}
+        } catch (e) { }
     },
 
     saveCustomer: async (e) => {
@@ -208,12 +208,12 @@ window.AcUnitForm = {
         const btn = document.getElementById('qcSaveBtn');
         btn.disabled = true;
         btn.innerText = 'Saving...';
-        
+
         // Clear errors
         ['qcCode', 'qcName', 'qcMobile'].forEach(id => {
             document.getElementById(id).style.borderColor = 'var(--border-glass)';
             const errDiv = document.getElementById('err_' + id);
-            if(errDiv) {
+            if (errDiv) {
                 errDiv.style.display = 'none';
                 errDiv.innerText = '';
             }
@@ -231,16 +231,16 @@ window.AcUnitForm = {
             if (res.success) {
                 window.showToast('Customer created successfully!', 'success');
                 document.getElementById('addCustomerModal').style.display = 'none';
-                
+
                 // Add to dropdown
                 const select = document.getElementById('customerSelect');
                 const custRes = await window.api.get('/customers?per_page=100');
                 if (custRes.success) {
                     const customers = custRes.data?.data || custRes.data || [];
-                    select.innerHTML = '<option value="">Select Customer</option>' + customers.map(c => 
+                    select.innerHTML = '<option value="">Select Customer</option>' + customers.map(c =>
                         `<option value="${c.id}">${c.full_name} (${c.mobile})</option>`
                     ).join('');
-                    
+
                     if (res.data?.id) {
                         select.value = res.data.id;
                     }
@@ -309,7 +309,7 @@ window.AcUnitForm = {
                     for (const [key, messages] of Object.entries(res.errors)) {
                         let input = form.querySelector(`[name="${key}"]`);
                         if (input) input.style.borderColor = '#ef4444';
-                        
+
                         let errDiv = document.getElementById('err_' + key);
                         if (errDiv) {
                             errDiv.innerText = messages[0];
