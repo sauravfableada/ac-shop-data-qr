@@ -537,17 +537,13 @@ body.light-mode {
         display: inline-flex;
     }
 
-    .table-header-row,
     .table-filter-row {
         flex-direction: column !important;
         align-items: flex-start !important;
         gap: 16px !important;
     }
 
-    .table-header-row>div:last-child {
-        width: 100%;
-        flex-wrap: wrap;
-    }
+
 
     .table-filter-row>div {
         width: 100%;

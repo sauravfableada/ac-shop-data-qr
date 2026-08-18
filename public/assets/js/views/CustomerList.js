@@ -96,9 +96,9 @@ window.CustomerList = {
             }
 
             return `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 14px; color: var(--text-muted);">
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 14px; color: var(--text-muted);">
                     <div>Showing ${start} to ${end} of ${state.meta.total} results</div>
-                    <div style="display: flex; gap: 8px;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <button class="page-btn" data-page="${state.meta.current_page - 1}" ${state.meta.current_page === 1 ? 'disabled' : ''} style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-glass); background: transparent; color: ${state.meta.current_page === 1 ? 'var(--border-glass)' : 'var(--text-main)'}; cursor: ${state.meta.current_page === 1 ? 'not-allowed' : 'pointer'};">Previous</button>
                         ${pagesHTML}
                         <button class="page-btn" data-page="${state.meta.current_page + 1}" ${state.meta.current_page === state.meta.last_page ? 'disabled' : ''} style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-glass); background: transparent; color: ${state.meta.current_page === state.meta.last_page ? 'var(--border-glass)' : 'var(--text-main)'}; cursor: ${state.meta.current_page === state.meta.last_page ? 'not-allowed' : 'pointer'};">Next</button>
@@ -129,7 +129,7 @@ window.CustomerList = {
                                     <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px;"></i>
                                     <input type="text" id="searchInput" value="${state.search}" placeholder="Search by name, phone no..." style="padding: 8px 12px 8px 36px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; width: 250px;">
                                 </div>
-                                <button style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: var(--text-muted); border: 1px solid var(--border-glass); border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;">
+                                <button class="hide-on-mobile" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: var(--text-muted); border: 1px solid var(--border-glass); border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;">
                                     <i class="fa-solid fa-filter"></i> Filters
                                 </button>
                             </div>

@@ -36,7 +36,7 @@ window.AcUnitList = {
                 <tr style="border-bottom: 1px solid var(--border-glass);">
                     <td style="padding: 16px; font-size: 14px; font-weight: 600; color: var(--text-main);">${ac.ac_code}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.brand || '-'} ${ac.model || ''}</td>
-                    <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.customer ? ac.customer.full_name : 'N/A'}</td>
+                    <td style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.customer ? ac.customer.full_name : 'N/A'}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.ac_type || '-'} · ${ac.capacity || '-'}</td>
                     <td class="hide-on-mobile" style="padding: 16px;">
                         <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: ${ac.status === 'active' ? 'rgba(16,185,129,0.1)' : 'rgba(244,63,94,0.1)'}; color: ${ac.status === 'active' ? '#10B981' : '#F43F5E'};">${ac.status ? ac.status.toUpperCase() : 'ACTIVE'}</span>
@@ -105,9 +105,9 @@ window.AcUnitList = {
             }
 
             return `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 14px; color: var(--text-muted);">
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 14px; color: var(--text-muted);">
                     <div>Showing ${start} to ${end} of ${state.meta.total} results</div>
-                    <div style="display: flex; gap: 8px;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <button class="page-btn" data-page="${state.meta.current_page - 1}" ${state.meta.current_page === 1 ? 'disabled' : ''} style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-glass); background: transparent; color: ${state.meta.current_page === 1 ? 'var(--border-glass)' : 'var(--text-main)'}; cursor: ${state.meta.current_page === 1 ? 'not-allowed' : 'pointer'};">Previous</button>
                         ${pagesHTML}
                         <button class="page-btn" data-page="${state.meta.current_page + 1}" ${state.meta.current_page === state.meta.last_page ? 'disabled' : ''} style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-glass); background: transparent; color: ${state.meta.current_page === state.meta.last_page ? 'var(--border-glass)' : 'var(--text-main)'}; cursor: ${state.meta.current_page === state.meta.last_page ? 'not-allowed' : 'pointer'};">Next</button>
@@ -125,7 +125,7 @@ window.AcUnitList = {
                             
                         </div>
                         <div style="display: flex; gap: 12px;">
-                            <button onclick="window.router.navigate('/scanner')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                            <button class="hide-on-mobile" onclick="window.router.navigate('/scanner')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                                 <i class="fa-solid fa-qrcode"></i> Scan QR
                             </button>
                             <button onclick="window.router.navigate('/ac-units/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
@@ -141,7 +141,7 @@ window.AcUnitList = {
                                     <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px;"></i>
                                     <input type="text" id="searchInput" value="${state.search}" placeholder="Search AC code, brand..." style="padding: 8px 12px 8px 36px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; width: 250px;">
                                 </div>
-                                <button style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: var(--text-muted); border: 1px solid var(--border-glass); border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;">
+                                <button class="hide-on-mobile" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: var(--text-muted); border: 1px solid var(--border-glass); border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;">
                                     <i class="fa-solid fa-filter"></i> Filters
                                 </button>
                             </div>
@@ -162,7 +162,7 @@ window.AcUnitList = {
                                     <tr style="border-bottom: 2px solid var(--border-glass); color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 700;">
                                         <th style="padding: 12px 16px;">Code</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">Brand/Model</th>
-                                        <th class="hide-on-mobile" style="padding: 12px 16px;">Customer</th>
+                                        <th style="padding: 12px 16px;">Customer</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">AC Type & Capacity</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">Status</th>
                                         <th style="padding: 12px 16px; text-align: right;">Actions</th>
