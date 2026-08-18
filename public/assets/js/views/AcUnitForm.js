@@ -131,24 +131,26 @@ window.AcUnitForm = {
                     <!-- Installation & Warranty -->
                     <div style="grid-column: span 2; margin-top: 16px;">
                         <h3 style="font-size: 16px; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 16px;">Installation & Warranty</h3>
-                    </div>
+                        
+                        <div class="responsive-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Date</label>
+                                <input type="date" name="installation_date" value="${ac.installation_date ? ac.installation_date.split('T')[0] : ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            </div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Date</label>
-                        <input type="date" name="installation_date" value="${ac.installation_date ? ac.installation_date.split('T')[0] : ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                    </div>
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Location / Room</label>
+                                <input type="text" name="room" value="${ac.room || ''}" placeholder="e.g. Master Bedroom" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            </div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Location / Room</label>
-                        <input type="text" name="room" value="${ac.room || ''}" placeholder="e.g. Master Bedroom" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                    </div>
-
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: #334155;">Status</label>
-                        <select name="status" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                            <option value="active" ${ac.status === 'active' ? 'selected' : ''}>Active</option>
-                            <option value="inactive" ${ac.status === 'inactive' ? 'selected' : ''}>Inactive</option>
-                        </select>
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Status</label>
+                                <select name="status" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                    <option value="active" ${ac.status === 'active' ? 'selected' : ''}>Active</option>
+                                    <option value="inactive" ${ac.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; grid-column: span 2;">
@@ -198,6 +200,16 @@ window.AcUnitForm = {
         `;
 
         container.innerHTML = window.renderLayout(content);
+
+        setTimeout(() => {
+            if (window.Choices) {
+                window.customerChoices = new Choices(document.getElementById('customerSelect'), {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    shouldSort: false
+                });
+            }
+        }, 100);
     },
 
     loadCustomerCode: async () => {
@@ -243,12 +255,25 @@ window.AcUnitForm = {
                 const custRes = await window.api.get('/customers?per_page=100');
                 if (custRes.success) {
                     const customers = custRes.data?.data || custRes.data || [];
+                    
+                    if (window.customerChoices) {
+                        window.customerChoices.destroy();
+                    }
+                    
                     select.innerHTML = '<option value="">Select Customer</option>' + customers.map(c =>
                         `<option value="${c.id}">${c.full_name} (${c.mobile})</option>`
                     ).join('');
 
                     if (res.data?.id) {
                         select.value = res.data.id;
+                    }
+                    
+                    if (window.Choices) {
+                        window.customerChoices = new Choices(select, {
+                            searchEnabled: true,
+                            itemSelectText: '',
+                            shouldSort: false
+                        });
                     }
                 }
             } else {

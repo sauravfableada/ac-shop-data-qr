@@ -565,11 +565,47 @@ body.light-mode {
     #serviceForm>div,
     #acForm>div,
     form[style*="grid-template-columns"],
-    .responsive-grid {
-        grid-template-columns: 1fr !important;
+    .two-col-mobile {
+        grid-template-columns: 1fr 1fr !important;
     }
 
     div[style*="grid-column: span 2"] {
         grid-column: span 1 !important;
     }
+}
+
+/* Choices.js Custom Styling to match other inputs */
+.choices {
+    margin-bottom: 0 !important;
+    font-family: inherit !important;
+    font-size: 14px !important;
+}
+.choices__inner {
+    border-radius: 8px !important;
+    border: 1px solid var(--border-glass) !important;
+    background: transparent !important;
+    min-height: 45px !important;
+    padding: 5px 12px !important;
+    display: flex;
+    align-items: center;
+}
+.choices[data-type*="select-one"] .choices__inner {
+    padding-bottom: 5px !important;
+}
+.choices__list--dropdown {
+    border-radius: 8px !important;
+    border: 1px solid var(--border-glass) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+    z-index: 100 !important;
+    background: #ffffff !important;
+}
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background-color: rgba(59,130,246,0.1) !important;
+    color: var(--text-main) !important;
+}
+.choices[data-type*="select-one"]::after {
+    border-color: var(--text-muted) transparent transparent transparent !important;
+}
+.choices[data-type*="select-one"].is-open::after {
+    border-color: transparent transparent var(--text-muted) transparent !important;
 }
