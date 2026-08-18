@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom Design System -->
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="{{ public_asset('assets/css/styles.css') }}?v={{ time() }}">
 </head>
 <body>
     
@@ -26,29 +26,29 @@
     </div>
 
     <!-- Core Scripts -->
-    <script src="/assets/js/api.js"></script>
-    <script src="/assets/js/router.js"></script>
+    <script src="{{ public_asset('assets/js/api.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/router.js') }}?v={{ time() }}"></script>
     
     <!-- External Libraries -->
     <script src="https://unpkg.com/html5-qrcode"></script>
 
     <!-- Views -->
-    <script src="/assets/js/views/LoginView.js"></script>
-    <script src="/assets/js/views/AdminDashboard.js"></script>
-    <script src="/assets/js/views/CustomerList.js"></script>
-    <script src="/assets/js/views/CustomerForm.js"></script>
-    <script src="/assets/js/views/CustomerView.js"></script>
-    <script src="/assets/js/views/AcUnitList.js"></script>
-    <script src="/assets/js/views/AcUnitForm.js"></script>
-    <script src="/assets/js/views/AcUnitView.js"></script>
-    <script src="/assets/js/views/ServiceList.js"></script>
-    <script src="/assets/js/views/ServiceForm.js"></script>
-    <script src="/assets/js/views/ServiceView.js"></script>
-    <script src="/assets/js/views/QrScanner.js"></script>
-    <script src="/assets/js/views/ProfileView.js"></script>
-    <script src="/assets/js/views/UserLogs.js"></script>
+    <script src="{{ public_asset('assets/js/views/LoginView.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/AdminDashboard.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/CustomerList.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/CustomerForm.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/CustomerView.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/AcUnitList.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/AcUnitForm.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/AcUnitView.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/ServiceList.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/ServiceForm.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/ServiceView.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/QrScanner.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/ProfileView.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/UserLogs.js') }}?v={{ time() }}"></script>
     
     <!-- App Entry -->
-    <script src="/assets/js/app.js"></script>
+    <script src="{{ public_asset('assets/js/app.js') }}?v={{ time() }}"></script>
 </body>
 </html>
