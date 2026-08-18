@@ -39,7 +39,11 @@ window.ServiceList = {
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${s.ac_unit ? s.ac_unit.ac_code : 'N/A'}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${new Date(s.service_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td class="hide-on-mobile" style="padding: 16px;">
-                        <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: ${s.status === 'completed' ? 'rgba(16,185,129,0.1)' : 'rgba(244,63,94,0.1)'}; color: ${s.status === 'completed' ? '#10B981' : '#F43F5E'};">${s.status ? s.status.toUpperCase() : 'PENDING'}</span>
+                        <select onchange="window.ServiceList.changeStatusDirect(${s.id}, this.value)" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: ${s.status === 'completed' ? 'rgba(16,185,129,0.1)' : (s.status === 'in_progress' ? 'rgba(59,130,246,0.1)' : 'rgba(244,63,94,0.1)')}; color: ${s.status === 'completed' ? '#10B981' : (s.status === 'in_progress' ? '#3B82F6' : '#F43F5E')}; border: 1px solid transparent; outline: none; cursor: pointer;">
+                            <option value="pending" ${(!s.status || s.status === 'pending') ? 'selected' : ''} style="color: #0f172a;">PENDING</option>
+                            <option value="in_progress" ${s.status === 'in_progress' ? 'selected' : ''} style="color: #0f172a;">IN PROGRESS</option>
+                            <option value="completed" ${s.status === 'completed' ? 'selected' : ''} style="color: #0f172a;">COMPLETED</option>
+                        </select>
                     </td>
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" onclick="window.ServiceList.toggleMobileRow(${s.id}, this)"><i class="fa-solid fa-plus"></i></button>
@@ -66,7 +70,13 @@ window.ServiceList = {
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> STATUS :</div>
-                                <div style="font-weight: 400; color: #64748b;">${s.status ? s.status.toUpperCase() : 'PENDING'}</div>
+                                <div style="font-weight: 400; color: #64748b;">
+                                    <select onchange="window.ServiceList.changeStatusDirect(${s.id}, this.value)" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: ${s.status === 'completed' ? 'rgba(16,185,129,0.1)' : (s.status === 'in_progress' ? 'rgba(59,130,246,0.1)' : 'rgba(244,63,94,0.1)')}; color: ${s.status === 'completed' ? '#10B981' : (s.status === 'in_progress' ? '#3B82F6' : '#F43F5E')}; border: 1px solid transparent; outline: none; cursor: pointer;">
+                                        <option value="pending" ${(!s.status || s.status === 'pending') ? 'selected' : ''} style="color: #0f172a;">PENDING</option>
+                                        <option value="in_progress" ${s.status === 'in_progress' ? 'selected' : ''} style="color: #0f172a;">IN PROGRESS</option>
+                                        <option value="completed" ${s.status === 'completed' ? 'selected' : ''} style="color: #0f172a;">COMPLETED</option>
+                                    </select>
+                                </div>
                             </div>
                             
                             <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 16px;">
@@ -219,6 +229,12 @@ window.ServiceList = {
             document.getElementById('servicePagination').innerHTML = renderPagination();
         };
 
+        // Store refresh function for use by changeStatusDirect
+        window.ServiceList._refresh = async () => {
+            await fetchServices();
+            updateDOM();
+        };
+
         // Initial Load
         await fetchServices();
         renderView();
@@ -235,5 +251,29 @@ window.ServiceList = {
             row.classList.add('show');
             icon.className = 'fa-solid fa-minus';
         }
+    },
+
+    changeStatusDirect: async (id, newStatus) => {
+        try {
+            const res = await window.api.patch(`/services/${id}/status`, { status: newStatus });
+            if (res.success) {
+                window.showToast('Status updated successfully', 'success');
+                if (window.ServiceList._refresh) {
+                    await window.ServiceList._refresh();
+                }
+            } else {
+                window.showToast('Failed to update status', 'error');
+                if (window.ServiceList._refresh) {
+                    await window.ServiceList._refresh();
+                }
+            }
+        } catch (e) {
+            window.showToast('Failed to update status', 'error');
+        }
     }
 };
+
+// Auto-init if not SPA
+if (!window.router) {
+    document.addEventListener('DOMContentLoaded', window.ServiceList.init);
+}

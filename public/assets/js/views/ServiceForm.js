@@ -20,6 +20,16 @@ window.ServiceForm = {
             console.error("Failed to load AC units", e);
         }
 
+        let customers = [];
+        try {
+            const custRes = await window.api.get('/customers?per_page=1000');
+            if (custRes.success) {
+                customers = custRes.data?.data || custRes.data || [];
+            }
+        } catch (e) {
+            console.error("Failed to load customers", e);
+        }
+
         if (isEdit) {
             try {
                 const res = await window.api.get(`/services/${serviceId}`);
@@ -60,7 +70,10 @@ window.ServiceForm = {
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">AC Unit <span style="color: red;">*</span></label>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">AC Unit <span style="color: red;">*</span></label>
+                            <button type="button" onclick="document.getElementById('addAcModal').style.display='flex'; window.ServiceForm.loadAcCode();" style="background: var(--primary); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                        </div>
                         <select id="acSelect" name="ac_unit_id" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             <option value="">Select AC Unit</option>
                             ${acOptions}
@@ -152,19 +165,193 @@ window.ServiceForm = {
                     </div>
                 </form>
             </div>
+
+            <!-- Add AC Modal -->
+            <div id="addAcModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center;">
+                <div style="background: #ffffff; width: 100%; max-width: 700px; border-radius: 16px; padding: 32px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); position: relative; max-height: 90vh; overflow-y: auto;">
+                    <button type="button" onclick="document.getElementById('addAcModal').style.display='none'" style="position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 20px; color: #64748b; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+                    <h3 style="font-size: 20px; color: #0f172a; margin-bottom: 24px;">Quick Add AC Unit</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Customer <span style="color: red;">*</span></label>
+                            <select id="qaCustomer" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                <option value="">Select Customer</option>
+                                ${customers.map(c => `<option value="${c.id}">${c.full_name} (${c.mobile})</option>`).join('')}
+                            </select>
+                            <div id="err_qaCustomer" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
+                        </div>
+
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Code <span style="color: red;">*</span></label>
+                            <input type="text" id="qaAcCode" readonly style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: rgba(0,0,0,0.05); color: var(--text-muted); outline: none; font-family: inherit; font-size: 14px; cursor: not-allowed;">
+                            <div id="err_qaAcCode" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
+                        </div>
+
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Brand</label>
+                            <input type="text" id="qaBrand" placeholder="e.g. Daikin, LG" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                        </div>
+
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Model</label>
+                            <input type="text" id="qaModel" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                        </div>
+
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Serial Number</label>
+                            <input type="text" id="qaSerialNumber" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                        </div>
+
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Capacity</label>
+                            <input type="text" id="qaCapacity" placeholder="e.g. 1.5 Ton" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                        </div>
+
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Type</label>
+                            <select id="qaAcType" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                <option value="">Select Type</option>
+                                <option value="Split">Split</option>
+                                <option value="Window">Window</option>
+                                <option value="Cassette">Cassette</option>
+                                <option value="Tower">Tower</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Inverter Type</label>
+                            <select id="qaInverterType" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                <option value="">Select</option>
+                                <option value="Inverter">Inverter</option>
+                                <option value="Non-Inverter">Non-Inverter</option>
+                            </select>
+                        </div>
+
+                        <div style="grid-column: span 2; display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px;">
+                            <button type="button" onclick="document.getElementById('addAcModal').style.display='none'" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
+                            <button type="button" id="qaSaveAcBtn" onclick="window.ServiceForm.saveAcUnit(event)" style="padding: 10px 20px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600;">Save AC Unit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         `;
 
         container.innerHTML = window.renderLayout(content);
 
         setTimeout(() => {
             if (window.Choices) {
-                new Choices(document.getElementById('acSelect'), {
+                window.acChoices = new Choices(document.getElementById('acSelect'), {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    shouldSort: false
+                });
+                
+                window.customerChoices = new Choices(document.getElementById('qaCustomer'), {
                     searchEnabled: true,
                     itemSelectText: '',
                     shouldSort: false
                 });
             }
         }, 100);
+    },
+
+    loadAcCode: async () => {
+        try {
+            const res = await window.api.get('/ac-units/next-code');
+            if (res.success) {
+                document.getElementById('qaAcCode').value = res.code;
+            }
+        } catch (e) { }
+    },
+
+    saveAcUnit: async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('qaSaveAcBtn');
+        btn.disabled = true;
+        btn.innerText = 'Saving...';
+
+        ['qaCustomer', 'qaAcCode'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.style.borderColor = 'var(--border-glass)';
+            const errDiv = document.getElementById('err_' + id);
+            if (errDiv) {
+                errDiv.style.display = 'none';
+                errDiv.innerText = '';
+            }
+        });
+
+        const payload = {
+            customer_id: document.getElementById('qaCustomer').value,
+            ac_code: document.getElementById('qaAcCode').value,
+            brand: document.getElementById('qaBrand').value,
+            model: document.getElementById('qaModel').value,
+            serial_number: document.getElementById('qaSerialNumber').value,
+            capacity: document.getElementById('qaCapacity').value,
+            ac_type: document.getElementById('qaAcType').value,
+            inverter_type: document.getElementById('qaInverterType').value,
+            status: 'active'
+        };
+
+        try {
+            const res = await window.api.post('/ac-units', payload);
+            if (res.success) {
+                window.showToast('AC Unit created successfully!', 'success');
+                document.getElementById('addAcModal').style.display = 'none';
+
+                // Reload AC options
+                const acRes = await window.api.get('/ac-units?per_page=1000');
+                if (acRes.success) {
+                    const acUnits = acRes.data?.data || acRes.data || [];
+                    
+                    if (window.acChoices) {
+                        window.acChoices.destroy();
+                    }
+                    
+                    const select = document.getElementById('acSelect');
+                    select.innerHTML = '<option value="">Select AC Unit</option>' + acUnits.map(ac =>
+                        `<option value="${ac.id}">${ac.ac_code} - ${ac.customer ? ac.customer.full_name : ''}</option>`
+                    ).join('');
+
+                    if (res.data?.id) {
+                        select.value = res.data.id;
+                    }
+                    
+                    if (window.Choices) {
+                        window.acChoices = new Choices(select, {
+                            searchEnabled: true,
+                            itemSelectText: '',
+                            shouldSort: false
+                        });
+                    }
+                }
+            } else {
+                let errorMessage = res.message || 'Error saving AC Unit';
+                if (res.errors) {
+                    const fieldMap = {
+                        'customer_id': 'qaCustomer',
+                        'ac_code': 'qaAcCode'
+                    };
+                    for (const [key, messages] of Object.entries(res.errors)) {
+                        if (fieldMap[key]) {
+                            document.getElementById(fieldMap[key]).style.borderColor = '#ef4444';
+                            const errDiv = document.getElementById('err_' + fieldMap[key]);
+                            if (errDiv) {
+                                errDiv.innerText = messages[0];
+                                errDiv.style.display = 'block';
+                            }
+                        }
+                    }
+                    if(res.errors[Object.keys(res.errors)[0]]) errorMessage = res.errors[Object.keys(res.errors)[0]][0];
+                }
+                window.showToast(errorMessage, 'error');
+            }
+        } catch (err) {
+            window.showToast('Failed to save AC Unit', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerText = 'Save AC Unit';
+        }
     },
 
     calculateTotal: () => {

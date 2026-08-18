@@ -515,8 +515,13 @@ body.light-mode {
 
     .content-area {
         padding: 16px !important;
-        padding-bottom: 90px !important;
-        /* Space for bottom nav */
+        padding-bottom: 20px !important;
+        /* Footer is now above bottom-nav */
+    }
+
+    .app-footer {
+        margin-bottom: 90px;
+        /* Space for fixed bottom nav */
     }
 
     .glass-panel {
@@ -529,8 +534,8 @@ body.light-mode {
     }
 
     .header-left span {
-        display: none;
-        /* Hide brand text on mobile */
+        font-size: 15px;
+        /* Show brand name on mobile */
     }
 
     .mobile-expand-btn {

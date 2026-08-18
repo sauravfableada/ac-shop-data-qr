@@ -50,6 +50,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/maintenance/{service}', [\App\Http\Controllers\ServiceController::class, 'update'])->middleware('permission:service.edit');
     
     // Service specialized routes
+    Route::patch('/services/{service}/status', [\App\Http\Controllers\ServiceController::class, 'updateStatus'])->middleware('permission:service.edit');
     Route::post('/services/{service}/assign-staff', [\App\Http\Controllers\ServiceController::class, 'assignStaff'])->middleware('permission:service.assign');
     Route::post('/services/{service}/images', [\App\Http\Controllers\ServiceController::class, 'uploadImages'])->middleware('permission:service.edit');
     Route::get('/ac-units/{id}/service-history', [\App\Http\Controllers\ServiceController::class, 'acServiceHistory'])->middleware('permission:service.view');

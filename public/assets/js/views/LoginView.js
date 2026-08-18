@@ -3,8 +3,14 @@ window.LoginView = {
         container.innerHTML = `
             <div class="auth-layout">
                 <div class="glass-panel auth-box">
-                    <h1 class="gradient-text" style="font-size: 2.5rem; margin-bottom: 8px;">Welcome Back</h1>
-                    <p style="color: var(--text-muted); margin-bottom: 32px;">Sign in to Maimoon Sales</p>
+
+                    <!-- Logo -->
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img src="/assets/logos/fableadLogo.jpg" alt="Fablead Logo" style="max-width: 160px; height: auto; border-radius: 8px;">
+                    </div>
+
+                    <h1 class="gradient-text" style="font-size: 2rem; margin-bottom: 8px;">Login</h1>
+                    <p style="color: var(--text-muted); margin-bottom: 24px; font-size: 14px;">Sign in to Maimoon Sales &mdash; AC Service Management</p>
                     
                     <form id="loginForm">
                         <div class="input-group" style="text-align: left;">
@@ -22,6 +28,15 @@ window.LoginView = {
                             Sign In
                         </button>
                     </form>
+
+                    <!-- Footer -->
+                    <div style="margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--border-glass); text-align: center; font-size: 12px; color: var(--text-muted);">
+                        &copy; ${new Date().getFullYear()} Copyright &mdash;
+                        <a href="https://www.fableadtechnolabs.com/" target="_blank" rel="noopener noreferrer"
+                           style="color: #3b82f6; font-weight: 600; text-decoration: none;">
+                            Fablead Techno Labs
+                        </a>
+                    </div>
                 </div>
             </div>
         `;

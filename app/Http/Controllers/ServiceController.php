@@ -83,6 +83,16 @@ class ServiceController extends Controller
         return $this->success(null, 'Service deleted successfully.');
     }
     
+    // Quick Status Update
+    public function updateStatus(Request $request, ServiceRecord $service)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,assigned,in_progress,completed,cancelled'
+        ]);
+        $service->update(['status' => $request->status]);
+        return $this->success($service, 'Status updated successfully.');
+    }
+
     // Assign Staff
     public function assignStaff(Request $request, ServiceRecord $service)
     {
