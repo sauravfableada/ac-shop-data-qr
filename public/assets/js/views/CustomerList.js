@@ -1,6 +1,6 @@
 window.CustomerList = {
     render: async (container) => {
-        
+
         let state = {
             search: '',
             page: 1,
@@ -17,7 +17,7 @@ window.CustomerList = {
             }).toString();
 
             const response = await window.api.get('/customers?' + query);
-            
+
             if (response.success) {
                 state.customers = response.data.data;
                 state.meta = response.data.meta;
@@ -31,10 +31,10 @@ window.CustomerList = {
             if (!state.customers.length) {
                 return `<tr><td colspan="6" style="padding: 16px; text-align: center; color: var(--text-muted);">No customers found</td></tr>`;
             }
-            
+
             // Calculate starting index
             const startIndex = (state.meta.current_page - 1) * state.meta.per_page;
-            
+
             return state.customers.map((c, index) => `
                 <tr style="border-bottom: 1px solid var(--border-glass);">
                     <td style="padding: 16px; font-size: 14px; color: var(--text-muted);">${startIndex + index + 1}</td>
@@ -45,9 +45,9 @@ window.CustomerList = {
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" data-id="${c.id}"><i class="fa-solid fa-plus"></i></button>
                         <div class="desktop-only" style="display: flex; gap: 8px;">
-                            <button class="view-customer-btn" data-id="${c.id}" style="background: transparent; border: 1px solid var(--border-glass); color: var(--text-muted); border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-regular fa-eye"></i></button>
-                            <button class="edit-customer-btn" data-id="${c.id}" style="background: transparent; border: 1px solid var(--border-glass); color: var(--text-muted); border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-pencil"></i></button>
-                            <button class="delete-customer-btn" data-id="${c.id}" style="background: transparent; border: 1px solid var(--border-glass); color: #ef4444; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-regular fa-trash-can"></i></button>
+                            <button class="view-customer-btn" data-id="${c.id}" style="background: transparent; border: 1px solid #bfdbfe; color: #3b82f6; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="View"><i class="fa-regular fa-eye"></i> View</button>
+                            <button class="edit-customer-btn" data-id="${c.id}" style="background: transparent; border: 1px solid #bfdbfe; color: #3b82f6; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Edit"><i class="fa-solid fa-pencil"></i> Edit</button>
+                            <button class="delete-customer-btn" data-id="${c.id}" style="background: transparent; border: 1px solid #fecaca; color: #ef4444; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Delete"><i class="fa-regular fa-trash-can"></i> Delete</button>
                         </div>
                     </td>
                 </tr>
@@ -85,10 +85,10 @@ window.CustomerList = {
 
         const renderPagination = () => {
             if (!state.meta || state.meta.total === 0) return '';
-            
+
             const start = (state.meta.current_page - 1) * state.meta.per_page + 1;
             const end = Math.min(state.meta.current_page * state.meta.per_page, state.meta.total);
-            
+
             let pagesHTML = '';
             for (let i = 1; i <= state.meta.last_page; i++) {
                 // Show first, last, current, and +/- 1 pages
@@ -99,7 +99,7 @@ window.CustomerList = {
                     pagesHTML += `<span style="padding: 6px 12px; color: var(--text-muted);">...</span>`;
                 }
             }
-            
+
             return `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 14px; color: var(--text-muted);">
                     <div>Showing ${start} to ${end} of ${state.meta.total} results</div>
@@ -121,12 +121,6 @@ window.CustomerList = {
                             <p style="color: #64748b; font-size: 14px;">View and manage your customer database and communication history.</p>
                         </div>
                         <div style="display: flex; gap: 12px;">
-                            <button style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
-                                <i class="fa-solid fa-file-arrow-up"></i> Import CSV
-                            </button>
-                            <button style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
-                                <i class="fa-solid fa-download"></i> Export
-                            </button>
                             <button onclick="window.router.navigate('/customers/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                                 <i class="fa-solid fa-plus"></i> Add Customer
                             </button>
@@ -179,7 +173,7 @@ window.CustomerList = {
                     </div>
                 </div>
             `;
-            
+
             container.innerHTML = window.renderLayout(content);
             attachEvents();
         };

@@ -37,15 +37,17 @@ window.CustomerForm = {
                 </div>
 
                 <div class="glass-panel" style="background: #ffffff; padding: 32px; border-radius: 12px; margin: 0 auto;">
-                    <form id="customerForm">
+                    <form id="customerForm" novalidate>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Customer Code *</label>
                                 <input type="text" id="cCode" value="${customer?.customer_code || dynamicCode}" required readonly style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: rgba(0,0,0,0.1); color: var(--text-muted); outline: none; cursor: not-allowed;">
+                                <div id="err_cCode" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Full Name *</label>
                                 <input type="text" id="cName" value="${customer?.full_name || ''}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                                <div id="err_cName" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                         </div>
 
@@ -53,10 +55,12 @@ window.CustomerForm = {
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Mobile *</label>
                                 <input type="text" id="cMobile" value="${customer?.mobile || ''}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                                <div id="err_cMobile" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">WhatsApp No.</label>
                                 <input type="text" id="cWhatsapp" value="${customer?.whatsapp_no || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                                <div id="err_cWhatsapp" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                         </div>
 
@@ -64,10 +68,12 @@ window.CustomerForm = {
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Email Address</label>
                                 <input type="email" id="cEmail" value="${customer?.email || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                                <div id="err_cEmail" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Date of Birth</label>
                                 <input type="date" id="cDob" value="${customer?.dob || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                                <div id="err_cDob" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                         </div>
 
@@ -80,16 +86,19 @@ window.CustomerForm = {
                         <div style="margin-bottom: 20px;">
                             <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Full Address</label>
                             <textarea id="cAddress" rows="3" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit;">${customer?.address || ''}</textarea>
+                            <div id="err_cAddress" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">City</label>
                                 <input type="text" id="cCity" value="${customer?.city || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                                <div id="err_cCity" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Country</label>
                                 <input type="text" id="cCountry" value="${customer?.country || 'India'}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                                <div id="err_cCountry" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                         </div>
 
@@ -128,6 +137,15 @@ window.CustomerForm = {
             btn.disabled = true;
             btn.innerText = 'Saving...';
 
+            // Clear previous error styles
+            document.querySelectorAll('#customerForm input, #customerForm textarea').forEach(input => {
+                input.style.borderColor = 'var(--border-glass)';
+            });
+            document.querySelectorAll('[id^="err_"]').forEach(el => {
+                el.style.display = 'none';
+                el.innerText = '';
+            });
+
             let res;
             if (isEdit) {
                 payload.append('_method', 'PUT'); // Laravel form method spoofing
@@ -140,7 +158,39 @@ window.CustomerForm = {
                 window.showToast(isEdit ? 'Customer updated successfully!' : 'Customer created successfully!', 'success');
                 window.router.navigate('/customers');
             } else {
-                window.showToast(res.message || 'Error saving customer', 'error');
+                let errorMessage = res.message || 'Error saving customer';
+                if (res.errors) {
+                    const fieldMap = {
+                        'mobile': 'cMobile',
+                        'email': 'cEmail',
+                        'full_name': 'cName',
+                        'customer_code': 'cCode',
+                        'whatsapp_no': 'cWhatsapp',
+                        'dob': 'cDob',
+                        'address': 'cAddress',
+                        'city': 'cCity',
+                        'country': 'cCountry'
+                    };
+                    
+                    for (const [key, messages] of Object.entries(res.errors)) {
+                        if (fieldMap[key]) {
+                            const input = document.getElementById(fieldMap[key]);
+                            if (input) input.style.borderColor = '#ef4444';
+                            
+                            const errDiv = document.getElementById('err_' + fieldMap[key]);
+                            if (errDiv) {
+                                errDiv.innerText = messages[0];
+                                errDiv.style.display = 'block';
+                            }
+                        }
+                    }
+
+                    const firstErrorKey = Object.keys(res.errors)[0];
+                    if (res.errors[firstErrorKey] && res.errors[firstErrorKey].length > 0) {
+                        errorMessage = res.errors[firstErrorKey][0];
+                    }
+                }
+                window.showToast(errorMessage, 'error');
                 btn.disabled = false;
                 btn.innerText = 'Save Customer';
             }

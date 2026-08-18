@@ -7,22 +7,22 @@ window.showToast = (message, type = 'success') => {
         container.className = 'toast-container';
         document.body.appendChild(container);
     }
-    
+
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    
+
     const iconClass = type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation';
-    
+
     toast.innerHTML = `
         <i class="${iconClass} toast-icon"></i>
         <div class="toast-message">${message}</div>
     `;
-    
+
     container.appendChild(toast);
-    
+
     // Trigger animation
     setTimeout(() => toast.classList.add('show'), 10);
-    
+
     // Remove after 3 seconds
     setTimeout(() => {
         toast.classList.remove('show');
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (localStorage.getItem('theme') === 'light') {
         document.body.classList.add('light-mode');
     }
-    
+
     // Define Routes
     window.router.addRoute('/login', window.LoginView.render, false);
     window.router.addRoute('/', window.CustomerList.render, true);
@@ -71,21 +71,21 @@ window.renderLayout = (content) => {
                 <div class="top-header" style="background-color: var(--bg-glass); border-bottom: 1px solid var(--border-glass);">
                     <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
                         <i class="fa-solid fa-shield-halved" style="color: #3b82f6; font-size: 24px; margin-left: 20px;"></i>
-                        <span style="font-weight: 700; font-size: 18px; color: var(--text-main); margin-right: 20px;">AC Service Pro</span>
+                        <span style="font-weight: 700; font-size: 18px; color: var(--text-main); margin-right: 20px;">Maimoon Sales</span>
                     </div>
                     
                     <div class="header-nav desktop-only" style="display: flex; gap: 10px; flex-grow: 1; margin-left: 20px;">
-                        <a href="/customers" data-link style="text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-glass-light)'" onmouseout="this.style.background='transparent'">
-                            <i class="fa-solid fa-users" style="color: var(--text-muted);"></i> Customers
+                        <a href="/customers" data-link style="text-decoration: none; color: white; background: #2B7FFF; font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <i class="fa-solid fa-users" style="color: white;"></i> Customers
                         </a>
-                        <a href="/ac-units" data-link style="text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-glass-light)'" onmouseout="this.style.background='transparent'">
-                            <i class="fa-solid fa-fan" style="color: var(--text-muted);"></i> AC Units
+                        <a href="/ac-units" data-link style="text-decoration: none; color: white; background: #7C5CFC; font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <i class="fa-solid fa-fan" style="color: white;"></i> AC Units
                         </a>
-                        <a href="/services" data-link style="text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-glass-light)'" onmouseout="this.style.background='transparent'">
-                            <i class="fa-solid fa-clipboard-list" style="color: var(--text-muted);"></i> Services
+                        <a href="/services" data-link style="text-decoration: none; color: white; background: #16B981; font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <i class="fa-solid fa-clipboard-list" style="color: white;"></i> Services
                         </a>
-                        <a href="/scanner" data-link style="text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-glass-light)'" onmouseout="this.style.background='transparent'">
-                            <i class="fa-solid fa-qrcode" style="color: var(--text-muted);"></i> Scanner
+                        <a href="/scanner" data-link style="text-decoration: none; color: white; background: #F59E0B; font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <i class="fa-solid fa-qrcode" style="color: white;"></i> Scanner
                         </a>
                     </div>
                     
@@ -165,7 +165,7 @@ document.addEventListener('click', async (e) => {
     // Handle Profile Dropdown Toggle
     const profileBtn = e.target.closest('#profileDropdownBtn');
     const dropdown = document.getElementById('profileDropdown');
-    
+
     if (profileBtn && dropdown) {
         dropdown.classList.toggle('show');
     } else if (dropdown && !e.target.closest('#profileDropdown')) {
@@ -179,7 +179,7 @@ document.addEventListener('click', async (e) => {
         body.classList.toggle('light-mode');
         const isLight = body.classList.contains('light-mode');
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        
+
         const icon = document.getElementById('themeIcon');
         if (icon) {
             icon.className = isLight ? 'fa-solid fa-sun' : 'fa-regular fa-moon';
@@ -200,7 +200,7 @@ document.addEventListener('click', async (e) => {
         e.preventDefault();
         try {
             await window.api.post('/auth/logout', {});
-        } catch (err) {} // ignore if auth controller is missing
+        } catch (err) { } // ignore if auth controller is missing
         localStorage.removeItem('auth_token');
         window.router.navigate('/login');
     }

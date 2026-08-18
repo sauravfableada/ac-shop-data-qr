@@ -53,7 +53,7 @@ window.ServiceForm = {
 
                 <div class="glass-panel" style="background: #ffffff;  padding: 32px; border-radius: 12px; margin: 0 auto;">
 
-                <form id="serviceForm" onsubmit="window.ServiceForm.save(event, ${isEdit}, ${serviceId})" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <form id="serviceForm" onsubmit="window.ServiceForm.save(event, ${isEdit}, ${serviceId})" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;" novalidate>
                     
                     <div style="grid-column: span 2;">
                         <h3 style="font-size: 16px; color: #0f172a; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px; margin-bottom: 16px;">Service Details</h3>
@@ -65,11 +65,13 @@ window.ServiceForm = {
                             <option value="">Select AC Unit</option>
                             ${acOptions}
                         </select>
+                        <div id="err_ac_unit_id" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                         <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Service Date <span style="color: red;">*</span></label>
                         <input type="date" name="service_date" value="${service.service_date ? service.service_date.split('T')[0] : new Date().toISOString().split('T')[0]}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                        <div id="err_service_date" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
@@ -80,6 +82,7 @@ window.ServiceForm = {
                             <option value="Installation" ${service.service_type === 'Installation' ? 'selected' : ''}>Installation</option>
                             <option value="Inspection" ${service.service_type === 'Inspection' ? 'selected' : ''}>Inspection</option>
                         </select>
+                        <div id="err_service_type" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
@@ -167,6 +170,15 @@ window.ServiceForm = {
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
 
+        // Clear previous error styles
+        form.querySelectorAll('input, select, textarea').forEach(input => {
+            input.style.borderColor = 'var(--border-glass)';
+        });
+        form.querySelectorAll('[id^="err_"]').forEach(el => {
+            el.style.display = 'none';
+            el.innerText = '';
+        });
+
         try {
             const res = isEdit
                 ? await window.api.put(`/services/${id}`, data)
@@ -174,14 +186,30 @@ window.ServiceForm = {
 
             if (res.success) {
                 window.showToast(`Maintenance record ${isEdit ? 'updated' : 'added'} successfully!`, 'success');
-                // Return to AC view if we have ac_unit_id, else to services list
                 if (data.ac_unit_id) {
                     window.router.navigate(`/ac-units/view/${data.ac_unit_id}`);
                 } else {
                     window.router.navigate('/services');
                 }
             } else {
-                window.showToast(res.message || 'Error saving maintenance record', 'error');
+                let errorMessage = res.message || 'Error saving maintenance record';
+                if (res.errors) {
+                    for (const [key, messages] of Object.entries(res.errors)) {
+                        let input = form.querySelector(`[name="${key}"]`);
+                        if (input) input.style.borderColor = '#ef4444';
+                        
+                        let errDiv = document.getElementById('err_' + key);
+                        if (errDiv) {
+                            errDiv.innerText = messages[0];
+                            errDiv.style.display = 'block';
+                        }
+                    }
+                    const firstErrorKey = Object.keys(res.errors)[0];
+                    if (res.errors[firstErrorKey] && res.errors[firstErrorKey].length > 0) {
+                        errorMessage = res.errors[firstErrorKey][0];
+                    }
+                }
+                window.showToast(errorMessage, 'error');
             }
         } catch (err) {
             window.showToast('Failed to save maintenance record', 'error');

@@ -44,8 +44,8 @@ window.ServiceList = {
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" onclick="window.ServiceList.toggleMobileRow(${s.id}, this)"><i class="fa-solid fa-plus"></i></button>
                         <div class="desktop-only" style="display: flex; gap: 8px; justify-content: flex-end;">
-                            <button onclick="window.router.navigate('/services/view/${s.id}')" style="background: transparent; border: 1px solid var(--border-glass); color: var(--text-muted); border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-eye"></i></button>
-                            <button onclick="window.router.navigate('/services/edit/${s.id}')" style="background: transparent; border: 1px solid var(--border-glass); color: var(--text-muted); border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="window.router.navigate('/services/view/${s.id}')" title="View" style="background: transparent; border: 1px solid #bfdbfe; color: #3b82f6; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-eye"></i></button>
+                            <button onclick="window.router.navigate('/services/edit/${s.id}')" title="Edit" style="background: transparent; border: 1px solid #bfdbfe; color: #3b82f6; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-pen-to-square"></i></button>
                         </div>
                     </td>
                 </tr>

@@ -26,9 +26,9 @@ class UpdateCustomerRequest extends FormRequest
             'customer_code' => 'sometimes|required|string|unique:customers,customer_code,' . ($this->route('customer')->id ?? $this->route('customer')),
             'full_name' => 'sometimes|required|string|max:255',
             'company_name' => 'nullable|string|max:255',
-            'mobile' => 'sometimes|required|string|max:20',
+            'mobile' => 'sometimes|required|string|max:20|unique:customers,mobile,' . ($this->route('customer')->id ?? $this->route('customer')),
             'alternate_mobile' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
+            'email' => 'nullable|email|max:255|unique:customers,email,' . ($this->route('customer')->id ?? $this->route('customer')),
             'address' => 'nullable|string',
             'city' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:100',
@@ -41,6 +41,14 @@ class UpdateCustomerRequest extends FormRequest
             'whatsapp_no' => 'nullable|string|max:20',
             'image' => 'nullable|image|max:2048',
             'dob' => 'nullable|date',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'mobile.unique' => 'Mobile number or email address already exists.',
+            'email.unique' => 'Mobile number or email address already exists.',
         ];
     }
 }

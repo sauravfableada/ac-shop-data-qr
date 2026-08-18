@@ -57,7 +57,7 @@ window.AcUnitForm = {
 
                 <div class="glass-panel" style="background: #ffffff; padding: 32px; border-radius: 12px; margin: 0 auto;">
 
-                <form id="acForm" onsubmit="window.AcUnitForm.save(event, ${isEdit}, ${acId})" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <form id="acForm" onsubmit="window.AcUnitForm.save(event, ${isEdit}, ${acId})" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;" novalidate>
                     
                     <!-- Basic Details -->
                     <div style="grid-column: span 2;">
@@ -65,16 +65,21 @@ window.AcUnitForm = {
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: #334155;">Customer <span style="color: red;">*</span></label>
-                        <select name="customer_id" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Customer <span style="color: red;">*</span></label>
+                            <button type="button" onclick="document.getElementById('addCustomerModal').style.display='flex'; window.AcUnitForm.loadCustomerCode();" style="background: var(--primary); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                        </div>
+                        <select id="customerSelect" name="customer_id" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             <option value="">Select Customer</option>
                             ${customerOptions}
                         </select>
+                        <div id="err_customer_id" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                         <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Code <span style="color: red;">*</span></label>
                         <input type="text" id="acCode" name="ac_code" value="${ac.ac_code || dynamicCode}" required readonly style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: rgba(0,0,0,0.05); color: var(--text-muted); outline: none; font-family: inherit; font-size: 14px; cursor: not-allowed;">
+                        <div id="err_ac_code" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
@@ -153,9 +158,124 @@ window.AcUnitForm = {
                     </div>
                 </form>
             </div>
+
+            <!-- Customer Modal -->
+            <div id="addCustomerModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-size: 18px; color: #0f172a;">Quick Add Customer</h3>
+                        <button onclick="document.getElementById('addCustomerModal').style.display='none'" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #64748b;">&times;</button>
+                    </div>
+                    <form id="quickCustomerForm" onsubmit="window.AcUnitForm.saveCustomer(event)" novalidate>
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Customer Code *</label>
+                            <input type="text" id="qcCode" required readonly style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: rgba(0,0,0,0.05); color: var(--text-muted); outline: none;">
+                            <div id="err_qcCode" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
+                        </div>
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Full Name *</label>
+                            <input type="text" id="qcName" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                            <div id="err_qcName" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
+                        </div>
+                        <div style="margin-bottom: 24px;">
+                            <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Mobile *</label>
+                            <input type="text" id="qcMobile" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                            <div id="err_qcMobile" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                            <button type="button" onclick="document.getElementById('addCustomerModal').style.display='none'" style="padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; cursor: pointer; color: var(--text-main); font-weight: 600;">Cancel</button>
+                            <button type="submit" id="qcSaveBtn" style="padding: 10px 16px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600;">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         `;
 
         container.innerHTML = window.renderLayout(content);
+    },
+
+    loadCustomerCode: async () => {
+        try {
+            const res = await window.api.get('/customers/next-code');
+            if (res.success) {
+                document.getElementById('qcCode').value = res.code;
+            }
+        } catch(e) {}
+    },
+
+    saveCustomer: async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('qcSaveBtn');
+        btn.disabled = true;
+        btn.innerText = 'Saving...';
+        
+        // Clear errors
+        ['qcCode', 'qcName', 'qcMobile'].forEach(id => {
+            document.getElementById(id).style.borderColor = 'var(--border-glass)';
+            const errDiv = document.getElementById('err_' + id);
+            if(errDiv) {
+                errDiv.style.display = 'none';
+                errDiv.innerText = '';
+            }
+        });
+
+        const payload = {
+            customer_code: document.getElementById('qcCode').value,
+            full_name: document.getElementById('qcName').value,
+            mobile: document.getElementById('qcMobile').value,
+            status: 'active'
+        };
+
+        try {
+            const res = await window.api.post('/customers', payload);
+            if (res.success) {
+                window.showToast('Customer created successfully!', 'success');
+                document.getElementById('addCustomerModal').style.display = 'none';
+                
+                // Add to dropdown
+                const select = document.getElementById('customerSelect');
+                const custRes = await window.api.get('/customers?per_page=100');
+                if (custRes.success) {
+                    const customers = custRes.data?.data || custRes.data || [];
+                    select.innerHTML = '<option value="">Select Customer</option>' + customers.map(c => 
+                        `<option value="${c.id}">${c.full_name} (${c.mobile})</option>`
+                    ).join('');
+                    
+                    if (res.data?.id) {
+                        select.value = res.data.id;
+                    }
+                }
+            } else {
+                let errorMessage = res.message || 'Error saving customer';
+                if (res.errors) {
+                    const fieldMap = {
+                        'customer_code': 'qcCode',
+                        'full_name': 'qcName',
+                        'mobile': 'qcMobile'
+                    };
+                    for (const [key, messages] of Object.entries(res.errors)) {
+                        if (fieldMap[key]) {
+                            document.getElementById(fieldMap[key]).style.borderColor = '#ef4444';
+                            const errDiv = document.getElementById('err_' + fieldMap[key]);
+                            if (errDiv) {
+                                errDiv.innerText = messages[0];
+                                errDiv.style.display = 'block';
+                            }
+                        }
+                    }
+                    const firstErrorKey = Object.keys(res.errors)[0];
+                    if (res.errors[firstErrorKey] && res.errors[firstErrorKey].length > 0) {
+                        errorMessage = res.errors[firstErrorKey][0];
+                    }
+                }
+                window.showToast(errorMessage, 'error');
+            }
+        } catch (err) {
+            window.showToast('Failed to save customer', 'error');
+            console.error(err);
+        }
+        btn.disabled = false;
+        btn.innerText = 'Save';
     },
 
     save: async (e, isEdit, id) => {
@@ -163,6 +283,17 @@ window.AcUnitForm = {
         const form = e.target;
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
+
+        // Clear previous error styles
+        form.querySelectorAll('input, select, textarea').forEach(input => {
+            input.style.borderColor = 'var(--border-glass)';
+        });
+        form.querySelectorAll('[id^="err_"]').forEach(el => {
+            if (!el.id.startsWith('err_qc')) {
+                el.style.display = 'none';
+                el.innerText = '';
+            }
+        });
 
         try {
             const res = isEdit
@@ -173,7 +304,24 @@ window.AcUnitForm = {
                 window.showToast(`AC Unit ${isEdit ? 'updated' : 'added'} successfully!`, 'success');
                 window.router.navigate('/ac-units');
             } else {
-                window.showToast(res.message || 'Error saving AC Unit', 'error');
+                let errorMessage = res.message || 'Error saving AC Unit';
+                if (res.errors) {
+                    for (const [key, messages] of Object.entries(res.errors)) {
+                        let input = form.querySelector(`[name="${key}"]`);
+                        if (input) input.style.borderColor = '#ef4444';
+                        
+                        let errDiv = document.getElementById('err_' + key);
+                        if (errDiv) {
+                            errDiv.innerText = messages[0];
+                            errDiv.style.display = 'block';
+                        }
+                    }
+                    const firstErrorKey = Object.keys(res.errors)[0];
+                    if (res.errors[firstErrorKey] && res.errors[firstErrorKey].length > 0) {
+                        errorMessage = res.errors[firstErrorKey][0];
+                    }
+                }
+                window.showToast(errorMessage, 'error');
             }
         } catch (err) {
             window.showToast('Failed to save AC Unit', 'error');

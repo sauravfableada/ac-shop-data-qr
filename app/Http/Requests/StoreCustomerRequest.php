@@ -26,9 +26,9 @@ class StoreCustomerRequest extends FormRequest
             'customer_code' => 'required|string|unique:customers',
             'full_name' => 'required|string|max:255',
             'company_name' => 'nullable|string|max:255',
-            'mobile' => 'required|string|max:20',
+            'mobile' => 'required|string|max:20|unique:customers,mobile',
             'alternate_mobile' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
+            'email' => 'nullable|email|max:255|unique:customers,email',
             'address' => 'nullable|string',
             'city' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:100',
@@ -41,6 +41,14 @@ class StoreCustomerRequest extends FormRequest
             'whatsapp_no' => 'nullable|string|max:20',
             'image' => 'nullable|image|max:2048',
             'dob' => 'nullable|date',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'mobile.unique' => 'Mobile number or email address already exists.',
+            'email.unique' => 'Mobile number or email address already exists.',
         ];
     }
 }
