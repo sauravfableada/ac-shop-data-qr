@@ -119,22 +119,22 @@ window.ServiceView = {
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <div style="display: flex; justify-content: space-between; font-size: 14px; color: #475569;">
                                 <span>Labor Charge</span>
-                                <span>$${service.labor_charge || '0.00'}</span>
+                                <span>₹${service.labor_charge || '0.00'}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 14px; color: #475569;">
+                            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; color: #64748b;">
                                 <span>Parts Charge</span>
-                                <span>$${service.parts_charge || '0.00'}</span>
+                                <span>₹${service.parts_charge || '0.00'}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; font-size: 14px; color: #475569;">
                                 <span>Discount</span>
-                                <span style="color: #10b981;">-$${service.discount || '0.00'}</span>
+                                <span style="color: #10b981;">-₹${service.discount || '0.00'}</span>
                             </div>
                             
                             <div style="border-top: 1px dashed var(--border-glass); margin: 8px 0;"></div>
                             
                             <div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; color: #0f172a;">
                                 <span>Total Amount</span>
-                                <span>$${service.total_amount || '0.00'}</span>
+                                <span>₹${service.total_amount || '0.00'}</span>
                             </div>
                         </div>
 

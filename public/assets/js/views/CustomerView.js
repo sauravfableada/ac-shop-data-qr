@@ -24,7 +24,7 @@ window.CustomerView = {
                         <td style="padding: 16px; color: #3b82f6; font-weight: 600;">${record.ac_unit ? record.ac_unit.ac_code : '-'}</td>
                         <td class="hide-on-mobile" style="padding: 16px;">${record.service_type || 'Regular Maintenance'}</td>
                         <td class="hide-on-mobile" style="padding: 16px;">${record.complaint || '-'}</td>
-                        <td class="hide-on-mobile" style="padding: 16px; font-weight: 600; color: #0f172a;">$${record.total_amount || '0.00'}</td>
+                        <td class="hide-on-mobile" style="padding: 16px; font-weight: 600; color: #0f172a;">₹${record.total_amount || '0.00'}</td>
                         <td style="padding: 16px;">
                             <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: ${record.status === 'completed' ? 'rgba(16,185,129,0.1)' : 'rgba(244,63,94,0.1)'}; color: ${record.status === 'completed' ? '#10B981' : '#F43F5E'};">${(record.status || 'pending').toUpperCase()}</span>
                         </td>

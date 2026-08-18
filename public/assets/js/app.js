@@ -127,7 +127,7 @@ window.renderLayout = (content) => {
 
                 <!-- Dynamic Page Content -->
                 <div class="content-area" style="padding: 24px;">
-                    <div style="max-width: 1200px; margin: 0 auto; width: 100%;">
+                    <div style="margin: 0 auto; width: 100%;">
                         ${content}
                     </div>
                 </div>

@@ -30,7 +30,7 @@ window.AdminDashboard = {
                     </div>
                     <div class="glass-card" style="padding: 24px;">
                         <h3 style="color: var(--text-muted); font-size: 14px; font-weight: 500; margin-bottom: 8px;">Total Revenue</h3>
-                        <div style="font-size: 36px; font-weight: 700; color: var(--secondary);">$${stats.total_revenue}</div>
+                        <div style="font-size: 36px; font-weight: 700; color: var(--secondary);">₹${stats.total_revenue}</div>
                     </div>
                 </div>
 
