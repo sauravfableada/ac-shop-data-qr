@@ -27,8 +27,8 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // Generate a simple token for SPA
-        $token = base64_encode($user->email . '|' . time());
+        // Generate a Passport token
+        $token = $user->createToken('AC_Service_Token')->accessToken;
 
         return response()->json([
             'success' => true,
