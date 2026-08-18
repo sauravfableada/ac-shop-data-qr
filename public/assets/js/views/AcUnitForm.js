@@ -35,6 +35,12 @@ window.AcUnitForm = {
                     dynamicCode = codeRes.code;
                 }
             } catch (e) { }
+            
+            // Check for customer_id in URL to auto-select
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('customer_id')) {
+                ac.customer_id = urlParams.get('customer_id');
+            }
         }
 
         const customerOptions = customers.map(c =>

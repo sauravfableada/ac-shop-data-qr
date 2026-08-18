@@ -44,6 +44,7 @@ window.CustomerList = {
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" data-id="${c.id}"><i class="fa-solid fa-plus"></i></button>
                         <div class="desktop-only" style="display: flex; gap: 8px;">
+                            <button onclick="window.router.navigate('/ac-units/add?customer_id=${c.id}')" style="background: #10b981; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Add AC Unit"><i class="fa-solid fa-plus"></i> Add AC</button>
                             <button class="view-customer-btn" data-id="${c.id}" style="background: #3b82f6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="View"><i class="fa-regular fa-eye"></i> View</button>
                             <button class="edit-customer-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Edit"><i class="fa-solid fa-pencil"></i> Edit</button>
                             <button class="delete-customer-btn" data-id="${c.id}" style="background: #ef4444; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Delete"><i class="fa-regular fa-trash-can"></i> Delete</button>
@@ -67,6 +68,7 @@ window.CustomerList = {
                             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-gear" style="margin-right: 8px;"></i> ACTIONS :</div>
                                 <div style="display: flex; gap: 8px;">
+                                    <button onclick="window.router.navigate('/ac-units/add?customer_id=${c.id}')" style="background: #10b981; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-plus"></i></button>
                                     <button class="view-customer-btn" data-id="${c.id}" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-eye"></i></button>
                                     <button class="edit-customer-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-pencil"></i></button>
                                     <button class="delete-customer-btn" data-id="${c.id}" style="background: #ef4444; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-trash-can"></i></button>
