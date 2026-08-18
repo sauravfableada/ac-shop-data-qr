@@ -13,12 +13,24 @@ class AcUnitController extends Controller
 {
     use ApiResponse;
 
+    public function getNextCode()
+    {
+        $lastAc = AcUnit::withTrashed()->orderBy('id', 'desc')->first();
+        $nextId = $lastAc ? $lastAc->id + 1 : 1;
+        $code = 'AC-' . date('Y') . '-' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
+        
+        return response()->json([
+            'success' => true,
+            'code' => $code
+        ]);
+    }
+
     /**
      * Display a listing of the ac units.
      */
     public function index(Request $request)
     {
-        $query = AcUnit::with('customer');
+        $query = AcUnit::with(['customer', 'qrCode']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -31,6 +43,8 @@ class AcUnitController extends Controller
             $query->where('status', $request->input('status'));
         }
 
+        $query->orderBy('id', 'desc');
+        
         $perPage = $request->input('per_page', 20);
         $acUnits = $query->paginate($perPage);
 
@@ -51,11 +65,15 @@ class AcUnitController extends Controller
     public function store(StoreAcUnitRequest $request)
     {
         $data = $request->validated();
-        // Generate secure QR token automatically
-        $data['qr_token'] = Str::uuid()->toString();
-
+        
         $acUnit = AcUnit::create($data);
-        return $this->success($acUnit, 'AC Unit created successfully.', 201);
+        
+        // Generate secure QR token automatically in ac_qr_codes
+        $acUnit->qrCode()->create([
+            'token' => Str::uuid()->toString(),
+        ]);
+
+        return $this->success($acUnit->load('qrCode'), 'AC Unit created successfully.', 201);
     }
 
     /**
@@ -63,7 +81,7 @@ class AcUnitController extends Controller
      */
     public function show(AcUnit $acUnit)
     {
-        $acUnit->load('customer');
+        $acUnit->load(['customer', 'qrCode']);
         return $this->success($acUnit, 'AC Unit retrieved successfully.');
     }
 

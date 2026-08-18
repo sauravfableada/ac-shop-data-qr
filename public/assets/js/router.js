@@ -14,11 +14,29 @@ class Router {
     async handleRoute() {
         let path = window.location.pathname || '/';
         
-        // Match route
-        const route = this.routes[path];
+        let route = this.routes[path];
+        let params = {};
         
         if (!route) {
-            this.appContainer.innerHTML = `<div class="auth-layout"><div class="glass-card p-8"><h1>404 Not Found</h1></div></div>`;
+            // Check dynamic routes
+            for (const key in this.routes) {
+                if (key.includes(':')) {
+                    const regex = new RegExp('^' + key.replace(/:\w+/g, '([\\w-]+)') + '$');
+                    const match = path.match(regex);
+                    if (match) {
+                        route = this.routes[key];
+                        const paramNames = key.match(/:\w+/g).map(n => n.substring(1));
+                        paramNames.forEach((name, i) => {
+                            params[name] = match[i+1];
+                        });
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (!route) {
+            this.appContainer.innerHTML = `<div class="auth-layout"><div class="glass-card" style="padding: 32px; text-align: center;"><h1>404 Not Found</h1></div></div>`;
             return;
         }
 
@@ -40,7 +58,7 @@ class Router {
 
         // Render view
         try {
-            await route.renderFunction(this.appContainer);
+            await route.renderFunction(this.appContainer, params);
         } catch (error) {
             console.error('Render error:', error);
             this.appContainer.innerHTML = `<div class="auth-layout"><div class="glass-card p-8 text-red-500">Error loading view</div></div>`;

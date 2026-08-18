@@ -20,6 +20,27 @@ class StoreServiceRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+    public function prepareForValidation()
+    {
+        // Auto-populate customer_id from ac_unit_id
+        if ($this->has('ac_unit_id') && !$this->has('customer_id')) {
+            $acUnit = \App\Models\AcUnit::find($this->ac_unit_id);
+            if ($acUnit) {
+                $this->merge([
+                    'customer_id' => $acUnit->customer_id,
+                ]);
+            }
+        }
+        
+        // Map frontend fields to backend fields
+        if ($this->has('work_done')) {
+            $this->merge(['work_performed' => $this->work_done]);
+        }
+        if ($this->has('next_maintenance_date')) {
+            $this->merge(['next_service_date' => $this->next_maintenance_date]);
+        }
+    }
+
     public function rules(): array
     {
         return [
@@ -36,10 +57,10 @@ class StoreServiceRequest extends FormRequest
             'parts_charge' => 'nullable|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
             'tax' => 'nullable|numeric|min:0',
-            'total' => 'nullable|numeric|min:0',
+            'total_amount' => 'nullable|numeric|min:0',
             'payment_status' => 'nullable|in:unpaid,partial,paid',
             'next_service_date' => 'nullable|date',
-            'notes' => 'nullable|string',
+            'technician_notes' => 'nullable|string',
         ];
     }
 }

@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class SparePart extends Model
 {
-    /** @use HasFactory<\Database\Factories\SparePartFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name', 'part_code', 'price', 'quantity', 'unit'
+        'part_code', 'name', 'brand', 'category', 'description', 
+        'purchase_price', 'selling_price', 'stock_quantity', 'minimum_stock', 
+        'unit', 'status'
     ];
 }

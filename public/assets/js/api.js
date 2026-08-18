@@ -10,10 +10,14 @@ class ApiClient {
     async request(endpoint, options = {}) {
         const url = `${this.baseUrl}${endpoint}`;
         const headers = {
-            'Content-Type': 'application/json',
             'Accept': 'application/json',
             ...options.headers
         };
+
+        // Only set Content-Type to JSON if it's not FormData
+        if (!(options.body instanceof FormData)) {
+            headers['Content-Type'] = 'application/json';
+        }
 
         const token = this.getToken();
         if (token) {
@@ -48,13 +52,24 @@ class ApiClient {
     }
 
     async post(endpoint, data) {
+        const isFormData = data instanceof FormData;
         return this.request(endpoint, {
             method: 'POST',
-            body: JSON.stringify(data)
+            body: isFormData ? data : JSON.stringify(data)
         });
     }
 
     async put(endpoint, data) {
+        const isFormData = data instanceof FormData;
+        
+        if (isFormData) {
+            data.append('_method', 'PUT');
+            return this.request(endpoint, {
+                method: 'POST', // Laravel uses POST with _method=PUT for multipart forms
+                body: data
+            });
+        }
+        
         return this.request(endpoint, {
             method: 'PUT',
             body: JSON.stringify(data)

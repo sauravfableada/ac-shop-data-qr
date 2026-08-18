@@ -23,22 +23,25 @@ class UpdateAcUnitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ac_code' => 'sometimes|required|string|unique:ac_units,ac_code,' . $this->route('ac_unit'),
-            'customer_id' => 'sometimes|required|exists:customers,id',
+            'ac_code' => 'required|string|unique:ac_units,ac_code,' . $this->route('ac_unit')->id,
+            'customer_id' => 'required|exists:customers,id',
             'brand' => 'nullable|string|max:100',
             'model' => 'nullable|string|max:100',
             'serial_number' => 'nullable|string|max:100',
             'ac_type' => 'nullable|string|max:100',
             'capacity' => 'nullable|string|max:50',
-            'is_inverter' => 'boolean',
+            'inverter_type' => 'nullable|string|max:50',
             'installation_date' => 'nullable|date',
-            'warranty' => 'nullable|string|max:100',
-            'location' => 'nullable|string|max:100',
+            'purchase_date' => 'nullable|date',
+            'warranty_start_date' => 'nullable|date',
+            'warranty_end_date' => 'nullable|date',
+            'installation_location' => 'nullable|string|max:100',
             'room' => 'nullable|string|max:100',
             'floor' => 'nullable|string|max:50',
             'indoor_unit_number' => 'nullable|string|max:100',
             'outdoor_unit_number' => 'nullable|string|max:100',
-            'condition' => 'nullable|string|max:255',
+            'current_condition' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
             'status' => 'nullable|in:active,inactive',
         ];
     }

@@ -13,11 +13,16 @@ class Customer extends Model
     protected $fillable = [
         'customer_code', 'full_name', 'company_name', 'mobile', 'alternate_mobile',
         'email', 'address', 'city', 'state', 'country', 'pincode', 'gst_number',
-        'customer_type', 'notes', 'status'
+        'customer_type', 'notes', 'status', 'whatsapp_no', 'image', 'dob'
     ];
 
     public function acUnits()
     {
         return $this->hasMany(AcUnit::class);
+    }
+
+    public function serviceRecords()
+    {
+        return $this->hasMany(ServiceRecord::class);
     }
 }

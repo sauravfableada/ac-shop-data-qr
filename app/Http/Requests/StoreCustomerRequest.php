@@ -38,6 +38,9 @@ class StoreCustomerRequest extends FormRequest
             'customer_type' => 'nullable|in:individual,company',
             'notes' => 'nullable|string',
             'status' => 'nullable|in:active,inactive',
+            'whatsapp_no' => 'nullable|string|max:20',
+            'image' => 'nullable|image|max:2048',
+            'dob' => 'nullable|date',
         ];
     }
 }

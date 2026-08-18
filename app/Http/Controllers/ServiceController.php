@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Service;
+use App\Models\ServiceRecord;
 use App\Models\ServiceImage;
 use App\Models\ServicePart;
 use App\Models\AcUnit;
@@ -17,10 +17,22 @@ class ServiceController extends Controller
 
     public function index(Request $request)
     {
-        $query = Service::with(['customer', 'acUnit', 'technician']);
+        $query = ServiceRecord::with(['customer', 'acUnit', 'technician']);
 
         if ($request->has('status')) {
             $query->where('status', $request->input('status'));
+        }
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('service_number', 'like', "%{$search}%")
+                  ->orWhere('service_type', 'like', "%{$search}%")
+                  ->orWhere('complaint', 'like', "%{$search}%")
+                  ->orWhereHas('customer', function ($cq) use ($search) {
+                      $cq->where('full_name', 'like', "%{$search}%");
+                  });
+            });
         }
         
         // If logged-in user is a staff/technician and not admin, only show their services (unless they have global view perm)
@@ -47,32 +59,32 @@ class ServiceController extends Controller
     {
         // Auto-generate service number
         $data = $request->validated();
-        $data['service_number'] = 'SRV-' . date('Y') . '-' . str_pad(Service::count() + 1, 5, '0', STR_PAD_LEFT);
+        $data['service_number'] = 'SRV-' . date('Y') . '-' . str_pad(ServiceRecord::count() + 1, 5, '0', STR_PAD_LEFT);
 
-        $service = Service::create($data);
+        $service = ServiceRecord::create($data);
         return $this->success($service, 'Service created successfully.', 201);
     }
 
-    public function show(Service $service)
+    public function show(ServiceRecord $service)
     {
         $service->load(['customer', 'acUnit', 'technician', 'parts.sparePart', 'images']);
         return $this->success($service, 'Service retrieved successfully.');
     }
 
-    public function update(UpdateServiceRequest $request, Service $service)
+    public function update(UpdateServiceRequest $request, ServiceRecord $service)
     {
         $service->update($request->validated());
         return $this->success($service, 'Service updated successfully.');
     }
 
-    public function destroy(Service $service)
+    public function destroy(ServiceRecord $service)
     {
         $service->delete();
         return $this->success(null, 'Service deleted successfully.');
     }
     
     // Assign Staff
-    public function assignStaff(Request $request, Service $service)
+    public function assignStaff(Request $request, ServiceRecord $service)
     {
         $request->validate(['technician_id' => 'required|exists:users,id']);
         $service->update(['technician_id' => $request->technician_id, 'status' => 'assigned']);
@@ -80,7 +92,7 @@ class ServiceController extends Controller
     }
 
     // Upload Images
-    public function uploadImages(Request $request, Service $service)
+    public function uploadImages(Request $request, ServiceRecord $service)
     {
         $request->validate([
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
@@ -105,7 +117,7 @@ class ServiceController extends Controller
     // Service Timeline (AC Unit History)
     public function acServiceHistory($id)
     {
-        $history = Service::where('ac_unit_id', $id)
+        $history = ServiceRecord::where('ac_unit_id', $id)
             ->with(['technician', 'parts.sparePart', 'images'])
             ->orderBy('service_date', 'desc')
             ->get();

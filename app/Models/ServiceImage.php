@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class ServiceImage extends Model
 {
     protected $fillable = [
-        'service_id', 'image_path', 'type'
+        'service_id', 'file_path', 'type'
     ];
 
-    public function service()
+    public function serviceRecord()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo(ServiceRecord::class, 'service_id');
     }
 }

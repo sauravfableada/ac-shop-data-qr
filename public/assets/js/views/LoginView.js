@@ -42,7 +42,7 @@ window.LoginView = {
             
             if (response.success) {
                 localStorage.setItem('auth_token', response.data.token);
-                window.router.navigate('/');
+                window.router.navigate('/customers');
             } else {
                 errorDiv.innerText = response.message || 'Invalid credentials';
                 errorDiv.style.display = 'block';

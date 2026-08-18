@@ -23,7 +23,7 @@ class UpdateCustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_code' => 'sometimes|required|string|unique:customers,customer_code,' . $this->route('customer'),
+            'customer_code' => 'sometimes|required|string|unique:customers,customer_code,' . ($this->route('customer')->id ?? $this->route('customer')),
             'full_name' => 'sometimes|required|string|max:255',
             'company_name' => 'nullable|string|max:255',
             'mobile' => 'sometimes|required|string|max:20',
@@ -38,6 +38,9 @@ class UpdateCustomerRequest extends FormRequest
             'customer_type' => 'nullable|in:individual,company',
             'notes' => 'nullable|string',
             'status' => 'nullable|in:active,inactive',
+            'whatsapp_no' => 'nullable|string|max:20',
+            'image' => 'nullable|image|max:2048',
+            'dob' => 'nullable|date',
         ];
     }
 }
