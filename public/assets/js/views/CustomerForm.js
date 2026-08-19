@@ -161,7 +161,7 @@ window.CustomerForm = {
                         <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 20px; margin-top: 8px;">
                             <h4 style="font-size: 14px; font-weight: 600; color: #334155; text-transform: uppercase; letter-spacing: 0.05em; margin: 0;">Installation &amp; Warranty</h4>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div class="installation-grid" style="margin-bottom: 16px;">
                             <div style="display: flex; flex-direction: column; gap: 8px;">
                                 <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Date</label>
                                 <input type="date" id="macInstDate" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
@@ -170,7 +170,7 @@ window.CustomerForm = {
                                 <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Location / Room</label>
                                 <input type="text" id="macRoom" placeholder="e.g. Master Bedroom" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
-                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div class="status-field" style="display: flex; flex-direction: column; gap: 8px;">
                                 <label style="font-weight: 500; font-size: 14px; color: #334155;">Status</label>
                                 <select id="macStatus" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                     <option value="active">Active</option>

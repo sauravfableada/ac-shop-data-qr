@@ -621,3 +621,11 @@ body.light-mode {
         grid-template-columns: 1fr !important;
     }
 }
+.responsive-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+@media (max-width: 768px) { .responsive-grid { grid-template-columns: 1fr !important; } }
+
+.grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 768px) { .grid-2-col { grid-template-columns: 1fr !important; } }
+
+.installation-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+@media (max-width: 768px) { .installation-grid { grid-template-columns: 1fr 1fr; } .installation-grid .status-field { grid-column: 1 / -1; } }
