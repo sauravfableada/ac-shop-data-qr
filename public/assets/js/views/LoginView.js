@@ -9,7 +9,7 @@ window.LoginView = {
                         <img src="/public/assets/logos/fableadLogo.jpg" alt="Fablead Logo" style="max-width: 160px; height: auto; border-radius: 8px;">
                     </div>
 
-                    <h1 class="gradient-text" style="font-size: 2rem; margin-bottom: 8px;">Login</h1>
+
                     <p style="color: var(--text-muted); margin-bottom: 24px; font-size: 14px;">Sign in to Maimoon Sales &mdash; AC Service Management</p>
                     
                     <form id="loginForm">
@@ -19,7 +19,10 @@ window.LoginView = {
                         </div>
                         <div class="input-group" style="text-align: left;">
                             <label for="password">Password</label>
-                            <input type="password" id="password" class="input-glass" required placeholder="••••••••">
+                            <div style="position: relative;">
+                                <input type="password" id="password" class="input-glass" required placeholder="••••••••" style="padding-right: 40px; width: 100%;">
+                                <i class="fa-regular fa-eye" id="toggleLoginPwd" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; cursor: pointer; font-size: 16px;"></i>
+                            </div>
                         </div>
                         
                         <div id="loginError" style="color: var(--accent); margin-bottom: 16px; display: none; font-size: 14px;"></div>
@@ -34,12 +37,24 @@ window.LoginView = {
                         &copy; ${new Date().getFullYear()} Copyright &mdash;
                         <a href="https://www.fableadtechnolabs.com/" target="_blank" rel="noopener noreferrer"
                            style="color: #3b82f6; font-weight: 600; text-decoration: none;">
-                            Fablead Techno Labs
+                           Fablead Developers Technolab
                         </a>
                     </div>
                 </div>
             </div>
         `;
+
+        // Toggle password visibility
+        const togglePwd = document.getElementById('toggleLoginPwd');
+        const pwdInput = document.getElementById('password');
+        if (togglePwd && pwdInput) {
+            togglePwd.addEventListener('click', () => {
+                const type = pwdInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                pwdInput.setAttribute('type', type);
+                togglePwd.classList.toggle('fa-eye');
+                togglePwd.classList.toggle('fa-eye-slash');
+            });
+        }
 
         // Attach event listener
         document.getElementById('loginForm').addEventListener('submit', async (e) => {

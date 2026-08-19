@@ -277,7 +277,6 @@ window.AcUnitForm = {
                     }
                 }
             } else {
-                let errorMessage = res.message || 'Error saving customer';
                 if (res.errors) {
                     const fieldMap = {
                         'customer_code': 'qcCode',
@@ -294,12 +293,9 @@ window.AcUnitForm = {
                             }
                         }
                     }
-                    const firstErrorKey = Object.keys(res.errors)[0];
-                    if (res.errors[firstErrorKey] && res.errors[firstErrorKey].length > 0) {
-                        errorMessage = res.errors[firstErrorKey][0];
-                    }
+                } else {
+                    window.showToast(res.message || 'Error saving customer', 'error');
                 }
-                window.showToast(errorMessage, 'error');
             }
         } catch (err) {
             window.showToast('Failed to save customer', 'error');
@@ -335,7 +331,6 @@ window.AcUnitForm = {
                 window.showToast(`AC Unit ${isEdit ? 'updated' : 'added'} successfully!`, 'success');
                 window.router.navigate('/ac-units');
             } else {
-                let errorMessage = res.message || 'Error saving AC Unit';
                 if (res.errors) {
                     for (const [key, messages] of Object.entries(res.errors)) {
                         let input = form.querySelector(`[name="${key}"]`);
@@ -347,12 +342,9 @@ window.AcUnitForm = {
                             errDiv.style.display = 'block';
                         }
                     }
-                    const firstErrorKey = Object.keys(res.errors)[0];
-                    if (res.errors[firstErrorKey] && res.errors[firstErrorKey].length > 0) {
-                        errorMessage = res.errors[firstErrorKey][0];
-                    }
+                } else {
+                    window.showToast(res.message || 'Error saving AC Unit', 'error');
                 }
-                window.showToast(errorMessage, 'error');
             }
         } catch (err) {
             window.showToast('Failed to save AC Unit', 'error');

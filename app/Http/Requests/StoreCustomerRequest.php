@@ -47,8 +47,8 @@ class StoreCustomerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'mobile.unique' => 'Mobile number or email address already exists.',
-            'email.unique' => 'Mobile number or email address already exists.',
+            'mobile.unique' => 'Mobile number already exists.',
+            'email.unique' => 'Email address already exists.',
         ];
     }
 }

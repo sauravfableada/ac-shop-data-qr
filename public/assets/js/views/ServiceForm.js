@@ -145,10 +145,9 @@ window.ServiceForm = {
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                         <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Payment Status</label>
-                        <select name="payment_status" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                        <select name="payment_status" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             <option value="unpaid" ${service.payment_status === 'unpaid' ? 'selected' : ''}>Unpaid</option>
                             <option value="paid" ${service.payment_status === 'paid' ? 'selected' : ''}>Paid</option>
-                            <option value="partial" ${service.payment_status === 'partial' ? 'selected' : ''}>Partial</option>
                         </select>
                     </div>
 
@@ -326,7 +325,6 @@ window.ServiceForm = {
                     }
                 }
             } else {
-                let errorMessage = res.message || 'Error saving AC Unit';
                 if (res.errors) {
                     const fieldMap = {
                         'customer_id': 'qaCustomer',
@@ -342,9 +340,9 @@ window.ServiceForm = {
                             }
                         }
                     }
-                    if(res.errors[Object.keys(res.errors)[0]]) errorMessage = res.errors[Object.keys(res.errors)[0]][0];
+                } else {
+                    window.showToast(res.message || 'Error saving AC Unit', 'error');
                 }
-                window.showToast(errorMessage, 'error');
             }
         } catch (err) {
             window.showToast('Failed to save AC Unit', 'error');
@@ -391,7 +389,6 @@ window.ServiceForm = {
                     window.router.navigate('/services');
                 }
             } else {
-                let errorMessage = res.message || 'Error saving maintenance record';
                 if (res.errors) {
                     for (const [key, messages] of Object.entries(res.errors)) {
                         let input = form.querySelector(`[name="${key}"]`);
@@ -403,12 +400,9 @@ window.ServiceForm = {
                             errDiv.style.display = 'block';
                         }
                     }
-                    const firstErrorKey = Object.keys(res.errors)[0];
-                    if (res.errors[firstErrorKey] && res.errors[firstErrorKey].length > 0) {
-                        errorMessage = res.errors[firstErrorKey][0];
-                    }
+                } else {
+                    window.showToast(res.message || 'Error saving maintenance record', 'error');
                 }
-                window.showToast(errorMessage, 'error');
             }
         } catch (err) {
             window.showToast('Failed to save maintenance record', 'error');

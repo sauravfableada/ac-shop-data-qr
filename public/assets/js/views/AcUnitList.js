@@ -36,7 +36,7 @@ window.AcUnitList = {
                 <tr style="border-bottom: 1px solid var(--border-glass);">
                     <td style="padding: 16px; font-size: 14px; font-weight: 600; color: var(--text-main);">${ac.ac_code}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.brand || '-'} ${ac.model || ''}</td>
-                    <td style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.customer ? ac.customer.full_name : 'N/A'}</td>
+                    <td style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.customer ? ac.customer.full_name : '--'}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.ac_type || '-'} · ${ac.capacity || '-'}</td>
                     <td class="hide-on-mobile" style="padding: 16px;">
                         <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: ${ac.status === 'active' ? 'rgba(16,185,129,0.1)' : 'rgba(244,63,94,0.1)'}; color: ${ac.status === 'active' ? '#10B981' : '#F43F5E'};">${ac.status ? ac.status.toUpperCase() : 'ACTIVE'}</span>
@@ -60,7 +60,7 @@ window.AcUnitList = {
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-user" style="margin-right: 8px;"></i> CUSTOMER :</div>
-                                <div style="font-weight: 400; color: #64748b;">${ac.customer ? ac.customer.full_name : 'N/A'}</div>
+                                <div style="font-weight: 400; color: #64748b;">${ac.customer ? ac.customer.full_name : '--'}</div>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-qrcode" style="margin-right: 8px;"></i> QR :</div>
@@ -141,9 +141,7 @@ window.AcUnitList = {
                                     <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px;"></i>
                                     <input type="text" id="searchInput" value="${state.search}" placeholder="Search AC code, brand..." style="padding: 8px 12px 8px 36px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; width: 250px;">
                                 </div>
-                                <button class="hide-on-mobile" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: var(--text-muted); border: 1px solid var(--border-glass); border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;">
-                                    <i class="fa-solid fa-filter"></i> Filters
-                                </button>
+
                             </div>
                             
                             <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px;">

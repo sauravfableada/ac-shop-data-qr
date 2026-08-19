@@ -39,7 +39,7 @@ window.CustomerList = {
                 <tr style="border-bottom: 1px solid var(--border-glass);">
                     <td style="padding: 16px; font-size: 14px; font-weight: 600;">${c.full_name}<br><span style="font-size: 12px; color: var(--text-muted); font-weight: 400;">${c.customer_code}</span></td>
                     <td style="padding: 16px; font-size: 14px; font-weight: 500; color: var(--text-main);">${c.mobile}</td>
-                    <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${c.address || 'N/A'}">${c.address || '--'}</td>
+                    <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${c.address || '--'}">${c.address || '--'}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; font-weight: 600;">${new Date(c.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" data-id="${c.id}"><i class="fa-solid fa-plus"></i></button>
@@ -131,9 +131,7 @@ window.CustomerList = {
                                     <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px;"></i>
                                     <input type="text" id="searchInput" value="${state.search}" placeholder="Search by name, phone no..." style="padding: 8px 12px 8px 36px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; width: 250px;">
                                 </div>
-                                <button class="hide-on-mobile" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: var(--text-muted); border: 1px solid var(--border-glass); border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;">
-                                    <i class="fa-solid fa-filter"></i> Filters
-                                </button>
+
                             </div>
                             
                             <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px;">
