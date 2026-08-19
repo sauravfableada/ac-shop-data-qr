@@ -82,7 +82,7 @@ window.CustomerView = {
                             
                             <div style="margin-bottom: 16px;">
                                 <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">WhatsApp Number</label>
-                                <div style="font-size: 15px; font-weight: 500;">${c.whatsapp_no || '<span style="color:var(--text-muted);">N/A</span>'}</div>
+                                <div style="font-size: 15px; font-weight: 500;">${c.whatsapp_no || '<span style="color:var(--text-muted);">--</span>'}</div>
                             </div>
                             
 
@@ -95,7 +95,7 @@ window.CustomerView = {
                             
                             <div style="margin-bottom: 16px;">
                                 <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Full Address</label>
-                                <div style="font-size: 15px; font-weight: 500; line-height: 1.5;">${c.address || '<span style="color:var(--text-muted);">N/A</span>'}</div>
+                                <div style="font-size: 15px; font-weight: 500; line-height: 1.5;">${c.address || '<span style="color:var(--text-muted);">--</span>'}</div>
                             </div>
                             
 

@@ -69,10 +69,10 @@ window.renderLayout = (content) => {
             <div class="main-content" style="width: 100%; display: flex; flex-direction: column;">
                 <!-- Top Header -->
                 <div class="top-header" style="background-color: var(--bg-glass); border-bottom: 1px solid var(--border-glass);">
-                    <div class="header-left" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="/customers" data-link class="header-left" style="display: flex; align-items: center; gap: 15px; text-decoration: none; cursor: pointer;">
                         <img src="/public/assets/logos/crmfavicon.png" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; margin-left: 20px;">
                         <span style="font-weight: 700; font-size: 18px; color: var(--text-main); margin-right: 20px;">Maimoon Sales</span>
-                    </div>
+                    </a>
                     
                     <div class="header-nav desktop-only" style="display: flex; gap: 10px; flex-grow: 1; margin-left: 20px;">
                         <a href="/customers" data-link style="text-decoration: none; color: white; background: #2B7FFF; font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
@@ -136,7 +136,7 @@ window.renderLayout = (content) => {
                 <footer class="app-footer" style="text-align: center; padding: 16px 24px; border-top: 1px solid var(--border-glass); background: var(--bg-glass); font-size: 13px; color: var(--text-muted);">
                     &copy; ${new Date().getFullYear()} Copyright &mdash; Powered by 
                     <a href="https://www.fableadtechnolabs.com/" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; font-weight: 600; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#3b82f6'">
-                        Fablead Techno Labs
+                       Fablead Developers Technolab
                     </a>
                 </footer>
 

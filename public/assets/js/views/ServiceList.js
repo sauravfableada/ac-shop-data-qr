@@ -35,8 +35,8 @@ window.ServiceList = {
             return state.services.map(s => `
                 <tr style="border-bottom: 1px solid var(--border-glass);">
                     <td style="padding: 16px; font-size: 14px; font-weight: 600; color: var(--text-main);">${s.service_number}</td>
-                    <td style="padding: 16px; font-size: 14px; color: var(--text-muted);">${s.customer ? s.customer.full_name : 'N/A'}</td>
-                    <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${s.ac_unit ? s.ac_unit.ac_code : 'N/A'}</td>
+                    <td style="padding: 16px; font-size: 14px; color: var(--text-muted);">${s.customer ? s.customer.full_name : '--'}</td>
+                    <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${s.ac_unit ? s.ac_unit.ac_code : '--'}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${new Date(s.service_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td class="hide-on-mobile" style="padding: 16px;">
                         <select onchange="window.ServiceList.changeStatusDirect(${s.id}, this.value)" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: ${s.status === 'completed' ? 'rgba(16,185,129,0.1)' : (s.status === 'in_progress' ? 'rgba(59,130,246,0.1)' : 'rgba(244,63,94,0.1)')}; color: ${s.status === 'completed' ? '#10B981' : (s.status === 'in_progress' ? '#3B82F6' : '#F43F5E')}; border: 1px solid transparent; outline: none; cursor: pointer;">
@@ -58,11 +58,11 @@ window.ServiceList = {
                         <div style="background: #ffffff; border-radius: 12px; border-left: 4px solid #0f172a; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-user" style="margin-right: 8px;"></i> CUSTOMER :</div>
-                                <div style="font-weight: 400; color: #64748b;">${s.customer ? s.customer.full_name : 'N/A'}</div>
+                                <div style="font-weight: 400; color: #64748b;">${s.customer ? s.customer.full_name : '--'}</div>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-fan" style="margin-right: 8px;"></i> AC CODE :</div>
-                                <div style="font-weight: 400; color: #64748b;">${s.ac_unit ? s.ac_unit.ac_code : 'N/A'}</div>
+                                <div style="font-weight: 400; color: #64748b;">${s.ac_unit ? s.ac_unit.ac_code : '--'}</div>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-calendar-days" style="margin-right: 8px;"></i> DATE :</div>
@@ -127,12 +127,11 @@ window.ServiceList = {
                 <div class="glass-panel" style="padding: 24px; background: #ffffff;">
                     <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                         <div>
-                            <h1 style="font-size: 24px; margin-bottom: 4px; color: #0f172a;">Maintenance Services</h1>
-                            
+                            <h1 style="font-size: 24px; margin-bottom: 4px; color: #0f172a;">Service Record</h1>
                         </div>
                         <div style="display: flex; gap: 12px;">
-                            <button onclick="window.router.navigate('/services/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
-                                <i class="fa-solid fa-plus"></i> Create Service
+                            <button onclick="window.router.navigate('/services/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap;">
+                                <i class="fa-solid fa-plus"></i> Add Service
                             </button>
                         </div>
                     </div>
@@ -144,9 +143,7 @@ window.ServiceList = {
                                     <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px;"></i>
                                     <input type="text" id="searchInput" value="${state.search}" placeholder="Search service #, customer..." style="padding: 8px 12px 8px 36px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; width: 250px;">
                                 </div>
-                                <button class="hide-on-mobile" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: var(--text-muted); border: 1px solid var(--border-glass); border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;">
-                                    <i class="fa-solid fa-filter"></i> Filters
-                                </button>
+
                             </div>
                             
                             <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px;">

@@ -26,11 +26,7 @@ window.ProfileView = {
 
         const content = `
             <div>
-                <!-- Page Title -->
-                <div style="margin-bottom: 8px;">
-                    <h1 style="font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">My Profile</h1>
-                    <p style="font-size: 13px; color: #94a3b8;">Home &rsaquo; My Profile</p>
-                </div>
+
 
                 <div style="display: grid; grid-template-columns: 300px 1fr; gap: 24px; margin-top: 24px;" class="profile-grid">
 
@@ -107,21 +103,23 @@ window.ProfileView = {
                                 </div>
                             </div>
 
-                            <div style="margin-bottom: 16px;">
-                                <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">Email Address</label>
-                                <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
-                                    <i class="fa-regular fa-envelope" style="color: #94a3b8; font-size: 14px;"></i>
-                                    <input type="email" id="prof_email" value="${user.email || ''}"
-                                        style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 36px;">
+                                <div>
+                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">Email Address</label>
+                                    <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
+                                        <i class="fa-regular fa-envelope" style="color: #94a3b8; font-size: 14px;"></i>
+                                        <input type="email" id="prof_email" value="${user.email || ''}"
+                                            style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div style="margin-bottom: 36px;">
-                                <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">Phone Number</label>
-                                <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
-                                    <i class="fa-solid fa-phone" style="color: #94a3b8; font-size: 14px;"></i>
-                                    <input type="text" id="prof_phone" value="${user.phone || ''}" placeholder="Enter phone number"
-                                        style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                                <div>
+                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">Phone Number</label>
+                                    <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
+                                        <i class="fa-solid fa-phone" style="color: #94a3b8; font-size: 14px;"></i>
+                                        <input type="text" id="prof_phone" value="${user.phone || ''}" placeholder="Enter phone number"
+                                            style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                                    </div>
                                 </div>
                             </div>
 
@@ -133,23 +131,25 @@ window.ProfileView = {
                                 <h3 style="font-size: 16px; font-weight: 700; color: #0f172a;">Security</h3>
                             </div>
 
-                            <div style="margin-bottom: 16px;">
-                                <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">Current Password</label>
-                                <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
-                                    <i class="fa-solid fa-lock" style="color: #94a3b8; font-size: 14px;"></i>
-                                    <input type="password" id="prof_current_password" placeholder="Enter current password"
-                                        style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
-                                    <i class="fa-regular fa-eye" id="toggleCurrentPwd" style="color: #94a3b8; cursor: pointer; font-size: 14px;"></i>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 36px;">
+                                <div>
+                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">Current Password</label>
+                                    <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
+                                        <i class="fa-solid fa-lock" style="color: #94a3b8; font-size: 14px;"></i>
+                                        <input type="password" id="prof_current_password" placeholder="Enter current password"
+                                            style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                                        <i class="fa-regular fa-eye" id="toggleCurrentPwd" style="color: #94a3b8; cursor: pointer; font-size: 14px;"></i>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div style="margin-bottom: 36px;">
-                                <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">New Password</label>
-                                <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
-                                    <i class="fa-solid fa-lock" style="color: #94a3b8; font-size: 14px;"></i>
-                                    <input type="password" id="prof_new_password" placeholder="Enter new password"
-                                        style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
-                                    <i class="fa-regular fa-eye" id="toggleNewPwd" style="color: #94a3b8; cursor: pointer; font-size: 14px;"></i>
+                                <div>
+                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">New Password</label>
+                                    <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
+                                        <i class="fa-solid fa-lock" style="color: #94a3b8; font-size: 14px;"></i>
+                                        <input type="password" id="prof_new_password" placeholder="Enter new password"
+                                            style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                                        <i class="fa-regular fa-eye" id="toggleNewPwd" style="color: #94a3b8; cursor: pointer; font-size: 14px;"></i>
+                                    </div>
                                 </div>
                             </div>
 

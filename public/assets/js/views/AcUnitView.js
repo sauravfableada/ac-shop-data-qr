@@ -74,15 +74,15 @@ window.AcUnitView = {
                     </div>
                     <div>
                         <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Serial Number</p>
-                        <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.serial_number || 'N/A'}</p>
+                        <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.serial_number || '--'}</p>
                     </div>
                     <div>
                         <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Installation Date</p>
-                        <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.installation_date ? new Date(ac.installation_date).toLocaleDateString() : 'N/A'}</p>
+                        <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.installation_date ? new Date(ac.installation_date).toLocaleDateString() : '--'}</p>
                     </div>
                     <div>
                         <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Location/Room</p>
-                        <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.room || 'N/A'}</p>
+                        <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.room || '--'}</p>
                     </div>
                     <div>
                         <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">QR Code</div>
