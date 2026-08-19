@@ -81,7 +81,7 @@ window.ServiceView = {
                     </div>
                 </div>
 
-                <div class="responsive-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+                <div class="responsive-grid">
                     <!-- Left Column -->
                     <div style="display: flex; flex-direction: column; gap: 24px;">
                         <div class="glass-panel" style="padding: 24px; border-radius: 12px;">

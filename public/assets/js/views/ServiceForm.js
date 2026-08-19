@@ -63,7 +63,7 @@ window.ServiceForm = {
 
                 <div class="glass-panel" style="background: #ffffff;  padding: 32px; border-radius: 12px; margin: 0 auto;">
 
-                <form id="serviceForm" onsubmit="window.ServiceForm.save(event, ${isEdit}, ${serviceId})" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;" novalidate>
+                <form id="serviceForm" onsubmit="window.ServiceForm.save(event, ${isEdit}, ${serviceId})" class="grid-2-col" novalidate>
                     
                     <div style="grid-column: span 2;">
                         <h3 style="font-size: 16px; color: #0f172a; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px; margin-bottom: 16px;">Service Details</h3>
@@ -107,7 +107,7 @@ window.ServiceForm = {
                         </select>
                     </div>
 
-                    <div class="two-col-mobile" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; grid-column: span 2;">
+                    <div class="grid-2-col" style="grid-column: span 2;">
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                             <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Customer Complaint / Issue</label>
                             <textarea name="complaint" rows="3" placeholder="What is the issue reported by the customer?" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; resize: vertical;">${service.complaint || ''}</textarea>
@@ -171,7 +171,7 @@ window.ServiceForm = {
                     <button type="button" onclick="document.getElementById('addAcModal').style.display='none'" style="position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 20px; color: #64748b; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
                     <h3 style="font-size: 20px; color: #0f172a; margin-bottom: 24px;">Quick Add AC Unit</h3>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="grid-2-col">
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                             <label style="font-weight: 500; font-size: 14px; color: #334155;">Customer <span style="color: red;">*</span></label>
                             <select id="qaCustomer" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
