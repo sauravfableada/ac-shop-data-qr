@@ -443,19 +443,96 @@ window.AcUnitList = {
             const token = ac.qr_code ? ac.qr_code.token : null;
             if (!token) { window.showToast('No QR code found', 'error'); return; }
             
-            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
-            const message = `AC Code: ${ac.ac_code}\nCustomer: ${ac.customer ? ac.customer.full_name : 'Unknown'}\nQR Code Link: ${qrImgUrl}`;
+            const qrCardUrl = `${window.location.origin}/qr-card/${token}`;
+            const messageText = `AC Code: ${ac.ac_code}\nCustomer: ${ac.customer ? ac.customer.full_name : 'Unknown'}\nQR Card Link: ${qrCardUrl}`;
             
-            let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-            
+            let phoneToUse = null;
             if (ac.customer) {
                 const phone = ac.customer.whatsapp_no || ac.customer.mobile;
                 if (phone) {
-                    const cleanPhone = phone.replace(/[^\d+]/g, '');
-                    whatsappUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(message)}`;
+                    phoneToUse = phone.replace(/[^\d+]/g, '');
                 }
             }
+
+            // Always generate the beautiful QR Card image first
+            const canvas = document.createElement('canvas');
+            canvas.width = 340;
+            canvas.height = 480;
+            const ctx = canvas.getContext('2d');
             
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([8, 8]);
+            ctx.beginPath();
+            ctx.roundRect(10, 10, 320, 460, 16);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.src = qrImgUrl;
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+            });
+            
+            ctx.drawImage(img, 60, 40, 220, 220);
+            
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 22px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#0f172a';
+            ctx.fillText(ac.ac_code, 170, 300);
+            
+            ctx.font = '14px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.fillText(ac.customer ? ac.customer.full_name : '', 170, 330);
+            
+            if (ac.brand) {
+                ctx.fillText(`${ac.brand} ${ac.model || ''}`, 170, 355);
+            }
+            
+            ctx.font = '10px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText(token, 170, 400);
+
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+            
+            if (phoneToUse) {
+                // We have a direct chat. Try to copy image to clipboard so they can paste it.
+                if (navigator.clipboard && window.ClipboardItem) {
+                    try {
+                        const item = new ClipboardItem({ 'image/png': blob });
+                        await navigator.clipboard.write([item]);
+                        window.showToast('Image copied! Just PASTE it in the chat.', 'success');
+                    } catch (clipErr) {
+                        console.log('Clipboard write failed', clipErr);
+                    }
+                }
+                const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneToUse}&text=${encodeURIComponent(messageText)}`;
+                window.open(whatsappUrl, '_blank');
+                return;
+            }
+
+            // If no specific phone, fallback to native Web Share API
+            const file = new File([blob], `QR_Card_${ac.ac_code}.png`, { type: 'image/png' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: `QR Code - ${ac.ac_code}`,
+                        text: messageText
+                    });
+                    return; 
+                } catch (shareErr) {
+                    if (shareErr.name === 'AbortError') return; 
+                }
+            }
+
+            // Absolute fallback
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(messageText)}`;
             window.open(whatsappUrl, '_blank');
         } catch (err) {
             window.showToast('Error sharing QR', 'error');
