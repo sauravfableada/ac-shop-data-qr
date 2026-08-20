@@ -443,6 +443,7 @@ window.AcUnitList = {
             const token = ac.qr_code ? ac.qr_code.token : null;
             if (!token) { window.showToast('No QR code found', 'error'); return; }
             
+            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
             const qrCardUrl = `${window.location.origin}/qr-card/${token}`;
             const messageText = `AC Code: ${ac.ac_code}\nCustomer: ${ac.customer ? ac.customer.full_name : 'Unknown'}\nQR Card Link: ${qrCardUrl}`;
             
@@ -511,8 +512,8 @@ window.AcUnitList = {
                         console.log('Clipboard write failed', clipErr);
                     }
                 }
-                const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneToUse}&text=${encodeURIComponent(messageText)}`;
-                window.open(whatsappUrl, '_blank');
+                const whatsappUrl = `https://wa.me/${phoneToUse}?text=${encodeURIComponent(messageText)}`;
+                window.location.href = whatsappUrl;
                 return;
             }
 
@@ -532,8 +533,8 @@ window.AcUnitList = {
             }
 
             // Absolute fallback
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(messageText)}`;
-            window.open(whatsappUrl, '_blank');
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(messageText)}`;
+            window.location.href = whatsappUrl;
         } catch (err) {
             window.showToast('Error sharing QR', 'error');
         }
