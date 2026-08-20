@@ -230,16 +230,15 @@ h4 {
 /* Layouts */
 .auth-layout {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 40px 20px;
 }
 
 .auth-box {
     width: 100%;
     max-width: 400px;
-    padding: 40px;
     text-align: center;
 }
 
