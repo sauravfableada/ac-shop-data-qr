@@ -91,7 +91,7 @@ window.AcUnitView = {
                                <div style="font-size: 11px; color: #64748b; word-break: break-all;">${ac.qr_code.token}</div>
                                <div style="display: flex; gap: 8px; margin-top: 12px;">
                                    <button onclick="window.AcUnitView.downloadQrImage(${ac.id})" title="Save QR" style="background: #8b5cf6; border: none; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-download"></i> Save QR</button>
-                                   <button onclick="window.AcUnitView.shareQrWhatsapp('${ac.qr_code.token}', '${ac.ac_code}', '${ac.customer ? ac.customer.full_name : ''}')" title="Share WhatsApp" style="background: #25D366; border: none; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: 0.2s;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                                   <button onclick="window.AcUnitView.shareQrWhatsapp(${ac.id})" title="Share WhatsApp" style="background: #25D366; border: none; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: 0.2s;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
                                </div>`
                 : `<div style="font-size: 14px; color: #64748b;">None generated</div>`}
                     </div>
@@ -192,11 +192,27 @@ window.AcUnitView = {
         }
     },
 
-    shareQrWhatsapp: (token, acCode, customerName) => {
+    shareQrWhatsapp: async (id) => {
         try {
+            const res = await window.api.get(`/ac-units/${id}`);
+            if (!res.success) { window.showToast('Could not load AC Unit data', 'error'); return; }
+            const ac = res.data;
+            const token = ac.qr_code ? ac.qr_code.token : null;
+            if (!token) { window.showToast('No QR code found', 'error'); return; }
+            
             const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
-            const message = `AC Code: ${acCode}\nCustomer: ${customerName || 'Unknown'}\nQR Code Link: ${qrImgUrl}`;
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            const message = `AC Code: ${ac.ac_code}\nCustomer: ${ac.customer ? ac.customer.full_name : 'Unknown'}\nQR Code Link: ${qrImgUrl}`;
+            
+            let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            
+            if (ac.customer) {
+                const phone = ac.customer.whatsapp_no || ac.customer.mobile;
+                if (phone) {
+                    const cleanPhone = phone.replace(/[^\d+]/g, '');
+                    whatsappUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(message)}`;
+                }
+            }
+            
             window.open(whatsappUrl, '_blank');
         } catch (err) {
             window.showToast('Error sharing QR', 'error');

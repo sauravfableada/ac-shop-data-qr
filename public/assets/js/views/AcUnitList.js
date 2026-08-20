@@ -445,7 +445,17 @@ window.AcUnitList = {
             
             const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
             const message = `AC Code: ${ac.ac_code}\nCustomer: ${ac.customer ? ac.customer.full_name : 'Unknown'}\nQR Code Link: ${qrImgUrl}`;
-            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            
+            let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            
+            if (ac.customer) {
+                const phone = ac.customer.whatsapp_no || ac.customer.mobile;
+                if (phone) {
+                    const cleanPhone = phone.replace(/[^\d+]/g, '');
+                    whatsappUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(message)}`;
+                }
+            }
+            
             window.open(whatsappUrl, '_blank');
         } catch (err) {
             window.showToast('Error sharing QR', 'error');
