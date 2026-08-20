@@ -44,6 +44,8 @@ window.AcUnitList = {
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" onclick="window.AcUnitList.toggleMobileRow(${ac.id}, this)"><i class="fa-solid fa-plus"></i></button>
                         <div class="desktop-only" style="display: flex; gap: 8px; justify-content: flex-end;">
+                            <button onclick="window.AcUnitList.downloadQrImage(${ac.id})" title="Save QR" style="background: #8b5cf6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-download"></i> Save QR</button>
+                            <button onclick="window.AcUnitList.shareQrWhatsapp(${ac.id})" title="Share WhatsApp" style="background: #25D366; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
                             <button onclick="window.AcUnitList.printAcUnit(${ac.id})" title="Print QR" style="background: #0f172a; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-print"></i> Print</button>
                             <button onclick="window.router.navigate('/ac-units/view/${ac.id}')" title="View" style="background: #3b82f6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-eye"></i> View</button>
                             <button onclick="window.router.navigate('/ac-units/edit/${ac.id}')" title="Edit" style="background: #f59e0b; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
@@ -76,6 +78,8 @@ window.AcUnitList = {
                             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-gear" style="margin-right: 8px;"></i> ACTIONS :</div>
                                 <div style="display: flex; gap: 8px;">
+                                    <button onclick="window.AcUnitList.downloadQrImage(${ac.id})" style="background: #8b5cf6; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-download"></i></button>
+                                    <button onclick="window.AcUnitList.shareQrWhatsapp(${ac.id})" style="background: #25D366; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-brands fa-whatsapp"></i></button>
                                     <button onclick="window.AcUnitList.printAcUnit(${ac.id})" style="background: #0f172a; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-print"></i></button>
                                     <button onclick="window.router.navigate('/ac-units/view/${ac.id}')" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-eye"></i></button>
                                     <button onclick="window.router.navigate('/ac-units/edit/${ac.id}')" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-pencil"></i></button>
@@ -351,6 +355,100 @@ window.AcUnitList = {
             printWindow.document.close();
         } catch (err) {
             window.showToast('Error generating print view', 'error');
+        }
+    },
+
+    downloadQrImage: async (id) => {
+        try {
+            const res = await window.api.get(`/ac-units/${id}`);
+            if (!res.success) { window.showToast('Could not load AC Unit data', 'error'); return; }
+            const ac = res.data;
+            const token = ac.qr_code ? ac.qr_code.token : null;
+            if (!token) { window.showToast('No QR code found', 'error'); return; }
+            
+            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+            
+            // Create canvas for the card
+            const canvas = document.createElement('canvas');
+            canvas.width = 340;
+            canvas.height = 480;
+            const ctx = canvas.getContext('2d');
+            
+            // White background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Dashed border
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([8, 8]);
+            ctx.beginPath();
+            ctx.roundRect(10, 10, 320, 460, 16);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Load QR Image
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.src = qrImgUrl;
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+            });
+            
+            // Draw QR Code
+            ctx.drawImage(img, 60, 40, 220, 220);
+            
+            // Draw Texts
+            ctx.textAlign = 'center';
+            
+            // AC Code
+            ctx.font = 'bold 22px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#0f172a';
+            ctx.fillText(ac.ac_code, 170, 300);
+            
+            // Customer Name
+            ctx.font = '14px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.fillText(ac.customer ? ac.customer.full_name : '', 170, 330);
+            
+            // Brand/Model
+            if (ac.brand) {
+                ctx.fillText(`${ac.brand} ${ac.model || ''}`, 170, 355);
+            }
+            
+            // Token
+            ctx.font = '10px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText(token, 170, 400);
+            
+            const dataUrl = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = dataUrl;
+            a.download = `QR_Card_${ac.ac_code}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } catch (err) {
+            window.showToast('Error downloading QR', 'error');
+        }
+    },
+
+    shareQrWhatsapp: async (id) => {
+        try {
+            const res = await window.api.get(`/ac-units/${id}`);
+            if (!res.success) { window.showToast('Could not load AC Unit data', 'error'); return; }
+            const ac = res.data;
+            const token = ac.qr_code ? ac.qr_code.token : null;
+            if (!token) { window.showToast('No QR code found', 'error'); return; }
+            
+            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+            const message = `AC Code: ${ac.ac_code}\nCustomer: ${ac.customer ? ac.customer.full_name : 'Unknown'}\nQR Code Link: ${qrImgUrl}`;
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        } catch (err) {
+            window.showToast('Error sharing QR', 'error');
         }
     }
 };
