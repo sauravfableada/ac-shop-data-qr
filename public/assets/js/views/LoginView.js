@@ -40,7 +40,12 @@ window.LoginView = {
                            Fablead Developers Technolab
                         </a>
                     </div>
-                </div>
+               </div>
+               <style>
+                .body {
+    overflow-y:hidden !important;
+}
+               </style>
             </div>
         `;
 
