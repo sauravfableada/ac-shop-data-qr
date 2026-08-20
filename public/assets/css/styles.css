@@ -575,7 +575,7 @@ body.light-mode {
     }
 
     div[style*="grid-column: span 2"] {
-        grid-column: span 1 !important;
+        grid-column: 1 / -1 !important;
     }
 }
 

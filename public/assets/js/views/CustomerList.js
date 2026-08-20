@@ -29,7 +29,7 @@ window.CustomerList = {
 
         const renderTable = () => {
             if (!state.customers.length) {
-                return `<tr><td colspan="6" style="padding: 16px; text-align: center; color: var(--text-muted);">No customers found</td></tr>`;
+                return `<tr><td colspan="5" style="padding: 16px; text-align: center; color: var(--text-muted);">No customers found</td></tr>`;
             }
 
             // Calculate starting index
@@ -52,7 +52,7 @@ window.CustomerList = {
                     </td>
                 </tr>
                 <tr id="mobile-expand-${c.id}" class="mobile-expanded-row">
-                    <td colspan="3" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
+                    <td colspan="5" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
                         <div style="background: #ffffff; border-radius: 12px; border-left: 4px solid #0f172a; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-map-marker-alt" style="margin-right: 8px;"></i> ADDRESS :</div>
