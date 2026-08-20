@@ -360,7 +360,7 @@ window.CustomerForm = {
                     </div>
 
                     <p style="font-size: 12px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 12px;">Installation &amp; Warranty</p>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div class="installation-grid" style="margin-bottom: 24px;">
                         <div style="display: flex; flex-direction: column; gap: 8px;">
                             <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Date</label>
                             <input type="date" id="msvIacInstDate" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
@@ -369,7 +369,7 @@ window.CustomerForm = {
                             <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Location / Room</label>
                             <input type="text" id="msvIacRoom" placeholder="e.g. Master Bedroom" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                         </div>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div class="status-field" style="display: flex; flex-direction: column; gap: 8px;">
                             <label style="font-weight: 500; font-size: 14px; color: #334155;">Status</label>
                             <select id="msvIacStatus" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                 <option value="active">Active</option>
