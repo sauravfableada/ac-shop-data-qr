@@ -88,7 +88,11 @@ window.AcUnitView = {
                         <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">QR Code</div>
                         ${ac.qr_code
                 ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${ac.qr_code.token}" alt="QR Code" style="border-radius: 8px; border: 1px solid var(--border-glass); padding: 4px; background: white; margin-bottom: 8px;">
-                               <div style="font-size: 11px; color: #64748b; word-break: break-all;">${ac.qr_code.token}</div>`
+                               <div style="font-size: 11px; color: #64748b; word-break: break-all;">${ac.qr_code.token}</div>
+                               <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                   <button onclick="window.AcUnitView.downloadQrImage(${ac.id})" title="Save QR" style="background: #8b5cf6; border: none; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-download"></i> Save QR</button>
+                                   <button onclick="window.AcUnitView.shareQrWhatsapp('${ac.qr_code.token}', '${ac.ac_code}', '${ac.customer ? ac.customer.full_name : ''}')" title="Share WhatsApp" style="background: #25D366; border: none; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: 0.2s;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                               </div>`
                 : `<div style="font-size: 14px; color: #64748b;">None generated</div>`}
                     </div>
                 </div>
@@ -120,5 +124,82 @@ window.AcUnitView = {
         `;
 
         container.innerHTML = window.renderLayout(content);
+    },
+
+    downloadQrImage: async (id) => {
+        try {
+            const res = await window.api.get(`/ac-units/${id}`);
+            if (!res.success) { window.showToast('Could not load AC Unit data', 'error'); return; }
+            const ac = res.data;
+            const token = ac.qr_code ? ac.qr_code.token : null;
+            if (!token) { window.showToast('No QR code found', 'error'); return; }
+            
+            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = 340;
+            canvas.height = 480;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([8, 8]);
+            ctx.beginPath();
+            ctx.roundRect(10, 10, 320, 460, 16);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.src = qrImgUrl;
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+            });
+            
+            ctx.drawImage(img, 60, 40, 220, 220);
+            
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 22px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#0f172a';
+            ctx.fillText(ac.ac_code, 170, 300);
+            
+            ctx.font = '14px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.fillText(ac.customer ? ac.customer.full_name : '', 170, 330);
+            
+            if (ac.brand) {
+                ctx.fillText(`${ac.brand} ${ac.model || ''}`, 170, 355);
+            }
+            
+            ctx.font = '10px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText(token, 170, 400);
+            
+            const dataUrl = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = dataUrl;
+            a.download = `QR_Card_${ac.ac_code}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } catch (err) {
+            window.showToast('Error downloading QR', 'error');
+        }
+    },
+
+    shareQrWhatsapp: (token, acCode, customerName) => {
+        try {
+            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+            const message = `AC Code: ${acCode}\nCustomer: ${customerName || 'Unknown'}\nQR Code Link: ${qrImgUrl}`;
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        } catch (err) {
+            window.showToast('Error sharing QR', 'error');
+        }
     }
 };
