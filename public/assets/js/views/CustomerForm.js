@@ -1041,6 +1041,7 @@ window.CustomerForm = {
                 }
                 window.showToast('Service added successfully!', 'success');
                 window.CustomerForm.closeServiceModal();
+                window.router.navigate('/services');
             } else {
                 if (res.errors) {
                     const fieldMap = {
