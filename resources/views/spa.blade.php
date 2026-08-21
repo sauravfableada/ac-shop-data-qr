@@ -54,6 +54,9 @@
     <script src="{{ public_asset('assets/js/views/ServiceForm.js') }}?v={{ time() }}"></script>
     <script src="{{ public_asset('assets/js/views/ServiceView.js') }}?v={{ time() }}"></script>
     <script src="{{ public_asset('assets/js/views/QrScanner.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/StaffList.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/StaffForm.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/StaffView.js') }}?v={{ time() }}"></script>
     <script src="{{ public_asset('assets/js/views/ProfileView.js') }}?v={{ time() }}"></script>
     <script src="{{ public_asset('assets/js/views/UserLogs.js') }}?v={{ time() }}"></script>
     

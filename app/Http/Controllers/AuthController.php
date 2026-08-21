@@ -18,7 +18,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::with('roles')->where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
@@ -47,7 +47,7 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return $this->success(auth()->user());
+        return $this->success(auth()->user()->load('roles'));
     }
 
     public function updateProfile(Request $request)

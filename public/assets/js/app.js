@@ -40,6 +40,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Define Routes
     window.router.addRoute('/login', window.LoginView.render, false);
+    
+    // Fetch user if authenticated
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+        try {
+            const response = await window.api.get('/auth/me');
+            if (response.success) {
+                window.appUser = response.data;
+            } else {
+                localStorage.removeItem('auth_token');
+            }
+        } catch (e) {
+            console.error('Failed to fetch user:', e);
+        }
+    }
+
     window.router.addRoute('/', window.CustomerList.render, true);
     window.router.addRoute('/customers', window.CustomerList.render, true);
     window.router.addRoute('/customers/add', window.CustomerForm.render, true);
@@ -54,6 +70,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.router.addRoute('/services/edit/:id', window.ServiceForm.render, true);
     window.router.addRoute('/services/view/:id', window.ServiceView.render, true);
     window.router.addRoute('/scanner', window.QrScanner.render, true);
+    window.router.addRoute('/staff', window.StaffList.render, true);
+    window.router.addRoute('/staff/add', window.StaffForm.render, true);
+    window.router.addRoute('/staff/view/:id', window.StaffView.render, true);
+    window.router.addRoute('/staff/edit/:id', window.StaffForm.render, true);
     window.router.addRoute('/profile', window.ProfileView.render, true);
     window.router.addRoute('/user-logs', window.UserLogs.render, true);
 
@@ -87,6 +107,11 @@ window.renderLayout = (content) => {
                         <a href="/scanner" data-link style="text-decoration: none; color: white; background: #F59E0B; font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                             <i class="fa-solid fa-qrcode" style="color: white;"></i> Scanner
                         </a>
+                        ${window.appUser && window.appUser.roles && window.appUser.roles[0].name === 'admin' ? `
+                        <a href="/staff" data-link style="text-decoration: none; color: white; background: #EF4444; font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <i class="fa-solid fa-user-tie" style="color: white;"></i> Staff
+                        </a>
+                        ` : ''}
                     </div>
                     
                     <div class="header-right" style="display: flex; align-items: center; gap: 15px;">
@@ -95,10 +120,10 @@ window.renderLayout = (content) => {
                             <!-- Profile Info with Dropdown -->
                             <div style="position: relative;">
                                 <div id="profileDropdownBtn" style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-left: 10px; padding: 5px; border-radius: 8px;">
-                                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=10B981&color=fff" alt="Profile" style="width: 36px; height: 36px; border-radius: 50%;">
+                                    <img src="${window.appUser && window.appUser.profile_image ? window.appUser.profile_image : `https://ui-avatars.com/api/?name=${encodeURIComponent(window.appUser ? window.appUser.name : 'Admin User')}&background=10B981&color=fff`}" alt="Profile" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
                                     <div class="desktop-only">
-                                        <div style="font-weight: 700; font-size: 13px; color: var(--text-main);">Admin User</div>
-                                        <div style="font-size: 11px; color: var(--text-muted);">Administrator</div>
+                                        <div style="font-weight: 600; color: #0f172a; font-size: 14px;">${window.appUser ? window.appUser.name : 'Admin User'}</div>
+                                    <div style="font-size: 11px; color: var(--text-muted); text-transform: capitalize;">${window.appUser && window.appUser.roles && window.appUser.roles.length > 0 ? window.appUser.roles[0].name : 'Administrator'}</div>
                                     </div>
                                     <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: var(--text-muted);"></i>
                                 </div>
@@ -142,9 +167,9 @@ window.renderLayout = (content) => {
 
                 <!-- Mobile Bottom Navigation -->
                 <div class="bottom-nav">
-                    <a href="/customers" data-link class="bottom-nav-item ${window.location.pathname === '/customers' ? 'active' : ''}">
-                        <i class="fa-solid fa-house"></i>
-                        <span>Home</span>
+                    <a href="/customers" data-link class="bottom-nav-item ${(window.location.pathname === '/customers' || window.location.pathname === '/') ? 'active' : ''}">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Customers</span>
                     </a>
                     <a href="/ac-units" data-link class="bottom-nav-item ${window.location.pathname === '/ac-units' ? 'active' : ''}">
                         <i class="fa-solid fa-fan"></i>
@@ -158,10 +183,13 @@ window.renderLayout = (content) => {
                         <i class="fa-solid fa-clipboard-list"></i>
                         <span>Services</span>
                     </a>
-                    <a href="/profile" data-link class="bottom-nav-item ${window.location.pathname === '/profile' ? 'active' : ''}">
-                        <i class="fa-solid fa-user"></i>
-                        <span>Profile</span>
+                    ${window.appUser && window.appUser.roles && window.appUser.roles[0].name === 'admin' ? `
+                    <a href="/staff" data-link class="bottom-nav-item ${window.location.pathname === '/staff' ? 'active' : ''}">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <span>Staff</span>
                     </a>
+                    ` : ''}
+
                 </div>
             </div>
         </div>
