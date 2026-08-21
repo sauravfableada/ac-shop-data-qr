@@ -30,7 +30,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Customer::query();
+        $query = Customer::with('creator');
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -116,7 +116,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        $customer->load('acUnits');
+        $customer->load(['acUnits', 'creator']);
         return $this->success($customer, 'Customer retrieved successfully.');
     }
 

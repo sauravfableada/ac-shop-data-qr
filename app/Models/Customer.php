@@ -26,6 +26,11 @@ class Customer extends Model
         return $this->hasMany(ServiceRecord::class);
     }
 
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
     /**
      * Accessor for image to respect PUBLIC_PATH
      */

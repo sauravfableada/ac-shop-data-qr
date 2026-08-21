@@ -42,4 +42,9 @@ class ServiceRecord extends Model
     {
         return $this->hasMany(ServiceImage::class, 'service_id');
     }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }
