@@ -84,13 +84,13 @@ window.ProfileView = {
                                 <h3 style="font-size: 16px; font-weight: 700; color: #0f172a;">Personal Information</h3>
                             </div>
 
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 36px;">
                                 <div>
                                     <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">First Name</label>
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-regular fa-user" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="text" id="prof_first_name" value="${firstName}"
-                                            style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                                            style="border: none !important; padding: 0 !important; height: auto !important; min-height: auto !important; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
                                     </div>
                                 </div>
                                 <div>
@@ -98,18 +98,16 @@ window.ProfileView = {
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-regular fa-user" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="text" id="prof_last_name" value="${lastName}"
-                                            style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                                            style="border: none !important; padding: 0 !important; height: auto !important; min-height: auto !important; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
                                     </div>
                                 </div>
-                            </div>
 
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 36px;">
                                 <div>
                                     <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">Email Address</label>
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-regular fa-envelope" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="email" id="prof_email" value="${user.email || ''}"
-                                            style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                                            style="border: none !important; padding: 0 !important; height: auto !important; min-height: auto !important; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
                                     </div>
                                 </div>
 
@@ -118,7 +116,7 @@ window.ProfileView = {
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-solid fa-phone" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="text" id="prof_phone" value="${user.phone || ''}" placeholder="Enter phone number"
-                                            style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                                            style="border: none !important; padding: 0 !important; height: auto !important; min-height: auto !important; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +135,7 @@ window.ProfileView = {
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-solid fa-lock" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="password" id="prof_current_password" placeholder="Enter current password"
-                                            style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                                            style="border: none !important; padding: 0 !important; height: auto !important; min-height: auto !important; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
                                         <i class="fa-regular fa-eye" id="toggleCurrentPwd" style="color: #94a3b8; cursor: pointer; font-size: 14px;"></i>
                                     </div>
                                 </div>
@@ -147,7 +145,7 @@ window.ProfileView = {
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-solid fa-lock" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="password" id="prof_new_password" placeholder="Enter new password"
-                                            style="border: none; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
+                                            style="border: none !important; padding: 0 !important; height: auto !important; min-height: auto !important; outline: none; width: 100%; font-size: 14px; color: #0f172a; background: transparent;">
                                         <i class="fa-regular fa-eye" id="toggleNewPwd" style="color: #94a3b8; cursor: pointer; font-size: 14px;"></i>
                                     </div>
                                 </div>

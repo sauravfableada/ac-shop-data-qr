@@ -86,4 +86,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Accessor for profile_image to respect PUBLIC_PATH
+     */
+    public function getProfileImageAttribute($value)
+    {
+        if ($value && strpos($value, 'http') === false) {
+            return public_asset(ltrim($value, '/'));
+        }
+        return $value;
+    }
 }

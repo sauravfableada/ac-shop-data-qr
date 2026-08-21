@@ -526,7 +526,7 @@ window.CustomerForm = {
                         }
                     }
                 }
-                window.showToast(errorMessage, 'error');
+                window.showToast(res.message || 'Failed to save customer', 'error');
                 btn.disabled = false;
                 btn.innerText = 'Save Customer';
             }
