@@ -50,10 +50,33 @@ window.StaffList = {
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${roleNames}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; font-weight: 600;"><span style="background-color: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Active</span></td>
                     <td style="padding: 16px;">
+                        <button class="mobile-expand-btn" data-id="${c.id}"><i class="fa-solid fa-plus"></i></button>
                         <div class="desktop-only" style="display: flex; gap: 8px;">
                             <button onclick="window.router.navigate('/staff/view/${c.id}')" class="view-staff-btn" data-id="${c.id}" style="background: #3b82f6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="View"><i class="fa-regular fa-eye"></i> View</button>
                             <button class="edit-staff-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Edit"><i class="fa-solid fa-pencil"></i> Edit</button>
                             <button class="delete-staff-btn" data-id="${c.id}" style="background: #ef4444; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Delete"><i class="fa-regular fa-trash-can"></i> Delete</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="mobile-expand-${c.id}" class="mobile-expanded-row">
+                    <td colspan="5" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
+                        <div style="background: #ffffff; border-radius: 12px; border-left: 4px solid #0f172a; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                <div><i class="fa-solid fa-user-tie" style="margin-right: 8px;"></i> ROLE :</div>
+                                <div style="font-weight: 400; color: #64748b;">${roleNames}</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                <div><i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> STATUS :</div>
+                                <div style="font-weight: 400; color: #64748b;"><span style="color: #10b981; font-weight: 600;">Active</span></div>
+                            </div>
+                            
+                            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 16px;">
+                            
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; align-items: center;">
+                                <button onclick="window.router.navigate('/staff/view/${c.id}')" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-regular fa-eye" style="margin-right: 4px;"></i> View</button>
+                                <button class="edit-staff-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-pencil" style="margin-right: 4px;"></i> Edit</button>
+                                <button class="delete-staff-btn" data-id="${c.id}" style="background: #ef4444; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-regular fa-trash-can" style="margin-right: 4px;"></i> Delete</button>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -96,7 +119,7 @@ window.StaffList = {
                             <h1 style="font-size: 24px; margin-bottom: 4px; color: #0f172a;">Manage Staff</h1>
                         </div>
                         <div style="display: flex; gap: 12px;">
-                            <button onclick="window.router.navigate('/staff/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                            <button onclick="window.router.navigate('/staff/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap;">
                                 <i class="fa-solid fa-plus"></i> Add Staff
                             </button>
                         </div>
@@ -148,6 +171,22 @@ window.StaffList = {
         };
 
         const attachListeners = () => {
+            // Mobile Expand
+            document.querySelectorAll('.mobile-expand-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    const row = document.getElementById(`mobile-expand-${id}`);
+                    const icon = e.currentTarget.querySelector('i');
+                    if (row.classList.contains('show')) {
+                        row.classList.remove('show');
+                        icon.className = 'fa-solid fa-plus';
+                    } else {
+                        row.classList.add('show');
+                        icon.className = 'fa-solid fa-minus';
+                    }
+                });
+            });
+
             // Search
             const searchInput = document.getElementById('searchInput');
             if (searchInput) {
