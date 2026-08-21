@@ -95,6 +95,13 @@ class ServiceController extends Controller
 
     public function update(UpdateServiceRequest $request, ServiceRecord $service)
     {
+        $user = $request->user();
+        if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('service.view_all')) {
+            if ($service->created_by != $user->id && $service->assign_staff != $user->id) {
+                return $this->error('Unauthorized to modify this Service Record', 403);
+            }
+        }
+
         $data = $request->validated();
         
         $user = $request->user();
@@ -125,6 +132,13 @@ class ServiceController extends Controller
 
     public function destroy(ServiceRecord $service)
     {
+        $user = request()->user();
+        if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('service.view_all')) {
+            if ($service->created_by != $user->id && $service->assign_staff != $user->id) {
+                return $this->error('Unauthorized to delete this Service Record', 403);
+            }
+        }
+
         $srvNum = $service->service_number;
         $service->delete();
 

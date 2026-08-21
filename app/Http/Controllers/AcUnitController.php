@@ -119,6 +119,13 @@ class AcUnitController extends Controller
      */
     public function update(UpdateAcUnitRequest $request, AcUnit $acUnit)
     {
+        $user = $request->user();
+        if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('ac.view_all')) {
+            if ($acUnit->created_by != $user->id && $acUnit->assign_staff != $user->id) {
+                return $this->error('Unauthorized to modify this AC Unit', 403);
+            }
+        }
+
         $data = $request->validated();
         $data['updated_by'] = \Illuminate\Support\Facades\Auth::id();
         
@@ -149,6 +156,13 @@ class AcUnitController extends Controller
      */
     public function destroy(AcUnit $acUnit)
     {
+        $user = request()->user();
+        if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('ac.view_all')) {
+            if ($acUnit->created_by != $user->id && $acUnit->assign_staff != $user->id) {
+                return $this->error('Unauthorized to delete this AC Unit', 403);
+            }
+        }
+
         $acCode = $acUnit->ac_code;
         $acUnit->delete();
 

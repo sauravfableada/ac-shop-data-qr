@@ -40,6 +40,14 @@ class UserLog extends Model
                         $url
                     ));
                 }
+
+                // Notify the staff themselves
+                $user->notify(new \App\Notifications\AdminNotification(
+                    $log->action,
+                    $log->module,
+                    'You performed: ' . $log->message,
+                    $url
+                ));
             }
         });
     }
