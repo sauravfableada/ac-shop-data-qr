@@ -140,6 +140,14 @@ window.StaffForm = {
                 const result = await response.json();
 
                 if (result.success) {
+                    const staffName = document.getElementById('name').value;
+                    if (window.addNotification) {
+                        window.addNotification(
+                            isEdit ? 'Staff Updated' : 'Staff Created',
+                            `Staff member "${staffName}" was successfully ${isEdit ? 'updated' : 'created'}.`,
+                            'staff'
+                        );
+                    }
                     window.showToast(isEdit ? 'Staff updated successfully!' : 'Staff created successfully!', 'success');
                     window.router.navigate('/staff');
                 } else {

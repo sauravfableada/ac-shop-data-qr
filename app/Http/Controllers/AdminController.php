@@ -67,6 +67,13 @@ class AdminController extends Controller
         // Default role is staff (ID 2)
         $user->roles()->sync([2]);
 
+        \App\Models\UserLog::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'module' => 'Staff',
+            'action' => 'CREATE',
+            'message' => 'Created a Staff member: ' . $user->name
+        ]);
+
         return $this->success($user, 'Staff created successfully.');
     }
 
@@ -109,6 +116,13 @@ class AdminController extends Controller
             $user->roles()->sync([2]);
         }
 
+        \App\Models\UserLog::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'module' => 'Staff',
+            'action' => 'UPDATE',
+            'message' => 'Updated a Staff member: ' . $user->name
+        ]);
+
         return $this->success($user, 'Staff updated successfully.');
     }
 
@@ -127,6 +141,13 @@ class AdminController extends Controller
         }
 
         $user->delete();
+
+        \App\Models\UserLog::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'module' => 'Staff',
+            'action' => 'DELETE',
+            'message' => 'Deleted a Staff member: ' . $user->name
+        ]);
 
         return $this->success(null, 'Staff deleted successfully.');
     }

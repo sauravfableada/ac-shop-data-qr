@@ -452,6 +452,14 @@ window.CustomerForm = {
             }
 
             if (res.success) {
+                const customerName = document.getElementById('cName').value || 'Customer';
+                if (window.addNotification) {
+                    window.addNotification(
+                        isEdit ? 'Customer Updated' : 'Customer Created',
+                        `Customer "${customerName}" was successfully ${isEdit ? 'updated' : 'created'}.`,
+                        'customer'
+                    );
+                }
                 if (!isEdit && res.data?.id) {
                     window._cfSavedCustomerId = res.data.id;
                 }
@@ -543,6 +551,9 @@ window.CustomerForm = {
         }
         const res = await window.api.post('/customers', payload);
         if (res.success && res.data?.id) {
+            if (window.addNotification) {
+                window.addNotification('Customer Created', `Customer "${nameVal}" was successfully created.`, 'customer');
+            }
             window._cfSavedCustomerId = res.data.id;
             window.showToast('Customer saved! You can now add AC units / services.', 'success');
             const saveBtn = document.getElementById('saveCustomerBtn');
@@ -619,6 +630,9 @@ window.CustomerForm = {
         try {
             const res = await window.api.post('/ac-units', payload);
             if (res.success) {
+                if (window.addNotification) {
+                    window.addNotification('AC Unit Created', `AC Unit "${payload.ac_code}" was successfully created.`, 'ac-unit');
+                }
                 window.showToast('AC Unit added successfully!', 'success');
                 window.CustomerForm.closeAcModal();
             } else {
@@ -861,6 +875,9 @@ window.CustomerForm = {
         try {
             const res = await window.api.post('/ac-units', payload);
             if (res.success) {
+                if (window.addNotification) {
+                    window.addNotification('AC Unit Created', `AC Unit "${payload.ac_code}" was successfully created.`, 'ac-unit');
+                }
                 window.showToast('AC Unit added successfully!', 'success');
                 window.CustomerForm.closeMsvAcModal();
 
@@ -981,6 +998,13 @@ window.CustomerForm = {
         try {
             const res = await window.api.post('/services', payload);
             if (res.success) {
+                if (window.addNotification) {
+                    window.addNotification(
+                        'Service Record Created',
+                        `Service record for "${payload.service_type}" was successfully created.`,
+                        'service'
+                    );
+                }
                 window.showToast('Service added successfully!', 'success');
                 window.CustomerForm.closeServiceModal();
             } else {

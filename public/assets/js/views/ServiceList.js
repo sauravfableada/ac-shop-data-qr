@@ -134,22 +134,22 @@ window.ServiceList = {
                     </div>
 
                     <div>
-                        <div class="table-filter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <div style="display: flex; gap: 12px; align-items: center;">
-                                <div style="position: relative;">
-                                    <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px;"></i>
-                                    <input type="text" id="searchInput" value="${state.search}" placeholder="Search service #, customer..." style="padding: 8px 12px 8px 36px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; width: 250px;">
-                                </div>
-
+                        <div class="table-filter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap;">
+                            <!-- Search Input -->
+                            <div style="position: relative;">
+                                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;"></i>
+                                <input type="text" id="searchInput" value="${state.search}" placeholder="Search service #, customer..." style="width: 260px; padding: 9px 12px 9px 38px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
                             </div>
-                            
-                            <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px;">
-                                Show per page: 
-                                <select id="perPageSelect" style="padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+
+                            <!-- Per Page (desktop only) -->
+                            <div class="desktop-only" style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px; white-space: nowrap;">
+                                Show:
+                                <select id="perPageSelect" style="padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; cursor: pointer;">
                                     <option value="10" ${state.perPage == 10 ? 'selected' : ''}>10</option>
                                     <option value="25" ${state.perPage == 25 ? 'selected' : ''}>25</option>
                                     <option value="50" ${state.perPage == 50 ? 'selected' : ''}>50</option>
-                                </select> 
+                                </select>
+                                per page
                             </div>
                         </div>
 
@@ -248,9 +248,18 @@ window.ServiceList = {
     },
 
     changeStatusDirect: async (id, newStatus) => {
+        const service = state.services.find(s => String(s.id) === String(id));
+        const serviceNumber = service ? service.service_number : 'Service';
         try {
             const res = await window.api.patch(`/services/${id}/status`, { status: newStatus });
             if (res.success) {
+                if (window.addNotification) {
+                    window.addNotification(
+                        'Service Status Updated',
+                        `Service #${serviceNumber} status was changed to "${newStatus.toUpperCase()}".`,
+                        'service'
+                    );
+                }
                 window.showToast('Status updated successfully', 'success');
                 if (window.ServiceList._refresh) {
                     await window.ServiceList._refresh();
