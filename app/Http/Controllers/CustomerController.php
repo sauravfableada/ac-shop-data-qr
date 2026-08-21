@@ -77,8 +77,12 @@ class CustomerController extends Controller
         $data = $request->validated();
         
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('customers', 'public');
-            $data['image'] = '/storage/' . $path;
+            $file = $request->file('image');
+            $filename = 'customer_' . time() . '_' . \Illuminate\Support\Str::random(5) . '.' . $file->getClientOriginalExtension();
+            
+            $file->move(public_path('storage/customers'), $filename);
+            
+            $data['image'] = '/storage/customers/' . $filename;
         }
 
         $user = $request->user();
@@ -124,9 +128,19 @@ class CustomerController extends Controller
         $data = $request->validated();
         
         if ($request->hasFile('image')) {
-            // Delete old image if needed (optional, keeping it simple for now)
-            $path = $request->file('image')->store('customers', 'public');
-            $data['image'] = '/storage/' . $path;
+            $file = $request->file('image');
+            $filename = 'customer_' . $customer->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            $file->move(public_path('storage/customers'), $filename);
+            
+            if ($customer->image) {
+                $oldImagePath = public_path(ltrim($customer->image, '/'));
+                if (file_exists($oldImagePath) && is_file($oldImagePath)) {
+                    @unlink($oldImagePath);
+                }
+            }
+            
+            $data['image'] = '/storage/customers/' . $filename;
         }
         
         $data['updated_by'] = Auth::id();

@@ -58,8 +58,13 @@ class AdminController extends Controller
         ];
 
         if ($request->hasFile('profile_image')) {
-            $path = $request->file('profile_image')->store('public/avatars');
-            $data['profile_image'] = \Illuminate\Support\Facades\Storage::url($path);
+            $file = $request->file('profile_image');
+            // We don't have $user->id yet, so we use a random string
+            $filename = 'avatar_staff_' . time() . '_' . \Illuminate\Support\Str::random(5) . '.' . $file->getClientOriginalExtension();
+            
+            $file->move(public_path('storage/avatars'), $filename);
+            
+            $data['profile_image'] = '/storage/avatars/' . $filename;
         }
 
         $user = User::create($data);
@@ -105,8 +110,19 @@ class AdminController extends Controller
         }
 
         if ($request->hasFile('profile_image')) {
-            $path = $request->file('profile_image')->store('public/avatars');
-            $data['profile_image'] = \Illuminate\Support\Facades\Storage::url($path);
+            $file = $request->file('profile_image');
+            $filename = 'avatar_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            
+            $file->move(public_path('storage/avatars'), $filename);
+            
+            if ($user->profile_image) {
+                $oldImagePath = public_path(ltrim($user->profile_image, '/'));
+                if (file_exists($oldImagePath) && is_file($oldImagePath)) {
+                    @unlink($oldImagePath);
+                }
+            }
+            
+            $data['profile_image'] = '/storage/avatars/' . $filename;
         }
 
         $user->update($data);
