@@ -65,14 +65,11 @@ window.CustomerList = {
                             
                             <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 16px;">
                             
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #0f172a;">
-                                <div><i class="fa-solid fa-gear" style="margin-right: 8px;"></i> ACTIONS :</div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button onclick="window.router.navigate('/ac-units/add?customer_id=${c.id}')" style="background: #10b981; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-plus"></i></button>
-                                    <button class="view-customer-btn" data-id="${c.id}" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-eye"></i></button>
-                                    <button class="edit-customer-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-pencil"></i></button>
-                                    <button class="delete-customer-btn" data-id="${c.id}" style="background: #ef4444; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-regular fa-trash-can"></i></button>
-                                </div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; align-items: center;">
+                                <button onclick="window.router.navigate('/ac-units/add?customer_id=${c.id}')" style="background: #10b981; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-plus" style="margin-right: 4px;"></i> Add AC</button>
+                                <button class="view-customer-btn" data-id="${c.id}" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-regular fa-eye" style="margin-right: 4px;"></i> View</button>
+                                <button class="edit-customer-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-pencil" style="margin-right: 4px;"></i> Edit</button>
+                                <button class="delete-customer-btn" data-id="${c.id}" style="background: #ef4444; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-regular fa-trash-can" style="margin-right: 4px;"></i> Delete</button>
                             </div>
                         </div>
                     </td>
@@ -118,7 +115,7 @@ window.CustomerList = {
                             
                         </div>
                         <div style="display: flex; gap: 12px;">
-                            <button onclick="window.router.navigate('/customers/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                            <button onclick="window.router.navigate('/customers/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap;">
                                 <i class="fa-solid fa-plus"></i> Add Customer
                             </button>
                         </div>

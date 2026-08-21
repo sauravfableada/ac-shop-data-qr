@@ -81,12 +81,9 @@ window.ServiceList = {
                             
                             <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 16px;">
                             
-                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #0f172a;">
-                                <div><i class="fa-solid fa-gear" style="margin-right: 8px;"></i> ACTIONS :</div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button onclick="window.router.navigate('/services/view/${s.id}')" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-eye"></i></button>
-                                    <button onclick="window.router.navigate('/services/edit/${s.id}')" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 10px; cursor: pointer;"><i class="fa-solid fa-pencil"></i></button>
-                                </div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; align-items: center;">
+                                <button onclick="window.router.navigate('/services/view/${s.id}')" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-eye" style="margin-right: 4px;"></i> View</button>
+                                <button onclick="window.router.navigate('/services/edit/${s.id}')" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-pencil" style="margin-right: 4px;"></i> Edit</button>
                             </div>
                         </div>
                     </td>
