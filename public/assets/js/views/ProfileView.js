@@ -48,7 +48,7 @@ window.ProfileView = {
                             </div>
 
                             <h2 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">${user.name}</h2>
-                            <span style="background: #e0e7ff; color: #4f46e5; font-size: 12px; font-weight: 600; padding: 3px 12px; border-radius: 20px;">${user.role_name || 'Administrator'}</span>
+                            <span style="background: #e0e7ff; color: #4f46e5; font-size: 12px; font-weight: 600; padding: 3px 12px; border-radius: 20px;">${user.roles && user.roles.length > 0 ? user.roles[0].name.charAt(0).toUpperCase() + user.roles[0].name.slice(1) : 'Administrator'}</span>
 
                             <!-- Info Rows -->
                             <div style="width: 100%; margin-top: 24px; display: flex; flex-direction: column; gap: 14px; text-align: left;">
@@ -62,7 +62,7 @@ window.ProfileView = {
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 12px; font-size: 13px; color: #475569;">
                                     <i class="fa-solid fa-shield-halved" style="color: #6366f1; width: 16px;"></i>
-                                    <span>${user.role_name || 'Administrator'}</span>
+                                    <span>${user.roles && user.roles.length > 0 ? user.roles[0].name.charAt(0).toUpperCase() + user.roles[0].name.slice(1) : 'Administrator'}</span>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 12px; font-size: 13px; color: #475569;">
                                     <i class="fa-regular fa-calendar" style="color: #f97316; width: 16px;"></i>

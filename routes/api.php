@@ -60,6 +60,11 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/staff/dashboard', [\App\Http\Controllers\DashboardController::class, 'staffDashboard'])->middleware('permission:dashboard.staff');
 
     // Admin Staff Permissions
+    Route::get('/admin/staff', [\App\Http\Controllers\AdminController::class, 'index']);
+    Route::post('/admin/staff', [\App\Http\Controllers\AdminController::class, 'store']);
+    Route::get('/admin/staff/{id}', [\App\Http\Controllers\AdminController::class, 'show']);
+    Route::put('/admin/staff/{id}', [\App\Http\Controllers\AdminController::class, 'update']);
+    Route::delete('/admin/staff/{id}', [\App\Http\Controllers\AdminController::class, 'destroy']);
     Route::put('/admin/staff/{id}/permissions', [\App\Http\Controllers\AdminController::class, 'assignPermissions'])->middleware('permission:staff.edit');
 
     // QR Scan API (Token based)
