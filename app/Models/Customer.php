@@ -25,4 +25,15 @@ class Customer extends Model
     {
         return $this->hasMany(ServiceRecord::class);
     }
+
+    /**
+     * Accessor for image to respect PUBLIC_PATH
+     */
+    public function getImageAttribute($value)
+    {
+        if ($value && strpos($value, 'http') === false) {
+            return public_asset(ltrim($value, '/'));
+        }
+        return $value;
+    }
 }
