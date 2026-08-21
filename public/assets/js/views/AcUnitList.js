@@ -38,6 +38,7 @@ window.AcUnitList = {
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.brand || '-'} ${ac.model || ''}</td>
                     <td style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.customer ? ac.customer.full_name : '--'}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.ac_type || '-'} · ${ac.capacity || '-'}</td>
+                    <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.creator ? ac.creator.name : '--'}</td>
                     <td class="hide-on-mobile" style="padding: 16px;">
                         <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: ${ac.status === 'active' ? 'rgba(16,185,129,0.1)' : 'rgba(244,63,94,0.1)'}; color: ${ac.status === 'active' ? '#10B981' : '#F43F5E'};">${ac.status ? ac.status.toUpperCase() : 'ACTIVE'}</span>
                     </td>
@@ -55,8 +56,12 @@ window.AcUnitList = {
                     </td>
                 </tr>
                 <tr id="mobile-expand-${ac.id}" class="mobile-expanded-row">
-                    <td colspan="6" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
+                    <td colspan="7" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
                         <div style="background: #ffffff; border-radius: 12px; border-left: 4px solid #0f172a; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                <div><i class="fa-solid fa-user-plus" style="margin-right: 8px;"></i> CREATED BY :</div>
+                                <div style="font-weight: 400; color: #64748b; text-align: right; max-width: 60%;">${ac.creator ? ac.creator.name : '--'}</div>
+                            </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-fan" style="margin-right: 8px;"></i> MODEL :</div>
                                 <div style="font-weight: 400; color: #64748b;">${ac.brand || '-'} ${ac.model || ''}</div>
@@ -165,6 +170,7 @@ window.AcUnitList = {
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">Brand/Model</th>
                                         <th style="padding: 12px 16px;">Customer</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">AC Type & Capacity</th>
+                                        <th class="hide-on-mobile" style="padding: 12px 16px;">Created By</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">Status</th>
                                         <th style="padding: 12px 16px; text-align: right;">Actions</th>
                                     </tr>

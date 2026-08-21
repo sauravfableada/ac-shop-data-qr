@@ -14,7 +14,7 @@ window.CustomerView = {
         const c = response.data;
 
         // Fetch Service History
-        let historyHtml = `<tr><td colspan="7" style="padding: 16px; text-align: center; color: #64748b;">No maintenance history found for this customer.</td></tr>`;
+        let historyHtml = `<tr><td colspan="8" style="padding: 16px; text-align: center; color: #64748b;">No maintenance history found for this customer.</td></tr>`;
         try {
             const histRes = await window.api.get(`/customers/${params.id}/service-history`);
             if (histRes.success && histRes.data.length > 0) {
@@ -23,6 +23,7 @@ window.CustomerView = {
                         <td style="padding: 16px; font-weight: 500;">${new Date(record.service_date).toLocaleDateString()}</td>
                         <td style="padding: 16px; color: #3b82f6; font-weight: 600;">${record.ac_unit ? record.ac_unit.ac_code : '-'}</td>
                         <td class="hide-on-mobile" style="padding: 16px;">${record.service_type || 'Regular Maintenance'}</td>
+                        <td class="hide-on-mobile" style="padding: 16px;">${record.creator ? record.creator.name : '--'}</td>
                         <td class="hide-on-mobile" style="padding: 16px;">${record.complaint || '-'}</td>
                         <td class="hide-on-mobile" style="padding: 16px; font-weight: 600; color: #0f172a;">₹${record.total_amount || '0.00'}</td>
                         <td style="padding: 16px;">
@@ -36,11 +37,15 @@ window.CustomerView = {
                         </td>
                     </tr>
                     <tr id="mobile-expand-${record.id}" class="mobile-expanded-row">
-                        <td colspan="7" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
+                        <td colspan="8" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
                             <div style="background: #ffffff; border-radius: 12px; border-left: 4px solid #0f172a; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                     <div><i class="fa-solid fa-wrench" style="margin-right: 8px;"></i> TYPE :</div>
                                     <div style="font-weight: 400; color: #64748b; text-align: right; max-width: 60%;">${record.service_type || 'Regular Maintenance'}</div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                    <div><i class="fa-solid fa-user-plus" style="margin-right: 8px;"></i> CREATED BY :</div>
+                                    <div style="font-weight: 400; color: #64748b; text-align: right; max-width: 60%;">${record.creator ? record.creator.name : '--'}</div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                     <div><i class="fa-solid fa-comment-dots" style="margin-right: 8px;"></i> COMPLAINT :</div>
@@ -131,6 +136,11 @@ window.CustomerView = {
                                 <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Registered On</label>
                                 <div style="font-size: 15px; font-weight: 500;">${new Date(c.created_at).toLocaleString()}</div>
                             </div>
+
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Created By</label>
+                                <div style="font-size: 15px; font-weight: 500;">${c.creator ? c.creator.name : '--'}</div>
+                            </div>
                         </div>
 
                     </div>
@@ -151,6 +161,7 @@ window.CustomerView = {
                                     <th style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Date</th>
                                     <th style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">AC Unit</th>
                                     <th class="hide-on-mobile" style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Type</th>
+                                    <th class="hide-on-mobile" style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Created By</th>
                                     <th class="hide-on-mobile" style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Complaint</th>
                                     <th class="hide-on-mobile" style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Amount</th>
                                     <th style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Status</th>

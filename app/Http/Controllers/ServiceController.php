@@ -17,7 +17,7 @@ class ServiceController extends Controller
 
     public function index(Request $request)
     {
-        $query = ServiceRecord::with(['customer', 'acUnit', 'technician']);
+        $query = ServiceRecord::with(['customer', 'acUnit', 'technician', 'creator']);
 
         if ($request->has('status')) {
             $query->where('status', $request->input('status'));
@@ -217,7 +217,7 @@ class ServiceController extends Controller
     public function acServiceHistory($id)
     {
         $history = ServiceRecord::where('ac_unit_id', $id)
-            ->with(['technician', 'parts.sparePart', 'images'])
+            ->with(['technician', 'parts.sparePart', 'images', 'creator'])
             ->orderBy('service_date', 'desc')
             ->get();
             
@@ -228,7 +228,7 @@ class ServiceController extends Controller
     public function customerServiceHistory($id)
     {
         $history = ServiceRecord::where('customer_id', $id)
-            ->with(['acUnit', 'technician', 'parts.sparePart', 'images'])
+            ->with(['acUnit', 'technician', 'parts.sparePart', 'images', 'creator'])
             ->orderBy('service_date', 'desc')
             ->get();
             

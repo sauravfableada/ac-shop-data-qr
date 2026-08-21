@@ -30,7 +30,7 @@ class AcUnitController extends Controller
      */
     public function index(Request $request)
     {
-        $query = AcUnit::with(['customer', 'qrCode']);
+        $query = AcUnit::with(['customer', 'qrCode', 'creator']);
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -110,7 +110,7 @@ class AcUnitController extends Controller
      */
     public function show(AcUnit $acUnit)
     {
-        $acUnit->load(['customer', 'qrCode']);
+        $acUnit->load(['customer', 'qrCode', 'creator']);
         return $this->success($acUnit, 'AC Unit retrieved successfully.');
     }
 

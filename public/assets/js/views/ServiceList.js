@@ -37,6 +37,7 @@ window.ServiceList = {
                     <td style="padding: 16px; font-size: 14px; font-weight: 600; color: var(--text-main);">${s.service_number}</td>
                     <td style="padding: 16px; font-size: 14px; color: var(--text-muted);">${s.customer ? s.customer.full_name : '--'}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${s.ac_unit ? s.ac_unit.ac_code : '--'}</td>
+                    <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${s.creator ? s.creator.name : '--'}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${new Date(s.service_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td class="hide-on-mobile" style="padding: 16px;">
                         <select onchange="window.ServiceList.changeStatusDirect(${s.id}, this.value)" style="padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: ${s.status === 'completed' ? 'rgba(16,185,129,0.1)' : (s.status === 'in_progress' ? 'rgba(59,130,246,0.1)' : 'rgba(244,63,94,0.1)')}; color: ${s.status === 'completed' ? '#10B981' : (s.status === 'in_progress' ? '#3B82F6' : '#F43F5E')}; border: 1px solid transparent; outline: none; cursor: pointer;">
@@ -54,8 +55,12 @@ window.ServiceList = {
                     </td>
                 </tr>
                 <tr id="mobile-expand-${s.id}" class="mobile-expanded-row">
-                    <td colspan="6" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
+                    <td colspan="7" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
                         <div style="background: #ffffff; border-radius: 12px; border-left: 4px solid #0f172a; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                            <div style="display: flex; justify-content: space-between; gap: 12px; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                <div style="flex-shrink: 0;"><i class="fa-solid fa-user-plus" style="margin-right: 8px;"></i> CREATED BY :</div>
+                                <div style="font-weight: 400; color: #64748b; text-align: right;">${s.creator ? s.creator.name : '--'}</div>
+                            </div>
                             <div style="display: flex; justify-content: space-between; gap: 12px; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div style="flex-shrink: 0;"><i class="fa-solid fa-user" style="margin-right: 8px;"></i> CUSTOMER :</div>
                                 <div style="font-weight: 400; color: #64748b; text-align: right; word-break: break-word;">${s.customer ? s.customer.full_name : '--'}</div>
@@ -160,6 +165,7 @@ window.ServiceList = {
                                         <th style="padding: 12px 16px;">Service #</th>
                                         <th style="padding: 12px 16px;">Customer</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">AC Code</th>
+                                        <th class="hide-on-mobile" style="padding: 12px 16px;">Created By</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">Date</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">Status</th>
                                         <th style="padding: 12px 16px; text-align: right;">Actions</th>
