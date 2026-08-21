@@ -116,7 +116,7 @@ window.CustomerList = {
                         </div>
                         <div style="display: flex; gap: 12px;">
                             <button onclick="window.router.navigate('/customers/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap;">
-                                <i class="fa-solid fa-plus"></i> Add Customer
+                                <i class="fa-solid fa-plus"></i> Customer
                             </button>
                         </div>
                     </div>
@@ -215,7 +215,7 @@ window.CustomerList = {
                         cancelButtonColor: '#64748b',
                         confirmButtonText: 'Yes, delete it!'
                     });
-                    
+
                     if (result.isConfirmed) {
                         const response = await window.api.delete('/customers/' + id);
                         if (response.success) {
