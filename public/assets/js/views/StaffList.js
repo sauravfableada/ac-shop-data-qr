@@ -130,7 +130,7 @@ window.StaffList = {
                             <!-- Search Input -->
                             <div style="position: relative;">
                                 <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;"></i>
-                                <input type="text" id="searchInput" value="${state.search}" placeholder="Search by name, phone no..." style="width: 260px; padding: 9px 12px 9px 38px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
+                                <input type="text" id="searchInput" value="${state.search}" placeholder="Search by name, phone no..." style="width: 260px; padding: 9px 12px 9px 38px !important; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
                             </div>
 
                             <!-- Per Page (desktop only) -->
