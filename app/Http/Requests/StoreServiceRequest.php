@@ -46,7 +46,7 @@ class StoreServiceRequest extends FormRequest
         return [
             'customer_id' => 'required|exists:customers,id',
             'ac_unit_id' => 'required|exists:ac_units,id',
-            'staff_id' => 'nullable|exists:users,id',
+            'assign_staff' => 'nullable|exists:users,id',
             'service_date' => 'required|date',
             'service_type' => 'required|string|max:100',
             'complaint' => 'nullable|string',

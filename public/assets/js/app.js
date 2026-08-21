@@ -76,71 +76,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.router.addRoute('/staff/edit/:id', window.StaffForm.render, true);
     window.router.addRoute('/profile', window.ProfileView.render, true);
     window.router.addRoute('/user-logs', window.UserLogs.render, true);
-    window.router.addRoute('/notifications', window.NotificationsView.render, true);
+    window.router.addRoute('/notifications', window.NotificationList.render, true);
 
     // Initial Route Handling
     await window.router.handleRoute();
 });
 
 // --- Notification Read State Helpers ---
-const _getReadIds = () => JSON.parse(localStorage.getItem('read_log_ids') || '[]');
-const _saveReadIds = (ids) => localStorage.setItem('read_log_ids', JSON.stringify(ids));
+// No longer using localStorage, relying on backend.
 
-// Helper for managing persistent notifications
 window.addNotification = () => {
-    // Backend records notifications via DB logs — just refresh UI.
     window.loadNotifications();
 };
 
-window.markOneNotificationRead = (id) => {
-    const readIds = _getReadIds();
-    if (!readIds.includes(id)) {
-        readIds.push(id);
-        _saveReadIds(readIds);
-    }
-    window.loadNotifications();
+window.markOneNotificationRead = async (id) => {
+    try {
+        await window.api.post(`/notifications/${id}/read`);
+        window.loadNotifications();
+    } catch (e) {}
 };
 
 window.markAllNotificationsRead = async () => {
     try {
-        const response = await window.api.get('/user-logs');
-        if (response.success && response.data) {
-            const allIds = response.data.map(l => l.id);
-            _saveReadIds(allIds);
-        }
+        await window.api.post('/notifications/read-all');
         window.loadNotifications();
     } catch (e) {}
 };
 
 window.loadNotifications = async () => {
     try {
-        const response = await window.api.get('/user-logs');
+        const response = await window.api.get('/notifications');
         if (!response.success) return;
 
-        const logs = response.data || [];
-        const readIds = _getReadIds();
+        const notifs = response.data.notifications || [];
+        const unreadCount = response.data.unread_count || 0;
 
-        const notifications = logs.slice(0, 30).map(log => {
-            const userName = log.user ? log.user.name : 'System';
-            let moduleType = 'general';
-            if (log.module) {
-                const mod = log.module.toLowerCase();
-                if (mod === 'staff')                    moduleType = 'staff';
-                else if (mod === 'customer')            moduleType = 'customer';
-                else if (mod === 'ac-unit' || mod === 'ac') moduleType = 'ac-unit';
-                else if (mod === 'service')             moduleType = 'service';
-            }
+        const notifications = notifs.map(n => {
+            const data = n.data || {};
             return {
-                id: log.id,
-                title: `${log.module} ${log.action}`,
-                message: `${log.message} (by ${userName})`,
-                time: new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                type: moduleType,
-                unread: !readIds.includes(log.id)
+                id: n.id,
+                title: 'New Notification',
+                message: data.message || 'You have a new notification',
+                time: new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                type: data.type || 'general',
+                unread: n.read_at === null,
+                url: data.url || '#'
             };
         });
-
-        const unreadCount = notifications.filter(n => n.unread).length;
 
         const badge = document.getElementById('notificationBadge');
         if (badge) {
@@ -170,8 +152,8 @@ window.loadNotifications = async () => {
                     let icon = 'fa-info-circle', iconColor = '#3b82f6', bgLight = '#eff6ff';
                     if (n.type === 'staff')        { icon = 'fa-user-tie';       iconColor = '#ef4444'; bgLight = '#fef2f2'; }
                     else if (n.type === 'customer') { icon = 'fa-users';          iconColor = '#3b82f6'; bgLight = '#eff6ff'; }
-                    else if (n.type === 'ac-unit')  { icon = 'fa-snowflake';      iconColor = '#8b5cf6'; bgLight = '#f5f3ff'; }
-                    else if (n.type === 'service')  { icon = 'fa-clipboard-list'; iconColor = '#10b981'; bgLight = '#ecfdf5'; }
+                    else if (n.type === 'ac_unit' || n.type === 'ac-unit')  { icon = 'fa-snowflake';      iconColor = '#8b5cf6'; bgLight = '#f5f3ff'; }
+                    else if (n.type === 'service_record' || n.type === 'service')  { icon = 'fa-clipboard-list'; iconColor = '#10b981'; bgLight = '#ecfdf5'; }
 
                     return `
                         <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-glass); display: flex; gap: 10px; background: #f0f9ff; position: relative; align-items: flex-start;">
@@ -185,8 +167,7 @@ window.loadNotifications = async () => {
                                     <span style="font-size: 10px; color: var(--text-muted); flex-shrink: 0;">${n.time}</span>
                                 </div>
                                 <div style="font-size: 12px; color: var(--text-muted); line-height: 1.4; word-break: break-word; margin-bottom: 6px;">${n.message}</div>
-                                <button
-                                    class="notif-read-btn"
+                                <button type="button" class="notif-read-btn"
                                     data-id="${n.id}"
                                     style="font-size: 11px; font-weight: 600; color: #3b82f6; background: transparent; border: 1px solid #3b82f6; border-radius: 20px; padding: 2px 10px; cursor: pointer; transition: all 0.15s;"
                                     onmouseover="this.style.background='#3b82f6';this.style.color='white';"
@@ -203,7 +184,7 @@ window.loadNotifications = async () => {
                 listContainer.querySelectorAll('.notif-read-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        window.markOneNotificationRead(parseInt(btn.dataset.id));
+                        window.markOneNotificationRead(btn.dataset.id);
                     });
                 });
             }

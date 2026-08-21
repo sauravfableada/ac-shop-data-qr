@@ -12,7 +12,7 @@ class AcUnit extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'customer_id', 'ac_code', 'brand', 'model', 'serial_number', 'ac_type',
+        'created_by', 'updated_by', 'assign_staff', 'customer_id', 'ac_code', 'brand', 'model', 'serial_number', 'ac_type',
         'capacity', 'inverter_type', 'installation_date', 'purchase_date',
         'warranty_start_date', 'warranty_end_date', 'installation_location',
         'floor', 'room', 'indoor_unit_number', 'outdoor_unit_number',

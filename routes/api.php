@@ -86,4 +86,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/user-logs', [\App\Http\Controllers\UserLogController::class, 'index']);
     Route::delete('/user-logs/clear', [\App\Http\Controllers\UserLogController::class, 'clearAll']);
     Route::delete('/user-logs/{id}', [\App\Http\Controllers\UserLogController::class, 'destroy']);
+
+    // Notifications
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index']);
+    Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead']);
+    Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead']);
 });

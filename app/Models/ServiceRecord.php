@@ -12,7 +12,7 @@ class ServiceRecord extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'service_number', 'customer_id', 'ac_unit_id', 'staff_id', 'service_type',
+        'created_by', 'updated_by', 'service_number', 'customer_id', 'ac_unit_id', 'assign_staff', 'service_type',
         'service_date', 'complaint', 'diagnosis', 'work_performed', 'status',
         'labor_charge', 'parts_charge', 'discount', 'tax', 'total_amount',
         'payment_status', 'next_service_date', 'technician_notes', 'customer_notes'
@@ -30,7 +30,7 @@ class ServiceRecord extends Model
 
     public function technician()
     {
-        return $this->belongsTo(User::class, 'staff_id');
+        return $this->belongsTo(User::class, 'assign_staff');
     }
 
     public function parts()

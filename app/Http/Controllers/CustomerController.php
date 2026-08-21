@@ -90,6 +90,13 @@ class CustomerController extends Controller
 
         $customer = Customer::create($data);
         
+        if ($user->roles()->where('name', 'admin')->exists() && isset($data['assign_staff'])) {
+            $staff = \App\Models\User::find($data['assign_staff']);
+            if ($staff) {
+                $staff->notify(new \App\Notifications\StaffAssignedNotification('Customer', $customer->full_name, '/customers'));
+            }
+        }
+        
         UserLog::create([
             'user_id' => Auth::id() ?? 1, // Fallback for testing without auth
             'module' => 'Customer',
@@ -123,8 +130,18 @@ class CustomerController extends Controller
         }
         
         $data['updated_by'] = Auth::id();
+        
+        $oldStaffId = $customer->assign_staff;
 
         $customer->update($data);
+
+        $user = $request->user();
+        if ($user->roles()->where('name', 'admin')->exists() && isset($data['assign_staff']) && $data['assign_staff'] != $oldStaffId) {
+            $staff = \App\Models\User::find($data['assign_staff']);
+            if ($staff) {
+                $staff->notify(new \App\Notifications\StaffAssignedNotification('Customer', $customer->full_name, '/customers'));
+            }
+        }
         
         UserLog::create([
             'user_id' => Auth::id() ?? 1,
