@@ -59,7 +59,7 @@
     <script src="{{ public_asset('assets/js/views/StaffView.js') }}?v={{ time() }}"></script>
     <script src="{{ public_asset('assets/js/views/ProfileView.js') }}?v={{ time() }}"></script>
     <script src="{{ public_asset('assets/js/views/UserLogs.js') }}?v={{ time() }}"></script>
-    <script src="{{ public_asset('assets/js/views/NotificationsView.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/NotificationList.js') }}?v={{ time() }}"></script>
     
     <!-- App Entry -->
     <script src="{{ public_asset('assets/js/app.js') }}?v={{ time() }}"></script>

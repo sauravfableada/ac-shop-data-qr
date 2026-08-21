@@ -43,6 +43,14 @@ class AcUnitController extends Controller
             $query->where('status', $request->input('status'));
         }
 
+        $user = $request->user();
+        if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('ac.view_all')) {
+            $query->where(function ($q) use ($user) {
+                $q->where('created_by', $user->id)
+                  ->orWhere('assign_staff', $user->id);
+            });
+        }
+
         $query->orderBy('id', 'desc');
         
         $perPage = $request->input('per_page', 20);
@@ -66,7 +74,21 @@ class AcUnitController extends Controller
     {
         $data = $request->validated();
         
+        $user = $request->user();
+        $data['created_by'] = $user->id;
+        $data['updated_by'] = $user->id;
+        if (!$user->roles()->where('name', 'admin')->exists()) {
+            $data['assign_staff'] = $user->id;
+        }
+
         $acUnit = AcUnit::create($data);
+        
+        if ($user->roles()->where('name', 'admin')->exists() && isset($data['assign_staff'])) {
+            $staff = \App\Models\User::find($data['assign_staff']);
+            if ($staff) {
+                $staff->notify(new \App\Notifications\StaffAssignedNotification('AC Unit', $acUnit->ac_code, '/ac-units'));
+            }
+        }
         
         // Generate secure QR token automatically in ac_qr_codes
         $acUnit->qrCode()->create([
@@ -97,7 +119,20 @@ class AcUnitController extends Controller
      */
     public function update(UpdateAcUnitRequest $request, AcUnit $acUnit)
     {
-        $acUnit->update($request->validated());
+        $data = $request->validated();
+        $data['updated_by'] = \Illuminate\Support\Facades\Auth::id();
+        
+        $oldStaffId = $acUnit->assign_staff;
+
+        $acUnit->update($data);
+
+        $user = $request->user();
+        if ($user->roles()->where('name', 'admin')->exists() && isset($data['assign_staff']) && $data['assign_staff'] != $oldStaffId) {
+            $staff = \App\Models\User::find($data['assign_staff']);
+            if ($staff) {
+                $staff->notify(new \App\Notifications\StaffAssignedNotification('AC Unit', $acUnit->ac_code, '/ac-units'));
+            }
+        }
 
         \App\Models\UserLog::create([
             'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,

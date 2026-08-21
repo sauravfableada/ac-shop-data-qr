@@ -40,11 +40,11 @@ class DashboardController extends Controller
         $today = Carbon::today();
 
         $data = [
-            'assigned_services' => ServiceRecord::where('staff_id', $user->id)->count(),
-            'today_services' => ServiceRecord::where('staff_id', $user->id)->whereDate('service_date', $today)->count(),
-            'pending_services' => ServiceRecord::where('staff_id', $user->id)->where('status', 'pending')->count(),
-            'completed_services' => ServiceRecord::where('staff_id', $user->id)->where('status', 'completed')->count(),
-            'upcoming_services' => ServiceRecord::where('staff_id', $user->id)->where('service_date', '>', $today)->count(),
+            'assigned_services' => ServiceRecord::where('assign_staff', $user->id)->count(),
+            'today_services' => ServiceRecord::where('assign_staff', $user->id)->whereDate('service_date', $today)->count(),
+            'pending_services' => ServiceRecord::where('assign_staff', $user->id)->where('status', 'pending')->count(),
+            'completed_services' => ServiceRecord::where('assign_staff', $user->id)->where('status', 'completed')->count(),
+            'upcoming_services' => ServiceRecord::where('assign_staff', $user->id)->where('service_date', '>', $today)->count(),
         ];
 
         return $this->success($data, 'Staff dashboard statistics retrieved successfully.');

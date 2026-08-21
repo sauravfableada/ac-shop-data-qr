@@ -38,7 +38,7 @@ class ServiceController extends Controller
         // If logged-in user is a staff/technician and not admin, only show their services (unless they have global view perm)
         $user = $request->user();
         if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('service.view_all')) {
-            $query->where('staff_id', $user->id);
+            $query->where('assign_staff', $user->id);
         }
 
         $perPage = $request->input('per_page', 20);
@@ -62,11 +62,20 @@ class ServiceController extends Controller
         $data['service_number'] = 'SRV-' . date('Y') . '-' . str_pad(ServiceRecord::count() + 1, 5, '0', STR_PAD_LEFT);
 
         $user = $request->user();
+        $data['created_by'] = $user->id;
+        $data['updated_by'] = $user->id;
         if (!$user->roles()->where('name', 'admin')->exists()) {
-            $data['staff_id'] = $user->id;
+            $data['assign_staff'] = $user->id;
         }
 
         $service = ServiceRecord::create($data);
+        
+        if ($user->roles()->where('name', 'admin')->exists() && isset($data['assign_staff'])) {
+            $staff = \App\Models\User::find($data['assign_staff']);
+            if ($staff) {
+                $staff->notify(new \App\Notifications\StaffAssignedNotification('Service Record', $service->service_number, '/services'));
+            }
+        }
 
         \App\Models\UserLog::create([
             'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
@@ -89,11 +98,20 @@ class ServiceController extends Controller
         $data = $request->validated();
         
         $user = $request->user();
+        $data['updated_by'] = $user->id;
         if (!$user->roles()->where('name', 'admin')->exists()) {
-            $data['staff_id'] = $user->id;
+            $data['assign_staff'] = $user->id;
         }
 
+        $oldStaffId = $service->assign_staff;
         $service->update($data);
+
+        if ($user->roles()->where('name', 'admin')->exists() && isset($data['assign_staff']) && $data['assign_staff'] != $oldStaffId) {
+            $staff = \App\Models\User::find($data['assign_staff']);
+            if ($staff) {
+                $staff->notify(new \App\Notifications\StaffAssignedNotification('Service Record', $service->service_number, '/services'));
+            }
+        }
 
         \App\Models\UserLog::create([
             'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
@@ -141,8 +159,20 @@ class ServiceController extends Controller
     // Assign Staff
     public function assignStaff(Request $request, ServiceRecord $service)
     {
-        $request->validate(['staff_id' => 'required|exists:users,id']);
-        $service->update(['staff_id' => $request->staff_id, 'status' => 'assigned']);
+        $request->validate(['assign_staff' => 'required|exists:users,id']);
+        $service->update(['assign_staff' => $request->assign_staff, 'status' => 'assigned']);
+        
+        $staff = \App\Models\User::find($request->assign_staff);
+        if ($staff) {
+            $staff->notify(new \App\Notifications\StaffAssignedNotification('Service Record', $service->service_number, '/services'));
+        }
+
+        \App\Models\UserLog::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'module' => 'Service',
+            'action' => 'UPDATE',
+            'message' => 'Assigned staff ' . ($staff ? $staff->name : '') . ' to Service Record: ' . $service->service_number
+        ]);
         return $this->success($service, 'Staff assigned successfully.');
     }
 
