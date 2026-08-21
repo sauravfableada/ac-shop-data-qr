@@ -371,6 +371,10 @@ window.ServiceForm = {
         try {
             const res = await window.api.post('/ac-units', payload);
             if (res.success) {
+                const acCode = document.getElementById('qaAcCode').value || '';
+                if (window.addNotification) {
+                    window.addNotification('AC Unit Created', `AC Unit "${acCode}" was successfully created.`, 'ac-unit');
+                }
                 window.showToast('AC Unit created successfully!', 'success');
                 document.getElementById('addAcModal').style.display = 'none';
 
@@ -458,6 +462,14 @@ window.ServiceForm = {
                 : await window.api.post('/services', data);
 
             if (res.success) {
+                const serviceType = data.service_type || 'Maintenance';
+                if (window.addNotification) {
+                    window.addNotification(
+                        isEdit ? 'Service Record Updated' : 'Service Record Created',
+                        `Service record for "${serviceType}" was successfully ${isEdit ? 'updated' : 'created'}.`,
+                        'service'
+                    );
+                }
                 window.showToast(`Maintenance record ${isEdit ? 'updated' : 'added'} successfully!`, 'success');
                 if (data.ac_unit_id) {
                     window.router.navigate(`/ac-units/view/${data.ac_unit_id}`);

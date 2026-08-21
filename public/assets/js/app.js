@@ -76,13 +76,150 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.router.addRoute('/staff/edit/:id', window.StaffForm.render, true);
     window.router.addRoute('/profile', window.ProfileView.render, true);
     window.router.addRoute('/user-logs', window.UserLogs.render, true);
+    window.router.addRoute('/notifications', window.NotificationsView.render, true);
 
     // Initial Route Handling
     await window.router.handleRoute();
 });
 
+// --- Notification Read State Helpers ---
+const _getReadIds = () => JSON.parse(localStorage.getItem('read_log_ids') || '[]');
+const _saveReadIds = (ids) => localStorage.setItem('read_log_ids', JSON.stringify(ids));
+
+// Helper for managing persistent notifications
+window.addNotification = () => {
+    // Backend records notifications via DB logs — just refresh UI.
+    window.loadNotifications();
+};
+
+window.markOneNotificationRead = (id) => {
+    const readIds = _getReadIds();
+    if (!readIds.includes(id)) {
+        readIds.push(id);
+        _saveReadIds(readIds);
+    }
+    window.loadNotifications();
+};
+
+window.markAllNotificationsRead = async () => {
+    try {
+        const response = await window.api.get('/user-logs');
+        if (response.success && response.data) {
+            const allIds = response.data.map(l => l.id);
+            _saveReadIds(allIds);
+        }
+        window.loadNotifications();
+    } catch (e) {}
+};
+
+window.loadNotifications = async () => {
+    try {
+        const response = await window.api.get('/user-logs');
+        if (!response.success) return;
+
+        const logs = response.data || [];
+        const readIds = _getReadIds();
+
+        const notifications = logs.slice(0, 30).map(log => {
+            const userName = log.user ? log.user.name : 'System';
+            let moduleType = 'general';
+            if (log.module) {
+                const mod = log.module.toLowerCase();
+                if (mod === 'staff')                    moduleType = 'staff';
+                else if (mod === 'customer')            moduleType = 'customer';
+                else if (mod === 'ac-unit' || mod === 'ac') moduleType = 'ac-unit';
+                else if (mod === 'service')             moduleType = 'service';
+            }
+            return {
+                id: log.id,
+                title: `${log.module} ${log.action}`,
+                message: `${log.message} (by ${userName})`,
+                time: new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                type: moduleType,
+                unread: !readIds.includes(log.id)
+            };
+        });
+
+        const unreadCount = notifications.filter(n => n.unread).length;
+
+        const badge = document.getElementById('notificationBadge');
+        if (badge) {
+            if (unreadCount > 0) {
+                badge.innerText = unreadCount;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Only show UNREAD in the dropdown
+        const unreadNotifications = notifications.filter(n => n.unread);
+
+        const listContainer = document.getElementById('notificationList');
+        if (listContainer) {
+            if (unreadNotifications.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">
+                        <i class="fa-solid fa-circle-check" style="font-size: 28px; margin-bottom: 8px; display: block; color: #10b981;"></i>
+                        <div style="font-weight: 600; margin-bottom: 4px;">All caught up!</div>
+                        No new unread notifications
+                    </div>
+                `;
+            } else {
+                listContainer.innerHTML = unreadNotifications.map(n => {
+                    let icon = 'fa-info-circle', iconColor = '#3b82f6', bgLight = '#eff6ff';
+                    if (n.type === 'staff')        { icon = 'fa-user-tie';       iconColor = '#ef4444'; bgLight = '#fef2f2'; }
+                    else if (n.type === 'customer') { icon = 'fa-users';          iconColor = '#3b82f6'; bgLight = '#eff6ff'; }
+                    else if (n.type === 'ac-unit')  { icon = 'fa-snowflake';      iconColor = '#8b5cf6'; bgLight = '#f5f3ff'; }
+                    else if (n.type === 'service')  { icon = 'fa-clipboard-list'; iconColor = '#10b981'; bgLight = '#ecfdf5'; }
+
+                    return `
+                        <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-glass); display: flex; gap: 10px; background: #f0f9ff; position: relative; align-items: flex-start;">
+                            <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #3b82f6; border-radius: 0 2px 2px 0;"></div>
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: ${bgLight}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fa-solid ${icon}" style="color: ${iconColor}; font-size: 14px;"></i>
+                            </div>
+                            <div style="flex-grow: 1; min-width: 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px;">
+                                    <span style="font-weight: 600; font-size: 13px; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px;">${n.title}</span>
+                                    <span style="font-size: 10px; color: var(--text-muted); flex-shrink: 0;">${n.time}</span>
+                                </div>
+                                <div style="font-size: 12px; color: var(--text-muted); line-height: 1.4; word-break: break-word; margin-bottom: 6px;">${n.message}</div>
+                                <button
+                                    class="notif-read-btn"
+                                    data-id="${n.id}"
+                                    style="font-size: 11px; font-weight: 600; color: #3b82f6; background: transparent; border: 1px solid #3b82f6; border-radius: 20px; padding: 2px 10px; cursor: pointer; transition: all 0.15s;"
+                                    onmouseover="this.style.background='#3b82f6';this.style.color='white';"
+                                    onmouseout="this.style.background='transparent';this.style.color='#3b82f6';"
+                                >
+                                    <i class="fa-solid fa-check" style="margin-right:3px;"></i> Mark read
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Attach click handlers to per-item read buttons
+                listContainer.querySelectorAll('.notif-read-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        window.markOneNotificationRead(parseInt(btn.dataset.id));
+                    });
+                });
+            }
+        }
+    } catch (e) {
+        console.error('Failed to load notifications', e);
+    }
+};
+
 // Shared Layout Template
 window.renderLayout = (content) => {
+    setTimeout(() => {
+        if (typeof window.loadNotifications === 'function') {
+            window.loadNotifications();
+        }
+    }, 50);
     return `
         <div class="dashboard-wrapper">
             <!-- Main Content -->
@@ -115,6 +252,32 @@ window.renderLayout = (content) => {
                     </div>
                     
                     <div class="header-right" style="display: flex; align-items: center; gap: 15px;">
+                        <!-- Notification Bell with Dropdown -->
+                        <div style="position: relative;">
+                            <div id="notificationBellBtn" style="position: relative; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; transition: background 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
+                                <i class="fa-regular fa-bell" style="font-size: 18px; color: #475569;"></i>
+                                <span id="notificationBadge" style="position: absolute; top: -2px; right: -2px; background: #ef4444; color: white; font-size: 9px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: none; align-items: center; justify-content: center; border: 2px solid #fff;">0</span>
+                            </div>
+                            
+                            <!-- Notification Dropdown Menu -->
+                            <div id="notificationDropdown" class="profile-dropdown" style="width: 320px; right: 0; top: 45px; padding: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                                <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                                    <span style="font-weight: 700; font-size: 14px; color: #0f172a;">Notifications</span>
+                                    <span id="markAllReadBtn" style="font-size: 12px; color: #3b82f6; cursor: pointer; font-weight: 600;">Mark all as read</span>
+                                </div>
+                                <div id="notificationList" style="max-height: 280px; overflow-y: auto;">
+                                    <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">
+                                        <i class="fa-regular fa-bell-slash" style="font-size: 24px; margin-bottom: 8px; display: block; color: #94a3b8;"></i> No notifications yet
+                                    </div>
+                                </div>
+                                <div style="padding: 10px 16px; border-top: 1px solid var(--border-glass); background: #f8fafc; text-align: center;">
+                                    <a href="/notifications" data-link style="font-size: 13px; font-weight: 600; color: #3b82f6; text-decoration: none;">
+                                        <i class="fa-solid fa-arrow-right" style="margin-right: 4px;"></i> View all notifications
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="profile-sec" style="display: flex; align-items: center; gap: 15px; border-left: 1px solid var(--border-glass); padding-left: 15px; height: 40px;">
                             
                             <!-- Profile Info with Dropdown -->
@@ -189,6 +352,10 @@ window.renderLayout = (content) => {
                         <span>Staff</span>
                     </a>
                     ` : ''}
+                    <a href="/notifications" data-link class="bottom-nav-item ${window.location.pathname === '/notifications' ? 'active' : ''}">
+                        <i class="fa-regular fa-bell"></i>
+                        <span>Alerts</span>
+                    </a>
 
                 </div>
             </div>
@@ -204,8 +371,30 @@ document.addEventListener('click', async (e) => {
 
     if (profileBtn && dropdown) {
         dropdown.classList.toggle('show');
+        const notifDropdown = document.getElementById('notificationDropdown');
+        if (notifDropdown) notifDropdown.classList.remove('show');
     } else if (dropdown && !e.target.closest('#profileDropdown')) {
         dropdown.classList.remove('show');
+    }
+
+    // Handle Notification Dropdown Toggle
+    const notifBtn = e.target.closest('#notificationBellBtn');
+    const notifDropdown = document.getElementById('notificationDropdown');
+
+    if (notifBtn && notifDropdown) {
+        notifDropdown.classList.toggle('show');
+        const profileDropdown = document.getElementById('profileDropdown');
+        if (profileDropdown) profileDropdown.classList.remove('show');
+    } else if (notifDropdown && !e.target.closest('#notificationDropdown')) {
+        notifDropdown.classList.remove('show');
+    }
+
+    // Handle Mark All as Read (stop propagation so dropdown stays open)
+    const markReadBtn = e.target.closest('#markAllReadBtn');
+    if (markReadBtn) {
+        e.stopPropagation();
+        await window.markAllNotificationsRead();
+        window.showToast('All notifications marked as read', 'success');
     }
 
     // Handle Theme Toggle

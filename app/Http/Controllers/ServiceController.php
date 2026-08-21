@@ -38,7 +38,7 @@ class ServiceController extends Controller
         // If logged-in user is a staff/technician and not admin, only show their services (unless they have global view perm)
         $user = $request->user();
         if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('service.view_all')) {
-            $query->where('technician_id', $user->id);
+            $query->where('staff_id', $user->id);
         }
 
         $perPage = $request->input('per_page', 20);
@@ -62,6 +62,14 @@ class ServiceController extends Controller
         $data['service_number'] = 'SRV-' . date('Y') . '-' . str_pad(ServiceRecord::count() + 1, 5, '0', STR_PAD_LEFT);
 
         $service = ServiceRecord::create($data);
+
+        \App\Models\UserLog::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'module' => 'Service',
+            'action' => 'CREATE',
+            'message' => 'Created Service Record: ' . $service->service_number
+        ]);
+
         return $this->success($service, 'Service created successfully.', 201);
     }
 
@@ -74,12 +82,29 @@ class ServiceController extends Controller
     public function update(UpdateServiceRequest $request, ServiceRecord $service)
     {
         $service->update($request->validated());
+
+        \App\Models\UserLog::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'module' => 'Service',
+            'action' => 'UPDATE',
+            'message' => 'Updated Service Record: ' . $service->service_number
+        ]);
+
         return $this->success($service, 'Service updated successfully.');
     }
 
     public function destroy(ServiceRecord $service)
     {
+        $srvNum = $service->service_number;
         $service->delete();
+
+        \App\Models\UserLog::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'module' => 'Service',
+            'action' => 'DELETE',
+            'message' => 'Deleted Service Record: ' . $srvNum
+        ]);
+
         return $this->success(null, 'Service deleted successfully.');
     }
     
@@ -90,14 +115,22 @@ class ServiceController extends Controller
             'status' => 'required|in:pending,assigned,in_progress,completed,cancelled'
         ]);
         $service->update(['status' => $request->status]);
+
+        \App\Models\UserLog::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'module' => 'Service',
+            'action' => 'UPDATE',
+            'message' => 'Changed Status of Service Record: ' . $service->service_number . ' to ' . strtoupper($request->status)
+        ]);
+
         return $this->success($service, 'Status updated successfully.');
     }
 
     // Assign Staff
     public function assignStaff(Request $request, ServiceRecord $service)
     {
-        $request->validate(['technician_id' => 'required|exists:users,id']);
-        $service->update(['technician_id' => $request->technician_id, 'status' => 'assigned']);
+        $request->validate(['staff_id' => 'required|exists:users,id']);
+        $service->update(['staff_id' => $request->staff_id, 'status' => 'assigned']);
         return $this->success($service, 'Staff assigned successfully.');
     }
 

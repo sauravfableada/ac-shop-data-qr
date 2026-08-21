@@ -302,6 +302,10 @@ window.AcUnitForm = {
         try {
             const res = await window.api.post('/customers', payload);
             if (res.success) {
+                const customerName = document.getElementById('qcName').value || 'Customer';
+                if (window.addNotification) {
+                    window.addNotification('Customer Created', `Customer "${customerName}" was successfully created.`, 'customer');
+                }
                 window.showToast('Customer created successfully!', 'success');
                 document.getElementById('addCustomerModal').style.display = 'none';
 
@@ -383,6 +387,14 @@ window.AcUnitForm = {
                 : await window.api.post('/ac-units', data);
 
             if (res.success) {
+                const acCode = document.getElementById('acCode').value || '';
+                if (window.addNotification) {
+                    window.addNotification(
+                        isEdit ? 'AC Unit Updated' : 'AC Unit Created',
+                        `AC Unit "${acCode}" was successfully ${isEdit ? 'updated' : 'created'}.`,
+                        'ac-unit'
+                    );
+                }
                 window.showToast(`AC Unit ${isEdit ? 'updated' : 'added'} successfully!`, 'success');
                 window.router.navigate('/ac-units');
             } else {

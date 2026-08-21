@@ -73,6 +73,13 @@ class AcUnitController extends Controller
             'token' => Str::uuid()->toString(),
         ]);
 
+        \App\Models\UserLog::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'module' => 'AC-Unit',
+            'action' => 'CREATE',
+            'message' => 'Created AC Unit with code: ' . $acUnit->ac_code
+        ]);
+
         return $this->success($acUnit->load('qrCode'), 'AC Unit created successfully.', 201);
     }
 
@@ -91,6 +98,14 @@ class AcUnitController extends Controller
     public function update(UpdateAcUnitRequest $request, AcUnit $acUnit)
     {
         $acUnit->update($request->validated());
+
+        \App\Models\UserLog::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'module' => 'AC-Unit',
+            'action' => 'UPDATE',
+            'message' => 'Updated AC Unit: ' . $acUnit->ac_code
+        ]);
+
         return $this->success($acUnit, 'AC Unit updated successfully.');
     }
 
@@ -99,7 +114,16 @@ class AcUnitController extends Controller
      */
     public function destroy(AcUnit $acUnit)
     {
+        $acCode = $acUnit->ac_code;
         $acUnit->delete();
+
+        \App\Models\UserLog::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'module' => 'AC-Unit',
+            'action' => 'DELETE',
+            'message' => 'Deleted AC Unit: ' . $acCode
+        ]);
+
         return $this->success(null, 'AC Unit deleted successfully.');
     }
 }

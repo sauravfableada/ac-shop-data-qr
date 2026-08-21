@@ -54,7 +54,7 @@ window.StaffList = {
                         <div class="desktop-only" style="display: flex; gap: 8px;">
                             <button onclick="window.router.navigate('/staff/view/${c.id}')" class="view-staff-btn" data-id="${c.id}" style="background: #3b82f6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="View"><i class="fa-regular fa-eye"></i> View</button>
                             <button class="edit-staff-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Edit"><i class="fa-solid fa-pencil"></i> Edit</button>
-                            <button class="delete-staff-btn" data-id="${c.id}" style="background: #ef4444; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Delete"><i class="fa-regular fa-trash-can"></i> Delete</button>
+                            <button class="delete-staff-btn" data-id="${c.id}" data-name="${c.name}" style="background: #ef4444; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Delete"><i class="fa-regular fa-trash-can"></i> Delete</button>
                         </div>
                     </td>
                 </tr>
@@ -75,7 +75,7 @@ window.StaffList = {
                             <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; align-items: center;">
                                 <button onclick="window.router.navigate('/staff/view/${c.id}')" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-regular fa-eye" style="margin-right: 4px;"></i> View</button>
                                 <button class="edit-staff-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-pencil" style="margin-right: 4px;"></i> Edit</button>
-                                <button class="delete-staff-btn" data-id="${c.id}" style="background: #ef4444; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-regular fa-trash-can" style="margin-right: 4px;"></i> Delete</button>
+                                <button class="delete-staff-btn" data-id="${c.id}" data-name="${c.name}" style="background: #ef4444; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-regular fa-trash-can" style="margin-right: 4px;"></i> Delete</button>
                             </div>
                         </div>
                     </td>
@@ -126,21 +126,22 @@ window.StaffList = {
                     </div>
 
                     <div>
-                        <div class="table-filter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <div style="display: flex; gap: 12px; align-items: center;">
-                                <div style="position: relative;">
-                                    <i class="fa-solid fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px;"></i>
-                                    <input type="text" id="searchInput" value="${state.search}" placeholder="Search by name, phone no..." style="padding: 8px 12px 8px 36px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; width: 250px;">
-                                </div>
+                        <div class="table-filter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap;">
+                            <!-- Search Input -->
+                            <div style="position: relative;">
+                                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;"></i>
+                                <input type="text" id="searchInput" value="${state.search}" placeholder="Search by name, phone no..." style="width: 260px; padding: 9px 12px 9px 38px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
                             </div>
-                            
-                            <div style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px;">
-                                Show per page: 
-                                <select id="perPageSelect" style="padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+
+                            <!-- Per Page (desktop only) -->
+                            <div class="desktop-only" style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px; white-space: nowrap;">
+                                Show:
+                                <select id="perPageSelect" style="padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; cursor: pointer;">
                                     <option value="10" ${state.perPage == 10 ? 'selected' : ''}>10</option>
                                     <option value="25" ${state.perPage == 25 ? 'selected' : ''}>25</option>
                                     <option value="50" ${state.perPage == 50 ? 'selected' : ''}>50</option>
-                                </select> 
+                                </select>
+                                per page
                             </div>
                         </div>
 
@@ -262,6 +263,14 @@ window.StaffList = {
                             
                             const jsonResult = await response.json();
                             if (jsonResult.success) {
+                                const staffName = e.currentTarget.dataset.name || 'Staff member';
+                                if (window.addNotification) {
+                                    window.addNotification(
+                                        'Staff Deleted',
+                                        `Staff member "${staffName}" was successfully deleted.`,
+                                        'staff'
+                                    );
+                                }
                                 Swal.fire(
                                     'Deleted!',
                                     'Staff member has been deleted.',
