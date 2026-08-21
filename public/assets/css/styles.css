@@ -59,6 +59,14 @@ select,
     box-sizing: border-box !important;
 }
 
+/* iOS Date Input Fix */
+input[type="date"] {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    line-height: normal !important;
+    display: block !important;
+}
+
 .choices__inner {
     display: flex !important;
     align-items: center !important;

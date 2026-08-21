@@ -142,7 +142,7 @@ window.AcUnitList = {
                             <!-- Search Input -->
                             <div style="position: relative;">
                                 <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;"></i>
-                                <input type="text" id="searchInput" value="${state.search}" placeholder="Search AC code, brand..." style="width: 260px; padding: 9px 12px 9px 38px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
+                                <input type="text" id="searchInput" value="${state.search}" placeholder="Search AC code, brand..." style="width: 260px; padding: 9px 12px 9px 38px !important; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
                             </div>
 
                             <!-- Per Page (desktop only) -->
@@ -283,20 +283,32 @@ window.AcUnitList = {
     },
 
     printAcUnit: async (id) => {
+        // Open window synchronously to avoid iOS popup blocker
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            window.showToast('Please allow popups to print', 'error');
+            return;
+        }
+
         try {
             const res = await window.api.get(`/ac-units/${id}`);
-            if (!res.success) { window.showToast('Could not load AC Unit data', 'error'); return; }
+            if (!res.success) { 
+                printWindow.close();
+                window.showToast('Could not load AC Unit data', 'error'); 
+                return; 
+            }
             const ac = res.data;
             const token = ac.qr_code ? ac.qr_code.token : null;
 
             if (!token) {
+                printWindow.close();
                 window.showToast('No QR code found for this AC Unit', 'error');
                 return;
             }
 
             const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
 
-            const printWindow = window.open('', '_blank');
+            printWindow.document.open();
             printWindow.document.write(`
                 <!DOCTYPE html>
                 <html>
@@ -363,6 +375,7 @@ window.AcUnitList = {
             `);
             printWindow.document.close();
         } catch (err) {
+            if (printWindow) printWindow.close();
             window.showToast('Error generating print view', 'error');
         }
     },
