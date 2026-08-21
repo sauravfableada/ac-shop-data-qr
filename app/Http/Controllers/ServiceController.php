@@ -61,6 +61,11 @@ class ServiceController extends Controller
         $data = $request->validated();
         $data['service_number'] = 'SRV-' . date('Y') . '-' . str_pad(ServiceRecord::count() + 1, 5, '0', STR_PAD_LEFT);
 
+        $user = $request->user();
+        if (!$user->roles()->where('name', 'admin')->exists()) {
+            $data['staff_id'] = $user->id;
+        }
+
         $service = ServiceRecord::create($data);
 
         \App\Models\UserLog::create([
@@ -81,7 +86,14 @@ class ServiceController extends Controller
 
     public function update(UpdateServiceRequest $request, ServiceRecord $service)
     {
-        $service->update($request->validated());
+        $data = $request->validated();
+        
+        $user = $request->user();
+        if (!$user->roles()->where('name', 'admin')->exists()) {
+            $data['staff_id'] = $user->id;
+        }
+
+        $service->update($data);
 
         \App\Models\UserLog::create([
             'user_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
