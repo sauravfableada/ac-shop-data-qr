@@ -66,11 +66,10 @@ window.AcUnitForm = {
                 <form id="acForm" onsubmit="window.AcUnitForm.save(event, ${isEdit}, ${acId})" novalidate>
                     
                     <!-- STEP 1: Basic Details -->
-                    <div id="acMainStep1" class="responsive-grid">
-                        <div style="grid-column: span 1; width: 100%;">
+                    <div id="acMainStep1" class="grid-2-col">
+                        <div style="grid-column: 1 / -1; width: 100%;">
                             <h3 style="font-size: 16px; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 16px;">Basic Details</h3>
                         </div>
-                        <div class="hide-on-mobile" style="grid-column: span 1;"></div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -130,7 +129,7 @@ window.AcUnitForm = {
                         </select>
                     </div>
 
-                    <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
+                    <div class="hide-on-desktop" style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
                         <button type="button" onclick="window.history.back()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
                         <button type="button" onclick="window.AcUnitForm.nextStep()" style="padding: 12px 24px; border-radius: 8px; border: none; background: #0ea5e9; color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">Next Step <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
@@ -138,30 +137,27 @@ window.AcUnitForm = {
 
                 <!-- STEP 2: Installation & Warranty -->
                 <div id="acMainStep2" style="display: none;">
-                    <div class="responsive-grid">
-                        <div style="grid-column: span 1; margin-top: 16px; width: 100%;">
+                    <div class="grid-2-col">
+                        <div style="grid-column: 1 / -1; margin-top: 16px; width: 100%;">
                             <h3 style="font-size: 16px; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 16px;">Installation & Warranty</h3>
                         </div>
-                        <div class="hide-on-mobile" style="grid-column: span 1;"></div>
                         
-                        <div class="responsive-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
-                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Date</label>
-                                <input type="date" name="installation_date" value="${ac.installation_date ? ac.installation_date.split('T')[0] : ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                            </div>
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Date</label>
+                            <input type="date" name="installation_date" value="${ac.installation_date ? ac.installation_date.split('T')[0] : ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                        </div>
 
-                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Location / Room</label>
-                                <input type="text" name="room" value="${ac.room || ''}" placeholder="e.g. Master Bedroom" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                            </div>
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Installation Location / Room</label>
+                            <input type="text" name="room" value="${ac.room || ''}" placeholder="e.g. Master Bedroom" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                        </div>
 
-                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Status</label>
-                                <select name="status" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                                    <option value="active" ${ac.status === 'active' ? 'selected' : ''}>Active</option>
-                                    <option value="inactive" ${ac.status === 'inactive' ? 'selected' : ''}>Inactive</option>
-                                </select>
-                            </div>
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Status</label>
+                            <select name="status" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                <option value="active" ${ac.status === 'active' ? 'selected' : ''}>Active</option>
+                                <option value="inactive" ${ac.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+                            </select>
                         </div>
 
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
@@ -170,7 +166,8 @@ window.AcUnitForm = {
                         </div>
 
                         <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
-                            <button type="button" onclick="window.AcUnitForm.prevStep()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                            <button type="button" onclick="window.history.back()" class="hide-on-mobile" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
+                            <button type="button" onclick="window.AcUnitForm.prevStep()" class="hide-on-desktop" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;"><i class="fa-solid fa-arrow-left"></i> Previous</button>
                             <button type="submit" style="padding: 12px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px var(--primary-glow);">
                                 ${isEdit ? 'Save Changes' : 'Add AC Unit'}
                             </button>

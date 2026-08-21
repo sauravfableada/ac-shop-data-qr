@@ -39,7 +39,7 @@ window.StaffForm = {
 
                 <div class="glass-panel" style="background: #ffffff; padding: 32px; border-radius: 12px; margin: 0 auto;">
                     <form id="staffForm" novalidate>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div class="grid-2-col" style="margin-bottom: 20px;">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Full Name *</label>
                                 <input type="text" id="name" value="${staff.name || ''}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
@@ -52,7 +52,7 @@ window.StaffForm = {
                             </div>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div class="grid-2-col" style="margin-bottom: 20px;">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Phone Number</label>
                                 <input type="text" id="phone" value="${staff.phone || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">

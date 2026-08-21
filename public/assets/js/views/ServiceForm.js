@@ -73,11 +73,10 @@ window.ServiceForm = {
                 <form id="serviceForm" onsubmit="window.ServiceForm.save(event, ${isEdit}, ${serviceId})" novalidate>
                     
                     <!-- STEP 1: Service Details -->
-                    <div id="serviceMainStep1" class="responsive-grid">
-                        <div style="grid-column: span 1; width: 100%;">
+                    <div id="serviceMainStep1" class="grid-2-col">
+                        <div style="grid-column: 1 / -1; width: 100%;">
                             <h3 style="font-size: 16px; color: #0f172a; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px; margin-bottom: 16px;">Service Details</h3>
                         </div>
-                        <div class="hide-on-mobile" style="grid-column: span 1;"></div>
 
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -117,7 +116,7 @@ window.ServiceForm = {
                             </select>
                         </div>
 
-                        <div class="responsive-grid" style="grid-column: 1 / -1;">
+                        <div class="grid-2-col" style="grid-column: 1 / -1;">
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                                 <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Customer Complaint / Issue</label>
                                 <textarea name="complaint" rows="3" placeholder="What is the issue reported by the customer?" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; resize: vertical;">${service.complaint || ''}</textarea>
@@ -129,7 +128,7 @@ window.ServiceForm = {
                             </div>
                         </div>
 
-                        <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
+                        <div class="hide-on-desktop" style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
                             <button type="button" onclick="window.history.back()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
                             <button type="button" onclick="window.ServiceForm.nextStep()" style="padding: 12px 24px; border-radius: 8px; border: none; background: #0ea5e9; color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">Next Step <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
@@ -137,11 +136,10 @@ window.ServiceForm = {
 
                     <!-- STEP 2: Billing Details -->
                     <div id="serviceMainStep2" style="display: none;">
-                        <div class="responsive-grid">
-                            <div style="grid-column: span 1; margin-top: 16px; width: 100%;">
+                        <div class="grid-2-col">
+                            <div style="grid-column: 1 / -1; margin-top: 16px; width: 100%;">
                                 <h3 style="font-size: 16px; color: #0f172a; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px; margin-bottom: 16px;">Billing Details</h3>
                             </div>
-                            <div class="hide-on-mobile" style="grid-column: span 1;"></div>
 
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                                 <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Labor / Service Charge (₹)</label>
@@ -177,7 +175,8 @@ window.ServiceForm = {
                             </div>
 
                             <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
-                                <button type="button" onclick="window.ServiceForm.prevStep()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                                <button type="button" onclick="window.history.back()" class="hide-on-mobile" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
+                                <button type="button" onclick="window.ServiceForm.prevStep()" class="hide-on-desktop" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;"><i class="fa-solid fa-arrow-left"></i> Previous</button>
                                 <button type="submit" style="padding: 12px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px var(--primary-glow);">
                                     ${isEdit ? 'Save Changes' : 'Save Maintenance'}
                                 </button>
