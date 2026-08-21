@@ -38,7 +38,7 @@ window.CustomerForm = {
 
                 <div class="glass-panel" style="background: #ffffff; padding: clamp(16px, 5vw, 32px); border-radius: 12px; margin: 0 auto; overflow-x: hidden;">
                     <form id="customerForm" novalidate>
-                        <div class="responsive-grid">
+                        <div class="grid-2-col">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Customer Code *</label>
                                 <input type="text" id="cCode" value="${customer?.customer_code || dynamicCode}" required readonly style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: rgba(0,0,0,0.1); color: var(--text-muted); outline: none; cursor: not-allowed;">
@@ -51,7 +51,7 @@ window.CustomerForm = {
                             </div>
                         </div>
 
-                        <div class="responsive-grid">
+                        <div class="grid-2-col">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Mobile *</label>
                                 <input type="text" id="cMobile" value="${customer?.mobile || ''}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
@@ -71,7 +71,7 @@ window.CustomerForm = {
 
 
 
-                        <div class="responsive-grid">
+                        <div class="grid-2-col">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Customer Photo</label>
                                 ${customer?.image ? `<div style="margin-bottom: 12px;"><img src="${customer.image}" style="height: 64px; border-radius: 8px; border: 1px solid var(--border-glass);"></div>` : ''}

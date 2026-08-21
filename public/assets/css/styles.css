@@ -688,7 +688,10 @@ body.light-mode {
 }
 
 @media (max-width: 768px) {
-    .grid-2-col {
+    .grid-2-col,
+    #customerForm .grid-2-col,
+    #acForm .grid-2-col,
+    #serviceForm .grid-2-col {
         grid-template-columns: 1fr !important;
     }
 }
@@ -706,5 +709,17 @@ body.light-mode {
 
     .installation-grid .status-field {
         grid-column: 1 / -1;
+    }
+}
+
+/* Desktop view: show all steps at once and hide step nav buttons */
+@media (min-width: 769px) {
+    #acMainStep2,
+    #serviceMainStep2 {
+        display: block !important;
+    }
+
+    .hide-on-desktop {
+        display: none !important;
     }
 }
