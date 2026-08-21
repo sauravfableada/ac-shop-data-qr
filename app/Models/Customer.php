@@ -11,7 +11,7 @@ class Customer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_code', 'full_name', 'company_name', 'mobile', 'alternate_mobile',
+        'created_by', 'updated_by', 'assign_staff', 'customer_code', 'full_name', 'company_name', 'mobile', 'alternate_mobile',
         'email', 'address', 'city', 'state', 'country', 'pincode', 'gst_number',
         'customer_type', 'notes', 'status', 'whatsapp_no', 'image', 'dob'
     ];

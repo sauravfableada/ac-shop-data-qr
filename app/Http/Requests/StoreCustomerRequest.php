@@ -39,8 +39,9 @@ class StoreCustomerRequest extends FormRequest
             'notes' => 'nullable|string',
             'status' => 'nullable|in:active,inactive',
             'whatsapp_no' => 'nullable|string|max:20',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
             'dob' => 'nullable|date',
+            'assign_staff' => 'nullable|exists:users,id'
         ];
     }
 

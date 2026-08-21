@@ -45,6 +45,14 @@ class CustomerController extends Controller
             $query->where('status', $request->input('status'));
         }
 
+        $user = $request->user();
+        if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('customer.view_all')) {
+            $query->where(function ($q) use ($user) {
+                $q->where('created_by', $user->id)
+                  ->orWhere('assign_staff', $user->id);
+            });
+        }
+
         $query->orderBy('id', 'desc');
         
         $perPage = $request->input('per_page', 20);
@@ -71,6 +79,13 @@ class CustomerController extends Controller
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('customers', 'public');
             $data['image'] = '/storage/' . $path;
+        }
+
+        $user = $request->user();
+        $data['created_by'] = $user->id;
+        $data['updated_by'] = $user->id;
+        if (!$user->roles()->where('name', 'admin')->exists()) {
+            $data['assign_staff'] = $user->id;
         }
 
         $customer = Customer::create($data);
@@ -106,6 +121,8 @@ class CustomerController extends Controller
             $path = $request->file('image')->store('customers', 'public');
             $data['image'] = '/storage/' . $path;
         }
+        
+        $data['updated_by'] = Auth::id();
 
         $customer->update($data);
         

@@ -85,6 +85,17 @@ window.CustomerForm = {
                             </div>
                         </div>
 
+                        ${window.appUser && window.appUser.roles && window.appUser.roles[0].name === 'admin' ? `
+                        <div class="grid-2-col" style="margin-bottom: 24px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Assign Staff</label>
+                                <select id="cAssignStaff" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                                    <option value="">Unassigned</option>
+                                </select>
+                            </div>
+                        </div>
+                        ` : ''}
+
                         <!-- Bottom action row: quick-add buttons (left) + cancel/save (right) -->
                         <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
                             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
@@ -414,6 +425,24 @@ window.CustomerForm = {
         // Track saved customer id so modals can link records to the right customer
         window._cfSavedCustomerId = customer?.id || null;
 
+        if (window.appUser && window.appUser.roles && window.appUser.roles[0].name === 'admin') {
+            const staffSelect = document.getElementById('cAssignStaff');
+            if (staffSelect) {
+                const staffRes = await window.api.get('/admin/staff');
+                if (staffRes.success) {
+                    staffRes.data.forEach(staff => {
+                        const option = document.createElement('option');
+                        option.value = staff.id;
+                        option.textContent = staff.name;
+                        if (customer && customer.assign_staff == staff.id) {
+                            option.selected = true;
+                        }
+                        staffSelect.appendChild(option);
+                    });
+                }
+            }
+        }
+
         document.getElementById('customerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -428,6 +457,11 @@ window.CustomerForm = {
             const fileInput = document.getElementById('cImage');
             if (fileInput.files.length > 0) {
                 payload.append('image', fileInput.files[0]);
+            }
+
+            const staffSelect = document.getElementById('cAssignStaff');
+            if (staffSelect && staffSelect.value) {
+                payload.append('assign_staff', staffSelect.value);
             }
 
             const btn = document.getElementById('saveCustomerBtn');
