@@ -2,6 +2,7 @@ window.ServiceForm = {
     render: async (container) => {
         const urlParams = new URLSearchParams(window.location.search);
         const acIdQuery = urlParams.get('ac_id');
+        const customerIdQuery = urlParams.get('customer_id');
 
         const urlSegments = window.location.pathname.split('/');
         const isEdit = urlSegments.includes('edit');
@@ -15,6 +16,10 @@ window.ServiceForm = {
             const acRes = await window.api.get('/ac-units?per_page=1000');
             if (acRes.success) {
                 acUnits = acRes.data?.data || acRes.data || [];
+                // Filter by customer if navigating from customer list
+                if (customerIdQuery) {
+                    acUnits = acUnits.filter(ac => String(ac.customer_id) === String(customerIdQuery));
+                }
             }
         } catch (e) {
             console.error("Failed to load AC units", e);
@@ -41,6 +46,8 @@ window.ServiceForm = {
             }
         } else if (acIdQuery) {
             service.ac_unit_id = acIdQuery;
+        } else if (customerIdQuery && acUnits.length === 1) {
+            service.ac_unit_id = acUnits[0].id;
         }
 
         const acOptions = acUnits.map(ac =>
@@ -63,105 +70,120 @@ window.ServiceForm = {
 
                 <div class="glass-panel" style="background: #ffffff;  padding: 32px; border-radius: 12px; margin: 0 auto;">
 
-                <form id="serviceForm" onsubmit="window.ServiceForm.save(event, ${isEdit}, ${serviceId})" class="grid-2-col" novalidate>
+                <form id="serviceForm" onsubmit="window.ServiceForm.save(event, ${isEdit}, ${serviceId})" novalidate>
                     
-                    <div style="grid-column: span 2;">
-                        <h3 style="font-size: 16px; color: #0f172a; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px; margin-bottom: 16px;">Service Details</h3>
-                    </div>
-
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">AC Unit <span style="color: red;">*</span></label>
-                            <button type="button" onclick="document.getElementById('addAcModal').style.display='flex'; window.ServiceForm.loadAcCode();" style="background: var(--primary); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                    <!-- STEP 1: Service Details -->
+                    <div id="serviceMainStep1" class="responsive-grid">
+                        <div style="grid-column: span 1; width: 100%;">
+                            <h3 style="font-size: 16px; color: #0f172a; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px; margin-bottom: 16px;">Service Details</h3>
                         </div>
-                        <select id="acSelect" name="ac_unit_id" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                            <option value="">Select AC Unit</option>
-                            ${acOptions}
-                        </select>
-                        <div id="err_ac_unit_id" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
-                    </div>
+                        <div class="hide-on-mobile" style="grid-column: span 1;"></div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Service Date <span style="color: red;">*</span></label>
-                        <input type="date" name="service_date" value="${service.service_date ? service.service_date.split('T')[0] : new Date().toISOString().split('T')[0]}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                        <div id="err_service_date" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
-                    </div>
-
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Service Type <span style="color: red;">*</span></label>
-                        <select name="service_type" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                            <option value="Regular Maintenance" ${service.service_type === 'Regular Maintenance' ? 'selected' : ''}>Regular Maintenance</option>
-                            <option value="Repair" ${service.service_type === 'Repair' ? 'selected' : ''}>Repair</option>
-                            <option value="Installation" ${service.service_type === 'Installation' ? 'selected' : ''}>Installation</option>
-                            <option value="Inspection" ${service.service_type === 'Inspection' ? 'selected' : ''}>Inspection</option>
-                        </select>
-                        <div id="err_service_type" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
-                    </div>
-
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Status</label>
-                        <select name="status" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                            <option value="completed" ${service.status === 'completed' ? 'selected' : ''}>Completed</option>
-                            <option value="pending" ${service.status === 'pending' ? 'selected' : ''}>Pending</option>
-                            <option value="in-progress" ${service.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
-                        </select>
-                    </div>
-
-                    <div class="grid-2-col" style="grid-column: span 2;">
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Customer Complaint / Issue</label>
-                            <textarea name="complaint" rows="3" placeholder="What is the issue reported by the customer?" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; resize: vertical;">${service.complaint || ''}</textarea>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">AC Unit <span style="color: red;">*</span></label>
+                                <button type="button" onclick="document.getElementById('addAcModal').style.display='flex'; window.ServiceForm.loadAcCode();" style="background: var(--primary); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                            </div>
+                            <select id="acSelect" name="ac_unit_id" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                <option value="">Select AC Unit</option>
+                                ${acOptions}
+                            </select>
+                            <div id="err_ac_unit_id" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                         </div>
 
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Diagnosis & Work Done</label>
-                            <textarea name="work_done" rows="3" placeholder="Describe the work performed..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; resize: vertical;">${service.work_done || ''}</textarea>
+                            <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Service Date <span style="color: red;">*</span></label>
+                            <input type="date" name="service_date" value="${service.service_date ? service.service_date.split('T')[0] : new Date().toISOString().split('T')[0]}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            <div id="err_service_date" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                         </div>
-                    </div>
 
-                    <div style="grid-column: span 2; margin-top: 16px;">
-                        <h3 style="font-size: 16px; color: #0f172a; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px; margin-bottom: 16px;">Billing Details</h3>
-                    </div>
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Service Type <span style="color: red;">*</span></label>
+                            <select name="service_type" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                <option value="Regular Maintenance" ${service.service_type === 'Regular Maintenance' ? 'selected' : ''}>Regular Maintenance</option>
+                                <option value="Repair" ${service.service_type === 'Repair' ? 'selected' : ''}>Repair</option>
+                                <option value="Installation" ${service.service_type === 'Installation' ? 'selected' : ''}>Installation</option>
+                                <option value="Inspection" ${service.service_type === 'Inspection' ? 'selected' : ''}>Inspection</option>
+                            </select>
+                            <div id="err_service_type" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
+                        </div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Labor / Service Charge (₹)</label>
-                        <input type="number" step="0.01" name="labor_charge" id="labor_charge" value="${service.labor_charge || '0.00'}" oninput="window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                    </div>
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Status</label>
+                            <select name="status" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                <option value="completed" ${service.status === 'completed' ? 'selected' : ''}>Completed</option>
+                                <option value="pending" ${service.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="in-progress" ${service.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                            </select>
+                        </div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Spare Parts Charge (₹)</label>
-                        <input type="number" step="0.01" name="parts_charge" id="parts_charge" value="${service.parts_charge || '0.00'}" oninput="window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                    </div>
+                        <div class="responsive-grid" style="grid-column: 1 / -1;">
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Customer Complaint / Issue</label>
+                                <textarea name="complaint" rows="3" placeholder="What is the issue reported by the customer?" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; resize: vertical;">${service.complaint || ''}</textarea>
+                            </div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Discount (₹)</label>
-                        <input type="number" step="0.01" name="discount" id="discount" value="${service.discount || '0.00'}" oninput="window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                    </div>
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Diagnosis & Work Done</label>
+                                <textarea name="work_done" rows="3" placeholder="Describe the work performed..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; resize: vertical;">${service.work_done || ''}</textarea>
+                            </div>
+                        </div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Total Amount (₹)</label>
-                        <input type="number" step="0.01" name="total_amount" id="total_amount" value="${service.total_amount || '0.00'}" readonly style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: rgba(0,0,0,0.05); color: var(--text-muted); outline: none; font-family: inherit; font-size: 14px; cursor: not-allowed; font-weight: bold;">
-                    </div>
+                        <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
+                            <button type="button" onclick="window.history.back()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
+                            <button type="button" onclick="window.ServiceForm.nextStep()" style="padding: 12px 24px; border-radius: 8px; border: none; background: #0ea5e9; color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">Next Step <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div> <!-- End Step 1 -->
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Payment Status</label>
-                        <select name="payment_status" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                            <option value="unpaid" ${service.payment_status === 'unpaid' ? 'selected' : ''}>Unpaid</option>
-                            <option value="paid" ${service.payment_status === 'paid' ? 'selected' : ''}>Paid</option>
-                        </select>
-                    </div>
+                    <!-- STEP 2: Billing Details -->
+                    <div id="serviceMainStep2" style="display: none;">
+                        <div class="responsive-grid">
+                            <div style="grid-column: span 1; margin-top: 16px; width: 100%;">
+                                <h3 style="font-size: 16px; color: #0f172a; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px; margin-bottom: 16px;">Billing Details</h3>
+                            </div>
+                            <div class="hide-on-mobile" style="grid-column: span 1;"></div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Next Maintenance Date</label>
-                        <input type="date" name="next_maintenance_date" value="${service.next_maintenance_date ? service.next_maintenance_date.split('T')[0] : ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                    </div>
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Labor / Service Charge (₹)</label>
+                                <input type="number" step="0.01" name="labor_charge" id="labor_charge" value="${service.labor_charge || '0.00'}" oninput="window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            </div>
 
-                    <div style="grid-column: span 2; display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
-                        <button type="button" onclick="window.history.back()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
-                        <button type="submit" style="padding: 12px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px var(--primary-glow);">
-                            ${isEdit ? 'Save Changes' : 'Save Maintenance'}
-                        </button>
-                    </div>
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Spare Parts Charge (₹)</label>
+                                <input type="number" step="0.01" name="parts_charge" id="parts_charge" value="${service.parts_charge || '0.00'}" oninput="window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            </div>
+
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Discount (₹)</label>
+                                <input type="number" step="0.01" name="discount" id="discount" value="${service.discount || '0.00'}" oninput="window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            </div>
+
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Total Amount (₹)</label>
+                                <input type="number" step="0.01" name="total_amount" id="total_amount" value="${service.total_amount || '0.00'}" readonly style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: rgba(0,0,0,0.05); color: var(--text-muted); outline: none; font-family: inherit; font-size: 14px; cursor: not-allowed; font-weight: bold;">
+                            </div>
+
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Payment Status</label>
+                                <select name="payment_status" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                    <option value="unpaid" ${service.payment_status === 'unpaid' ? 'selected' : ''}>Unpaid</option>
+                                    <option value="paid" ${service.payment_status === 'paid' ? 'selected' : ''}>Paid</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Next Maintenance Date</label>
+                                <input type="date" name="next_maintenance_date" value="${service.next_maintenance_date ? service.next_maintenance_date.split('T')[0] : ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            </div>
+
+                            <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
+                                <button type="button" onclick="window.ServiceForm.prevStep()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                                <button type="submit" style="padding: 12px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px var(--primary-glow);">
+                                    ${isEdit ? 'Save Changes' : 'Save Maintenance'}
+                                </button>
+                            </div>
+                        </div>
+                    </div> <!-- End Step 2 -->
                 </form>
             </div>
 
@@ -253,6 +275,61 @@ window.ServiceForm = {
                 });
             }
         }, 100);
+    },
+
+    nextStep: () => {
+        let valid = true;
+        const acEl = document.getElementById('acSelect');
+        const dateEl = document.querySelector('input[name="service_date"]');
+        const typeEl = document.querySelector('select[name="service_type"]');
+        
+        ['acSelect', 'service_date', 'service_type'].forEach(id => {
+            const errEl = document.getElementById('err_' + (id === 'acSelect' ? 'ac_unit_id' : id));
+            if (errEl) errEl.style.display = 'none';
+        });
+        
+        if (acEl.parentElement.querySelector('.choices')) {
+            acEl.parentElement.querySelector('.choices').style.border = '1px solid var(--border-glass)';
+        } else {
+            acEl.style.borderColor = 'var(--border-glass)';
+        }
+        dateEl.style.borderColor = 'var(--border-glass)';
+        typeEl.style.borderColor = 'var(--border-glass)';
+
+        if (!acEl.value) {
+            if (acEl.parentElement.querySelector('.choices')) {
+                acEl.parentElement.querySelector('.choices').style.border = '1px solid #ef4444';
+            } else {
+                acEl.style.borderColor = '#ef4444';
+            }
+            document.getElementById('err_ac_unit_id').innerText = 'AC Unit is required.';
+            document.getElementById('err_ac_unit_id').style.display = 'block';
+            valid = false;
+        }
+
+        if (!dateEl.value) {
+            dateEl.style.borderColor = '#ef4444';
+            document.getElementById('err_service_date').innerText = 'Service date is required.';
+            document.getElementById('err_service_date').style.display = 'block';
+            valid = false;
+        }
+
+        if (!typeEl.value) {
+            typeEl.style.borderColor = '#ef4444';
+            document.getElementById('err_service_type').innerText = 'Service type is required.';
+            document.getElementById('err_service_type').style.display = 'block';
+            valid = false;
+        }
+
+        if (!valid) return;
+
+        document.getElementById('serviceMainStep1').style.display = 'none';
+        document.getElementById('serviceMainStep2').style.display = 'block';
+    },
+
+    prevStep: () => {
+        document.getElementById('serviceMainStep2').style.display = 'none';
+        document.getElementById('serviceMainStep1').style.display = 'block';
     },
 
     loadAcCode: async () => {

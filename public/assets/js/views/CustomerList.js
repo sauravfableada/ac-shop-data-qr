@@ -44,6 +44,7 @@ window.CustomerList = {
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" data-id="${c.id}"><i class="fa-solid fa-plus"></i></button>
                         <div class="desktop-only" style="display: flex; gap: 8px;">
+                            <button onclick="window.router.navigate('/services/add?customer_id=${c.id}')" style="background: #0ea5e9; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Add Service"><i class="fa-solid fa-plus"></i> Service</button>
                             <button onclick="window.router.navigate('/ac-units/add?customer_id=${c.id}')" style="background: #10b981; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Add AC Unit"><i class="fa-solid fa-plus"></i> Add AC</button>
                             <button class="view-customer-btn" data-id="${c.id}" style="background: #3b82f6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="View"><i class="fa-regular fa-eye"></i> View</button>
                             <button class="edit-customer-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="Edit"><i class="fa-solid fa-pencil"></i> Edit</button>
@@ -66,6 +67,7 @@ window.CustomerList = {
                             <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 16px;">
                             
                             <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; align-items: center;">
+                                <button onclick="window.router.navigate('/services/add?customer_id=${c.id}')" style="background: #0ea5e9; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-plus" style="margin-right: 4px;"></i> Service</button>
                                 <button onclick="window.router.navigate('/ac-units/add?customer_id=${c.id}')" style="background: #10b981; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-plus" style="margin-right: 4px;"></i> Add AC</button>
                                 <button class="view-customer-btn" data-id="${c.id}" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-regular fa-eye" style="margin-right: 4px;"></i> View</button>
                                 <button class="edit-customer-btn" data-id="${c.id}" style="background: #f59e0b; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-pencil" style="margin-right: 4px;"></i> Edit</button>
