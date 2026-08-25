@@ -95,7 +95,7 @@ window.CustomerList = {
                 // Show first, last, current, and +/- 1 pages
                 if (i === 1 || i === state.meta.last_page || (i >= state.meta.current_page - 1 && i <= state.meta.current_page + 1)) {
                     const isActive = i === state.meta.current_page;
-                    pagesHTML += `<button class="page-btn" data-page="${i}" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-glass); background: ${isActive ? '#0f172a' : 'transparent'}; color: ${isActive ? 'white' : 'var(--text-main)'}; cursor: pointer;">${i}</button>`;
+                    pagesHTML += `<button class="page-btn" data-page="${i}" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-glass); background: ${isActive ? '#ff9f43' : 'transparent'}; color: ${isActive ? 'white' : 'var(--text-main)'}; cursor: pointer;">${i}</button>`;
                 } else if (i === state.meta.current_page - 2 || i === state.meta.current_page + 2) {
                     pagesHTML += `<span style="padding: 6px 12px; color: var(--text-muted);">...</span>`;
                 }
@@ -122,7 +122,7 @@ window.CustomerList = {
                             
                         </div>
                         <div style="display: flex; gap: 12px;">
-                            <button onclick="window.router.navigate('/customers/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap;">
+                            <button onclick="window.router.navigate('/customers/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #ff9f43; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap;">
                                 <i class="fa-solid fa-plus"></i> Customer
                             </button>
                         </div>
