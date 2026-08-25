@@ -126,8 +126,16 @@ window.ServiceView = {
                                 <span>₹${service.parts_charge || '0.00'}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; font-size: 14px; color: #475569;">
-                                <span>Discount</span>
-                                <span style="color: #10b981;">-₹${service.discount || '0.00'}</span>
+                                <span>Copper Pipe Miter</span>
+                                <span>${service.copper_pipe_charge || '0.00'}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 14px; color: #475569;">
+                                <span>Copper Pipe Miter Price</span>
+                                <span>₹${service.miter_charge || '0.00'}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 14px; color: #475569;">
+                                <span>Payment Type</span>
+                                <span>${service.payment_method || 'Pending'}</span>
                             </div>
                             
                             <div style="border-top: 1px dashed var(--border-glass); margin: 8px 0;"></div>

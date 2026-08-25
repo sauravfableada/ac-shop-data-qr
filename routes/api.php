@@ -55,9 +55,11 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/services/{service}/images', [\App\Http\Controllers\ServiceController::class, 'uploadImages'])->middleware('permission:service.edit');
     Route::get('/ac-units/{id}/service-history', [\App\Http\Controllers\ServiceController::class, 'acServiceHistory'])->middleware('permission:service.view');
     Route::get('/customers/{id}/service-history', [\App\Http\Controllers\ServiceController::class, 'customerServiceHistory'])->middleware('permission:service.view');
-    // Dashboards
+    // Dashboards & Reports
     Route::get('/admin/dashboard', [\App\Http\Controllers\DashboardController::class, 'adminDashboard'])->middleware('permission:dashboard.admin');
     Route::get('/staff/dashboard', [\App\Http\Controllers\DashboardController::class, 'staffDashboard'])->middleware('permission:dashboard.staff');
+    Route::get('/reports/income', [\App\Http\Controllers\ReportController::class, 'income'])->middleware('permission:dashboard.admin');
+    Route::get('/reports/export', [\App\Http\Controllers\ReportController::class, 'export'])->middleware('permission:dashboard.admin');
 
     // Admin Staff Permissions
     Route::get('/admin/staff', [\App\Http\Controllers\AdminController::class, 'index']);

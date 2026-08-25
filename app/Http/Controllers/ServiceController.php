@@ -35,11 +35,7 @@ class ServiceController extends Controller
             });
         }
         
-        // If logged-in user is a staff/technician and not admin, only show their services (unless they have global view perm)
-        $user = $request->user();
-        if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('service.view_all')) {
-            $query->where('assign_staff', $user->id);
-        }
+        // Removed staff filtering constraint as staff should be able to view and manage any service
 
         $perPage = $request->input('per_page', 20);
         $services = $query->orderBy('created_at', 'desc')->paginate($perPage);
@@ -96,11 +92,7 @@ class ServiceController extends Controller
     public function update(UpdateServiceRequest $request, ServiceRecord $service)
     {
         $user = $request->user();
-        if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('service.view_all')) {
-            if ($service->created_by != $user->id && $service->assign_staff != $user->id) {
-                return $this->error('Unauthorized to modify this Service Record', 403);
-            }
-        }
+        // Removed staff filtering constraint as staff should be able to view and manage any service
 
         $data = $request->validated();
         

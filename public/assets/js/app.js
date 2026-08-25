@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.router.addRoute('/staff/edit/:id', window.StaffForm.render, true);
     window.router.addRoute('/profile', window.ProfileView.render, true);
     window.router.addRoute('/user-logs', window.UserLogs.render, true);
+    window.router.addRoute('/reports', window.Reports.render, true);
     window.router.addRoute('/notifications', window.NotificationList.render, true);
 
     // Initial Route Handling
@@ -229,6 +230,9 @@ window.renderLayout = (content) => {
                         <a href="/staff" data-link style="text-decoration: none; color: white; background: #EF4444; font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                             <i class="fa-solid fa-user-tie" style="color: white;"></i> Staff
                         </a>
+                        <a href="/reports" data-link style="text-decoration: none; color: white; background: #8b5cf6; font-weight: 600; font-size: 14px; padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <i class="fa-solid fa-chart-bar" style="color: white;"></i> Reports
+                        </a>
                         ` : ''}
                     </div>
                     
@@ -331,6 +335,10 @@ window.renderLayout = (content) => {
                     <a href="/staff" data-link class="bottom-nav-item ${window.location.pathname === '/staff' ? 'active' : ''}">
                         <i class="fa-solid fa-user-tie"></i>
                         <span>Staff</span>
+                    </a>
+                    <a href="/reports" data-link class="bottom-nav-item ${window.location.pathname === '/reports' ? 'active' : ''}">
+                        <i class="fa-solid fa-chart-bar"></i>
+                        <span>Reports</span>
                     </a>
                     ` : ''}
                 </div>

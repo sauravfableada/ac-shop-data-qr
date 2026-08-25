@@ -27,7 +27,7 @@ window.AcUnitView = {
                     <tr style="border-bottom: 1px solid var(--border-glass);">
                         <td style="padding: 16px; font-weight: 500; cursor: pointer; color: #3b82f6;" onclick="window.router.navigate('/services/view/${record.id}')">${new Date(record.service_date).toLocaleDateString()}</td>
                         <td class="hide-on-mobile" style="padding: 16px;">${record.service_type || 'Regular Maintenance'}</td>
-                        <td class="hide-on-mobile" style="padding: 16px;">${record.creator ? record.creator.name : '--'}</td>
+                        <td style="padding: 16px; font-weight: 500; cursor: pointer; color: #3b82f6;" onclick="window.router.navigate('/services/view/${record.id}')">${record.creator ? record.creator.name : '--'}</td>
                         <td class="hide-on-mobile" style="padding: 16px;">${record.complaint || '-'}</td>
                         <td class="hide-on-mobile" style="padding: 16px; font-weight: 600; color: #0f172a;">₹${record.total_amount || '0.00'}</td>
                         <td class="hide-on-mobile" style="padding: 16px; cursor: pointer;" onclick="window.router.navigate('/services/view/${record.id}')">
@@ -150,7 +150,7 @@ window.AcUnitView = {
                                 <tr>
                                     <th style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Date</th>
                                     <th class="hide-on-mobile" style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Type</th>
-                                    <th class="hide-on-mobile" style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Created By</th>
+                                    <th style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Created By</th>
                                     <th class="hide-on-mobile" style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Complaint</th>
                                     <th class="hide-on-mobile" style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Amount</th>
                                     <th class="hide-on-mobile" style="padding: 12px 16px; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase;">Status</th>

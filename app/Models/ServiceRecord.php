@@ -14,8 +14,8 @@ class ServiceRecord extends Model
     protected $fillable = [
         'created_by', 'updated_by', 'service_number', 'customer_id', 'ac_unit_id', 'assign_staff', 'service_type',
         'service_date', 'complaint', 'diagnosis', 'work_performed', 'status',
-        'labor_charge', 'parts_charge', 'discount', 'tax', 'total_amount',
-        'payment_status', 'next_service_date', 'technician_notes', 'customer_notes'
+        'labor_charge', 'parts_charge', 'tax', 'total_amount', 'copper_pipe_charge', 'miter_charge',
+        'payment_status', 'payment_method', 'next_service_date', 'technician_notes', 'customer_notes'
     ];
 
     public function customer()

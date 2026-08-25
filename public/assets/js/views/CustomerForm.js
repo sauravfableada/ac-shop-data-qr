@@ -478,9 +478,10 @@ window.CustomerForm = {
             });
 
             let res;
-            if (isEdit) {
+            if (isEdit || window._cfSavedCustomerId) {
                 payload.append('_method', 'PUT'); // Laravel form method spoofing
-                res = await window.api.put('/customers/' + params.id, payload);
+                const updateId = isEdit ? params.id : window._cfSavedCustomerId;
+                res = await window.api.put('/customers/' + updateId, payload);
             } else {
                 res = await window.api.post('/customers', payload);
             }

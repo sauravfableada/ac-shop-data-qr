@@ -55,10 +55,12 @@ class StoreServiceRequest extends FormRequest
             'status' => 'nullable|in:pending,assigned,in_progress,completed,cancelled',
             'labor_charge' => 'nullable|numeric|min:0',
             'parts_charge' => 'nullable|numeric|min:0',
-            'discount' => 'nullable|numeric|min:0',
+            'copper_pipe_charge' => 'nullable|numeric|min:0',
+            'miter_charge' => 'nullable|numeric|min:0',
             'tax' => 'nullable|numeric|min:0',
             'total_amount' => 'nullable|numeric|min:0',
             'payment_status' => 'nullable|in:unpaid,partial,paid',
+            'payment_method' => 'nullable|string',
             'next_service_date' => 'nullable|date',
             'technician_notes' => 'nullable|string',
         ];
