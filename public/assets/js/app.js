@@ -78,6 +78,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.router.addRoute('/user-logs', window.UserLogs.render, true);
     window.router.addRoute('/reports', window.Reports.render, true);
     window.router.addRoute('/notifications', window.NotificationList.render, true);
+    window.router.addRoute('/masters', window.MastersDashboard.render, true);
+    window.router.addRoute('/masters/:type', window.MasterList.render, true);
 
     // Initial Route Handling
     await window.router.handleRoute();
