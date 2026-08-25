@@ -33,10 +33,10 @@ window.LoginView = {
                     </form>
 
                     <!-- Footer -->
-                    <div style="margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--border-glass); text-align: center; font-size: 12px; color: var(--text-muted);">
-                        &copy; ${new Date().getFullYear()} Copyright &mdash;
+                    <div style="margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--border-glass); text-align: center; font-size: 13px; font-weight: 500; color: #0f172a;">
+                        &copy; ${new Date().getFullYear()} Copyright -
                         <a href="https://www.fableadtechnolabs.com/" target="_blank" rel="noopener noreferrer"
-                           style="color: #3b82f6; font-weight: 600; text-decoration: none;">
+                           style="color: #0f172a; font-weight: 600; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#3b82f6'" onmouseout="this.style.color='#0f172a'">
                            Fablead Developers Technolab
                         </a>
                     </div>

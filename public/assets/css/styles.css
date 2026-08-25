@@ -212,13 +212,14 @@ h4 {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary), #6366f1);
+    background: #ff9f43;
     color: white;
-    box-shadow: 0 4px 14px 0 var(--primary-glow);
+    box-shadow: 0 4px 14px 0 rgba(255, 159, 67, 0.3);
 }
 
 .btn-primary:hover {
-    box-shadow: 0 6px 20px 0 var(--primary-glow);
+    background: #e58e3c;
+    box-shadow: 0 6px 20px 0 rgba(255, 159, 67, 0.4);
     transform: translateY(-2px);
 }
 
@@ -517,25 +518,25 @@ body.light-mode {
     bottom: 16px;
     left: 16px;
     right: 16px;
-    background: #0f172a;
+    background: #ff9f43;
     height: 70px;
     z-index: 1000;
     justify-content: space-around;
     align-items: center;
     border-radius: 24px;
     padding: 0 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 25px rgba(255, 159, 67, 0.3);
 }
 
 .bottom-nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #94a3b8;
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     font-size: 11px;
     gap: 6px;
-    transition: color 0.2s;
+    transition: color 0.2s, transform 0.2s;
     width: 60px;
 }
 
@@ -544,7 +545,8 @@ body.light-mode {
 }
 
 .bottom-nav-item.active {
-    color: #ffffff;
+    color: #0f172a;
+    font-weight: 600;
 }
 
 .mobile-expand-btn {
@@ -751,5 +753,38 @@ body.light-mode {
 
     .hide-on-desktop {
         display: none !important;
+    }
+}
+
+/* Mobile Scanner FAB */
+.mobile-scanner-fab {
+    display: none;
+    position: fixed;
+    bottom: 100px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    background: #ff9f43; /* matches the screenshot */
+    color: white;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(255,159,67,0.3);
+    font-size: 24px;
+    z-index: 1050;
+    text-decoration: none;
+    transition: transform 0.2s, background 0.2s;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.mobile-scanner-fab:hover, .mobile-scanner-fab:focus {
+    background: #e58e3c;
+    color: white;
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .mobile-scanner-fab {
+        display: flex;
     }
 }
