@@ -787,4 +787,24 @@ body.light-mode {
     .mobile-scanner-fab {
         display: flex;
     }
+
+    /* Prevent iOS auto-zoom on focus by enforcing at least 16px font-size */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* Fix iOS date input alignment and appearance */
+input[type="date"] {
+    text-align: left !important;
+    min-height: 44px;
+}
+
+/* WebKit-specific fixes for iOS date rendering */
+@supports (-webkit-touch-callout: none) {
+    input[type="date"] {
+        -webkit-appearance: none;
+        appearance: none;
+        background-color: transparent;
+    }
 }

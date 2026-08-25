@@ -154,7 +154,7 @@ window.ProfileView = {
                             <!-- Save Button -->
                             <div style="display: flex; justify-content: flex-end;">
                                 <button type="submit" id="saveProfileBtn"
-                                    style="display: flex; align-items: center; gap: 8px; padding: 12px 28px; background: #0f172a; border: none; color: white; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                                    style="display: flex; align-items: center; gap: 8px; padding: 12px 28px; background: #ff9f43; border: none; color: white; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; box-shadow: 0 4px 12px rgba(255,159,67,0.3);">
                                     <i class="fa-regular fa-floppy-disk"></i> Save Changes
                                 </button>
                             </div>
