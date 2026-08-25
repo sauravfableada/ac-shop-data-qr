@@ -298,7 +298,7 @@ h4 {
 
 .dashboard-wrapper {
     display: flex;
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
@@ -416,6 +416,7 @@ h4 {
 /* Header Styles */
 .top-header {
     height: 70px;
+    flex-shrink: 0;
     padding: 15px 20px;
     display: flex;
     align-items: center;
@@ -587,6 +588,7 @@ body.light-mode {
     }
 
     .app-footer {
+        flex-shrink: 0;
         margin-bottom: 90px;
         /* Space for fixed bottom nav */
     }

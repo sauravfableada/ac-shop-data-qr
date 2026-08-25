@@ -59,6 +59,7 @@ class Router {
         // Render view
         try {
             await route.renderFunction(this.appContainer, params);
+            window.scrollTo(0, 0);
         } catch (error) {
             console.error('Render error:', error);
             this.appContainer.innerHTML = `<div class="auth-layout"><div class="glass-card p-8 text-red-500">Error loading view</div></div>`;

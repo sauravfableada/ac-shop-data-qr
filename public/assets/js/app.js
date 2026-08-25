@@ -333,11 +333,6 @@ window.renderLayout = (content) => {
                         <span>Staff</span>
                     </a>
                     ` : ''}
-                    <a href="/notifications" data-link class="bottom-nav-item ${window.location.pathname === '/notifications' ? 'active' : ''}">
-                        <i class="fa-regular fa-bell"></i>
-                        <span>Alerts</span>
-                    </a>
-
                 </div>
             </div>
         </div>
