@@ -86,7 +86,7 @@ window.QrScanner = {
                     position: absolute;
                     width: 32px;
                     height: 32px;
-                    border-color: #3b82f6;
+                    border-color: #ff9f43;
                     border-style: solid;
                 }
                 .scanner-frame::before { top: 16px; left: 16px; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
@@ -97,11 +97,11 @@ window.QrScanner = {
                 .scanner-idle-icon {
                     width: 64px; height: 64px;
                     border-radius: 50%;
-                    background: rgba(59,130,246,0.1);
+                    background: rgba(255, 159, 67, 0.1);
                     display: flex; align-items: center; justify-content: center;
                     font-size: 28px;
-                    color: #3b82f6;
-                    margin-bottom: 16px;
+                    color: #ff9f43;
+                    margin: 0 auto 16px auto;
                 }
                 .scanner-or-divider {
                     display: flex; align-items: center; gap: 12px;
@@ -124,7 +124,7 @@ window.QrScanner = {
             <div>
                 <!-- Header -->
                 <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 15px;">
-                    <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(59,130,246,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #3b82f6; flex-shrink: 0;">
+                    <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(255, 159, 67, 0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #ff9f43; flex-shrink: 0;">
                         <i class="fa-solid fa-qrcode"></i>
                     </div>
                     <div>
@@ -182,7 +182,7 @@ window.QrScanner = {
             const resultDiv = document.getElementById('scanResult');
             resultDiv.innerHTML = `
                 <div style="text-align: center; padding: 32px; color: #64748b;">
-                    <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 28px; color: #3b82f6; margin-bottom: 12px; display: block;"></i>
+                    <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 28px; color: #ff9f43; margin-bottom: 12px; display: block;"></i>
                     Looking up AC Unit...
                 </div>`;
 
@@ -195,12 +195,32 @@ window.QrScanner = {
                 const serviceRows = services.length
                     ? services.map(s => `
                         <tr>
-                            <td style="font-weight: 700; color: #0f172a;">${s.service_number || '#' + s.id}</td>
-                            <td style="color: #64748b;"><i class="fa-regular fa-calendar" style="margin-right: 6px; color: #94a3b8;"></i>${s.service_date ? new Date(s.service_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</td>
-                            <td style="color: #64748b;">${s.service_type || '—'}</td>
-                            <td>${getStatusBadge(s.status)}</td>
+                            <td style="font-weight: 700; color: #ff9f43; cursor: pointer;" onclick="window.router.navigate('/services/view/${s.id}')">${s.service_number || '#' + s.id}</td>
+                            <td style="color: #ff9f43; cursor: pointer;" onclick="window.router.navigate('/services/view/${s.id}')"><i class="fa-regular fa-calendar" style="margin-right: 6px; color: #94a3b8;"></i>${s.service_date ? new Date(s.service_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</td>
+                            <td class="hide-on-mobile" style="color: #64748b;">${s.service_type || '—'}</td>
+                            <td class="hide-on-mobile">${getStatusBadge(s.status)}</td>
                             <td style="text-align: right;">
-                                <button onclick="window.router.navigate('/services/view/${s.id}')" style="background: transparent; border: none; color: #3b82f6; cursor: pointer; font-size: 18px;" title="View"><i class="fa-solid fa-eye"></i></button>
+                                <button class="mobile-expand-btn hide-on-desktop" data-id="qr-srv-${s.id}" style="background: transparent; border: none; color: #ff9f43; font-size: 16px; cursor: pointer;"><i class="fa-solid fa-plus"></i></button>
+                                <div class="hide-on-mobile">
+                                    <button onclick="window.router.navigate('/services/view/${s.id}')" style="background: transparent; border: none; color: #ff9f43; cursor: pointer; font-size: 18px;" title="View"><i class="fa-solid fa-eye"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="mobile-expand-qr-srv-${s.id}" class="mobile-expanded-row">
+                            <td colspan="5" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
+                                <div style="background: #ffffff; border-radius: 12px; border-left: 4px solid #0f172a; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                        <div><i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> STATUS :</div>
+                                        <div style="font-weight: 400; text-align: right; max-width: 60%;">${getStatusBadge(s.status)}</div>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                        <div><i class="fa-solid fa-wrench" style="margin-right: 8px;"></i> TYPE :</div>
+                                        <div style="font-weight: 400; color: #64748b; text-align: right; max-width: 60%;">${s.service_type || '—'}</div>
+                                    </div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; align-items: center; margin-top: 16px; border-top: 1px solid #e2e8f0; padding-top: 16px;">
+                                        <button onclick="window.router.navigate('/services/view/${s.id}')" style="background: #ff9f43; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-eye" style="margin-right: 4px;"></i> View Details</button>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     `).join('')
@@ -268,8 +288,8 @@ window.QrScanner = {
                                     <tr>
                                         <th>Service #</th>
                                         <th>Date</th>
-                                        <th>Type</th>
-                                        <th>Status</th>
+                                        <th class="hide-on-mobile">Type</th>
+                                        <th class="hide-on-mobile">Status</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -278,6 +298,24 @@ window.QrScanner = {
                         </div>
                     </div>
                 `;
+                
+                // Add accordion toggle logic after rendering
+                setTimeout(() => {
+                    document.querySelectorAll('.mobile-expand-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = e.currentTarget.dataset.id;
+                            const row = document.getElementById(`mobile-expand-${id}`);
+                            const icon = e.currentTarget.querySelector('i');
+                            if (row.classList.contains('show')) {
+                                row.classList.remove('show');
+                                icon.className = 'fa-solid fa-plus';
+                            } else {
+                                row.classList.add('show');
+                                icon.className = 'fa-solid fa-minus';
+                            }
+                        });
+                    });
+                }, 0);
             } else {
                 resultDiv.innerHTML = `
                     <div style="background: rgba(244,63,94,0.07); border: 1.5px solid #F43F5E; padding: 28px; border-radius: 16px; text-align: center;">

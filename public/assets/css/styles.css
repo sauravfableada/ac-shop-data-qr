@@ -795,21 +795,14 @@ body.light-mode {
 }
 
 /* Fix iOS date input alignment and appearance */
-input[type="date"] {
-    text-align: left !important;
-    min-height: 44px;
-    display: block;
-    width: 100%;
-}
-
-/* iOS Safari shadow DOM rules to force left alignment */
+/* iOS Safari shadow DOM rules to force left alignment and vertical center */
 input[type="date"]::-webkit-date-and-time-value {
     text-align: left !important;
 }
 input[type="date"]::-webkit-datetime-edit {
     text-align: left !important;
-    display: block;
     padding: 0;
+    line-height: normal;
 }
 
 /* WebKit-specific fixes for iOS date rendering */
@@ -819,5 +812,9 @@ input[type="date"]::-webkit-datetime-edit {
         appearance: none;
         background-color: transparent;
         justify-content: flex-start;
+        align-items: center;
+        display: flex;
+        min-height: 44px;
+        width: 100%;
     }
 }

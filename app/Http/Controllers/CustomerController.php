@@ -45,13 +45,7 @@ class CustomerController extends Controller
             $query->where('status', $request->input('status'));
         }
 
-        $user = $request->user();
-        if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('customer.view_all')) {
-            $query->where(function ($q) use ($user) {
-                $q->where('created_by', $user->id)
-                  ->orWhere('assign_staff', $user->id);
-            });
-        }
+        // Removed staff filtering constraint as staff should be able to service any customer
 
         $query->orderBy('id', 'desc');
         

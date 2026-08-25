@@ -43,13 +43,7 @@ class AcUnitController extends Controller
             $query->where('status', $request->input('status'));
         }
 
-        $user = $request->user();
-        if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('ac.view_all')) {
-            $query->where(function ($q) use ($user) {
-                $q->where('created_by', $user->id)
-                  ->orWhere('assign_staff', $user->id);
-            });
-        }
+        // Removed staff filtering constraint as staff should be able to service any AC Unit
 
         $query->orderBy('id', 'desc');
         
@@ -120,11 +114,7 @@ class AcUnitController extends Controller
     public function update(UpdateAcUnitRequest $request, AcUnit $acUnit)
     {
         $user = $request->user();
-        if (!$user->roles()->where('name', 'admin')->exists() && !$user->hasPermission('ac.view_all')) {
-            if ($acUnit->created_by != $user->id && $acUnit->assign_staff != $user->id) {
-                return $this->error('Unauthorized to modify this AC Unit', 403);
-            }
-        }
+        // Removed staff filtering constraint as staff should be able to service any AC Unit
 
         $data = $request->validated();
         $data['updated_by'] = \Illuminate\Support\Facades\Auth::id();

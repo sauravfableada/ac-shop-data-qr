@@ -143,17 +143,22 @@ window.ServiceForm = {
 
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                                 <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Labor / Service Charge (₹)</label>
-                                <input type="number" step="0.01" name="labor_charge" id="labor_charge" value="${service.labor_charge || '0.00'}" oninput="window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                <input type="number" step="0.01" min="0" name="labor_charge" id="labor_charge" value="${service.labor_charge || '0.00'}" oninput="if(this.value<0)this.value=0; window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
 
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                                 <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Spare Parts Charge (₹)</label>
-                                <input type="number" step="0.01" name="parts_charge" id="parts_charge" value="${service.parts_charge || '0.00'}" oninput="window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                <input type="number" step="0.01" min="0" name="parts_charge" id="parts_charge" value="${service.parts_charge || '0.00'}" oninput="if(this.value<0)this.value=0; window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
 
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Discount (₹)</label>
-                                <input type="number" step="0.01" name="discount" id="discount" value="${service.discount || '0.00'}" oninput="window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Copper Pipe Miter</label>
+                                <input type="number" step="0.01" min="0" name="copper_pipe_charge" id="copper_pipe_charge" value="${service.copper_pipe_charge || '0.00'}" oninput="if(this.value<0)this.value=0; window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            </div>
+
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Copper Pipe Miter Price (₹)</label>
+                                <input type="number" step="0.01" min="0" name="miter_charge" id="miter_charge" value="${service.miter_charge || '0.00'}" oninput="if(this.value<0)this.value=0; window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
 
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
@@ -166,6 +171,15 @@ window.ServiceForm = {
                                 <select name="payment_status" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                     <option value="unpaid" ${service.payment_status === 'unpaid' ? 'selected' : ''}>Unpaid</option>
                                     <option value="paid" ${service.payment_status === 'paid' ? 'selected' : ''}>Paid</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Payment Type</label>
+                                <select name="payment_method" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                    <option value="">Pending</option>
+                                    <option value="Cash" ${service.payment_method === 'Cash' ? 'selected' : ''}>Cash</option>
+                                    <option value="Online" ${service.payment_method === 'Online' ? 'selected' : ''}>Online</option>
                                 </select>
                             </div>
 
@@ -435,9 +449,10 @@ window.ServiceForm = {
     calculateTotal: () => {
         const labor = parseFloat(document.getElementById('labor_charge').value) || 0;
         const parts = parseFloat(document.getElementById('parts_charge').value) || 0;
-        const discount = parseFloat(document.getElementById('discount').value) || 0;
+        const copper_miter = parseFloat(document.getElementById('copper_pipe_charge').value) || 0;
+        const miter_price = parseFloat(document.getElementById('miter_charge').value) || 0;
 
-        const total = (labor + parts) - discount;
+        const total = labor + parts + (copper_miter * miter_price);
         document.getElementById('total_amount').value = Math.max(0, total).toFixed(2);
     },
 
