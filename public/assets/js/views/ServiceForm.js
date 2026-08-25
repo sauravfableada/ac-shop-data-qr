@@ -11,18 +11,30 @@ window.ServiceForm = {
         let service = {};
         let acUnits = [];
 
-        // Load AC Units for dropdown
+        let serviceTypes = [];
+        let acTypes = [];
+        let inverterTypes = [];
+
         try {
-            const acRes = await window.api.get('/ac-units?per_page=1000');
+            const [acRes, stRes, atRes, itRes] = await Promise.all([
+                window.api.get('/ac-units?per_page=1000'),
+                window.api.get('/masters?type=service_type&status=active'),
+                window.api.get('/masters?type=ac_type&status=active'),
+                window.api.get('/masters?type=inverter_type&status=active')
+            ]);
+            
             if (acRes.success) {
                 acUnits = acRes.data?.data || acRes.data || [];
-                // Filter by customer if navigating from customer list
                 if (customerIdQuery) {
                     acUnits = acUnits.filter(ac => String(ac.customer_id) === String(customerIdQuery));
                 }
             }
+            
+            if (stRes.success) serviceTypes = stRes.data || [];
+            if (atRes.success) acTypes = atRes.data || [];
+            if (itRes.success) inverterTypes = itRes.data || [];
         } catch (e) {
-            console.error("Failed to load AC units", e);
+            console.error("Failed to load AC units or masters", e);
         }
 
         let customers = [];
@@ -54,6 +66,18 @@ window.ServiceForm = {
             `<option value="${ac.id}" ${service.ac_unit_id == ac.id ? 'selected' : ''}>${ac.ac_code} - ${ac.customer ? ac.customer.full_name : ''}</option>`
         ).join('');
 
+        const serviceTypeOptions = serviceTypes.map(m =>
+            `<option value="${m.name}" ${service.service_type === m.name ? 'selected' : ''}>${m.name}</option>`
+        ).join('');
+
+        const acTypeOptions = acTypes.map(m =>
+            `<option value="${m.name}">${m.name}</option>`
+        ).join('');
+
+        const invTypeOptions = inverterTypes.map(m =>
+            `<option value="${m.name}">${m.name}</option>`
+        ).join('');
+
         const content = `
             <div>
                 <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin: 0 auto 24px auto;">
@@ -81,7 +105,7 @@ window.ServiceForm = {
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">AC Unit <span style="color: red;">*</span></label>
-                                <button type="button" onclick="document.getElementById('addAcModal').style.display='flex'; window.ServiceForm.loadAcCode();" style="background: var(--primary); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                                <button type="button" onclick="document.getElementById('addAcModal').style.display='flex'; window.ServiceForm.loadAcCode();" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
                             </div>
                             <select id="acSelect" name="ac_unit_id" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                 <option value="">Select AC Unit</option>
@@ -97,12 +121,13 @@ window.ServiceForm = {
                         </div>
 
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Service Type <span style="color: red;">*</span></label>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Service Type <span style="color: red;">*</span></label>
+                                <button type="button" onclick="window.ServiceForm.openMasterModal('service_type')" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                            </div>
                             <select name="service_type" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                                <option value="Regular Maintenance" ${service.service_type === 'Regular Maintenance' ? 'selected' : ''}>Regular Maintenance</option>
-                                <option value="Repair" ${service.service_type === 'Repair' ? 'selected' : ''}>Repair</option>
-                                <option value="Installation" ${service.service_type === 'Installation' ? 'selected' : ''}>Installation</option>
-                                <option value="Inspection" ${service.service_type === 'Inspection' ? 'selected' : ''}>Inspection</option>
+                                <option value="">Select Service Type</option>
+                                ${serviceTypeOptions}
                             </select>
                             <div id="err_service_type" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                         </div>
@@ -218,7 +243,7 @@ window.ServiceForm = {
 
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                             <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Code <span style="color: red;">*</span></label>
-                            <input type="text" id="qaAcCode" readonly style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: rgba(0,0,0,0.05); color: var(--text-muted); outline: none; font-family: inherit; font-size: 14px; cursor: not-allowed;">
+                            <input type="text" id="qaAcCode" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             <div id="err_qaAcCode" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                         </div>
 
@@ -243,22 +268,24 @@ window.ServiceForm = {
                         </div>
 
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Type</label>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Type</label>
+                                <button type="button" onclick="window.ServiceForm.openMasterModal('ac_type')" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                            </div>
                             <select id="qaAcType" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                 <option value="">Select Type</option>
-                                <option value="Split">Split</option>
-                                <option value="Window">Window</option>
-                                <option value="Cassette">Cassette</option>
-                                <option value="Tower">Tower</option>
+                                ${acTypeOptions}
                             </select>
                         </div>
 
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Inverter Type</label>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Inverter Type</label>
+                                <button type="button" onclick="window.ServiceForm.openMasterModal('inverter_type')" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                            </div>
                             <select id="qaInverterType" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                 <option value="">Select</option>
-                                <option value="Inverter">Inverter</option>
-                                <option value="Non-Inverter">Non-Inverter</option>
+                                ${invTypeOptions}
                             </select>
                         </div>
 
@@ -268,6 +295,28 @@ window.ServiceForm = {
                         </div>
                     </div>
                 </div>
+            </div> <!-- End Add AC Modal -->
+
+            <!-- Generic Master Quick Add Modal -->
+            <div id="addMasterModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1001; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 id="masterModalTitle" style="margin: 0; font-size: 18px; color: #0f172a;">Add New Option</h3>
+                            <button type="button" onclick="document.getElementById('addMasterModal').style.display='none'" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #64748b;">&times;</button>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Option Name <span style="color: red;">*</span></label>
+                            <input type="text" id="masterNewName" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            <div id="err_masterNewName" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
+                        </div>
+                        <input type="hidden" id="masterNewType">
+                        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+                            <button type="button" onclick="document.getElementById('addMasterModal').style.display='none'" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
+                            <button type="button" id="qaSaveMasterBtn" onclick="window.ServiceForm.saveMaster()" style="padding: 10px 20px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600;">Save Option</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         `;
 
@@ -511,5 +560,71 @@ window.ServiceForm = {
             window.showToast('Failed to save maintenance record', 'error');
             console.error(err);
         }
-    }
+        btn.disabled = false;
+        btn.innerText = 'Save Service';
+    },
+
+    saveMaster: async () => {
+            const type = document.getElementById('masterNewType').value;
+            const name = document.getElementById('masterNewName').value.trim();
+            const errEl = document.getElementById('err_masterNewName');
+            const btn = document.getElementById('qaSaveMasterBtn');
+
+            if (!name) {
+                errEl.innerText = "Name is required";
+                errEl.style.display = 'block';
+                return;
+            }
+            errEl.style.display = 'none';
+            btn.disabled = true;
+            btn.innerText = "Saving...";
+
+            try {
+                const res = await window.api.post('/masters', { type, name, status: 'active' });
+                if (res.success) {
+                    window.showToast("Option added successfully", "success");
+                    document.getElementById('addMasterModal').style.display = 'none';
+                    
+                    // Add to dropdown and select it
+                    // Based on type, the select ID might be different
+                    let selectEl;
+                    if (type === 'service_type') selectEl = document.querySelector(`select[name="service_type"]`);
+                    else if (type === 'ac_type') selectEl = document.getElementById('qaAcType');
+                    else if (type === 'inverter_type') selectEl = document.getElementById('qaInverterType');
+
+                    if (selectEl) {
+                        const newOption = new Option(name, name, true, true);
+                        selectEl.add(newOption);
+                    }
+                } else {
+                    if (res.errors && res.errors.name) {
+                        errEl.innerText = res.errors.name[0];
+                        errEl.style.display = 'block';
+                    } else {
+                        window.showToast(res.message || "Error saving option", "error");
+                    }
+                }
+            } catch (e) {
+                window.showToast("An error occurred", "error");
+            }
+            btn.disabled = false;
+            btn.innerText = "Save Option";
+        },
+
+        openMasterModal: (type) => {
+            try {
+                document.getElementById('masterNewType').value = type;
+                document.getElementById('masterNewName').value = '';
+                document.getElementById('err_masterNewName').style.display = 'none';
+                let title = 'Add New Option';
+                if (type === 'ac_type') title = 'Add AC Type';
+                if (type === 'inverter_type') title = 'Add Inverter Type';
+                if (type === 'service_type') title = 'Add Service Type';
+                document.getElementById('masterModalTitle').innerText = title;
+                document.getElementById('addMasterModal').style.display = 'flex';
+            } catch (e) {
+                alert("Error in openMasterModal: " + e.message);
+                console.error(e);
+            }
+        }
 };

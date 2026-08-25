@@ -61,6 +61,12 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/reports/income', [\App\Http\Controllers\ReportController::class, 'income'])->middleware('permission:dashboard.admin');
     Route::get('/reports/export', [\App\Http\Controllers\ReportController::class, 'export'])->middleware('permission:dashboard.admin');
 
+    // Masters
+    Route::get('/masters', [\App\Http\Controllers\MasterController::class, 'index']);
+    Route::post('/masters', [\App\Http\Controllers\MasterController::class, 'store'])->middleware('permission:dashboard.admin|staff'); // Allow staff to create to trigger notification, or just let both
+    Route::put('/masters/{id}', [\App\Http\Controllers\MasterController::class, 'update'])->middleware('permission:dashboard.admin');
+    Route::delete('/masters/{id}', [\App\Http\Controllers\MasterController::class, 'destroy'])->middleware('permission:dashboard.admin');
+
     // Admin Staff Permissions
     Route::get('/admin/staff', [\App\Http\Controllers\AdminController::class, 'index']);
     Route::post('/admin/staff', [\App\Http\Controllers\AdminController::class, 'store']);

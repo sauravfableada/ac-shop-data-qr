@@ -64,6 +64,8 @@
     <script src="{{ public_asset('assets/js/views/UserLogs.js') }}?v={{ time() }}"></script>
     <script src="{{ public_asset('assets/js/views/Reports.js') }}?v={{ time() }}"></script>
     <script src="{{ public_asset('assets/js/views/NotificationList.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/MastersDashboard.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/MasterList.js') }}?v={{ time() }}"></script>
     
     <!-- App Entry -->
     <script src="{{ public_asset('assets/js/app.js') }}?v={{ time() }}"></script>
