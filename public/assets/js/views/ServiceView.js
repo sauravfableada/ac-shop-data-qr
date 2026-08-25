@@ -73,7 +73,7 @@ window.ServiceView = {
                         <div style="font-size: 15px; color: #0f172a; font-weight: 500; cursor: pointer;" onclick="window.router.navigate('/ac-units/view/${service.ac_unit_id}')">
                             <span style="color: #3b82f6; text-decoration: underline;">${service.ac_unit ? service.ac_unit.ac_code : '-'}</span>
                         </div>
-                        <div style="font-size: 14px; color: #64748b;">${service.ac_unit ? service.ac_unit.brand + ' ' + service.ac_unit.model : ''}</div>
+                        <div style="font-size: 14px; color: #64748b;">${service.ac_unit && (service.ac_unit.brand || service.ac_unit.model) ? [service.ac_unit.brand, service.ac_unit.model].filter(Boolean).join(' ') : '--'}</div>
                     </div>
                     <div>
                         <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Technician</div>
