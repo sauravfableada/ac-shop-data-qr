@@ -131,7 +131,7 @@ window.AcUnitForm = {
 
                     <div class="hide-on-desktop" style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
                         <button type="button" onclick="window.history.back()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
-                        <button type="button" onclick="window.AcUnitForm.nextStep()" style="padding: 12px 24px; border-radius: 8px; border: none; background: #0ea5e9; color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">Next Step <i class="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" onclick="window.AcUnitForm.nextStep()" style="padding: 12px 24px; border-radius: 8px; border: none; background: #ff9f43; color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">Next Step <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                 </div> <!-- End Step 1 -->
 
@@ -168,7 +168,7 @@ window.AcUnitForm = {
                         <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
                             <button type="button" onclick="window.history.back()" class="hide-on-mobile" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
                             <button type="button" onclick="window.AcUnitForm.prevStep()" class="hide-on-desktop" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;"><i class="fa-solid fa-arrow-left"></i> Previous</button>
-                            <button type="submit" style="padding: 12px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px var(--primary-glow);">
+                            <button type="submit" style="padding: 12px 24px; border-radius: 8px; border: none; background: #ff9f43; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(255,159,67,0.3);">
                                 ${isEdit ? 'Save Changes' : 'Add AC Unit'}
                             </button>
                         </div>

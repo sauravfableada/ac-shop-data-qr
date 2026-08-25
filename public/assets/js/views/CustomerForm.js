@@ -107,7 +107,7 @@ window.CustomerForm = {
                             </div>
                             <div style="display: flex; gap: 16px;">
                                 <button type="button" onclick="window.router.navigate('/customers')" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
-                                <button type="submit" id="saveCustomerBtn" style="padding: 12px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px var(--primary-glow);">Save Customer</button>
+                                <button type="submit" id="saveCustomerBtn" style="padding: 12px 24px; border-radius: 8px; border: none; background: #ff9f43; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(255,159,67,0.3);">Save Customer</button>
                             </div>
                         </div>
                     </form>

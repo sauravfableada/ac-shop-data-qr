@@ -78,7 +78,7 @@ window.StaffForm = {
 
                         <div style="display: flex; justify-content: flex-end; align-items: center; gap: 16px;">
                             <button type="button" onclick="window.router.navigate('/staff')" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
-                            <button type="submit" id="saveBtn" style="padding: 12px 24px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px var(--primary-glow);">${isEdit ? 'Update Staff' : 'Save Staff'}</button>
+                            <button type="submit" id="saveBtn" style="padding: 12px 24px; border-radius: 8px; border: none; background: #ff9f43; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(255,159,67,0.3);">${isEdit ? 'Update Staff' : 'Save Staff'}</button>
                         </div>
                     </form>
                 </div>
