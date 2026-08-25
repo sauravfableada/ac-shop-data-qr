@@ -302,9 +302,9 @@ window.renderLayout = (content) => {
                 </div>
                 
                 <!-- Footer -->
-                <footer class="app-footer" style="text-align: center; padding: 16px 24px; border-top: 1px solid var(--border-glass); background: var(--bg-glass); font-size: 13px; color: var(--text-muted);">
-                    &copy; ${new Date().getFullYear()} Copyright &mdash; Powered by 
-                    <a href="https://www.fableadtechnolabs.com/" target="_blank" rel="noopener noreferrer" style="color: #3b82f6; font-weight: 600; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#3b82f6'">
+                <footer class="app-footer" style="text-align: center; padding: 16px 24px; border-top: 1px solid var(--border-glass); background: var(--bg-glass); font-size: 14px; font-weight: 500; color: #0f172a;">
+                    &copy; ${new Date().getFullYear()} Copyright - 
+                    <a href="https://www.fableadtechnolabs.com/" target="_blank" rel="noopener noreferrer" style="color: #0f172a; font-weight: 600; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#3b82f6'" onmouseout="this.style.color='#0f172a'">
                        Fablead Developers Technolab
                     </a>
                 </footer>
@@ -334,6 +334,11 @@ window.renderLayout = (content) => {
                     </a>
                     ` : ''}
                 </div>
+                
+                <!-- Mobile Scanner FAB -->
+                <a href="/scanner" data-link class="mobile-scanner-fab">
+                    <i class="fa-solid fa-qrcode"></i>
+                </a>
             </div>
         </div>
     `;
