@@ -509,7 +509,7 @@ window.ServiceForm = {
         e.preventDefault();
         const form = e.target;
         const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
+        let data = Object.fromEntries(formData.entries());
 
         // Clear previous error styles
         form.querySelectorAll('input, select, textarea').forEach(input => {
@@ -519,6 +519,107 @@ window.ServiceForm = {
             el.style.display = 'none';
             el.innerText = '';
         });
+
+        // --- SweetAlert Signature ---
+        const result = await Swal.fire({
+            title: 'Customer Approval',
+            html: `
+                <div style="text-align: left; margin-top: 10px;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #334155; cursor: pointer; margin-bottom: 16px;">
+                        <input type="checkbox" id="swalIsApproved" style="width: 18px; height: 18px; cursor: pointer;">
+                        I approve the service details and charges
+                    </label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="font-weight: 500; font-size: 14px; color: #334155;">Customer Signature</label>
+                        <button type="button" id="swalClearSig" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-eraser"></i> Clear</button>
+                    </div>
+                    <div style="border: 1px solid var(--border-glass); border-radius: 8px; background: #f8fafc; overflow: hidden; touch-action: none;">
+                        <canvas id="swalSignaturePad" width="400" height="150" style="width: 100%; touch-action: none; display: block;"></canvas>
+                    </div>
+                    <p style="font-size: 12px; color: #64748b; margin-top: 8px;">Please sign in the box above. Both approval and signature are required.</p>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Submit Service',
+            confirmButtonColor: '#ff9f43',
+            didOpen: () => {
+                const canvas = document.getElementById('swalSignaturePad');
+                const ctx = canvas.getContext('2d');
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.strokeStyle = '#0f172a';
+                
+                let isDrawing = false;
+                let lastX = 0; let lastY = 0;
+                window.swalSigEmpty = true;
+                
+                const getPos = (evt) => {
+                    const rect = canvas.getBoundingClientRect();
+                    const touch = evt.touches ? evt.touches[0] : evt;
+                    return { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
+                };
+                
+                const startDrawing = (evt) => {
+                    isDrawing = true;
+                    const pos = getPos(evt);
+                    [lastX, lastY] = [pos.x, pos.y];
+                    window.swalSigEmpty = false;
+                };
+                
+                const draw = (evt) => {
+                    if (!isDrawing) return;
+                    evt.preventDefault();
+                    const pos = getPos(evt);
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(pos.x, pos.y);
+                    ctx.stroke();
+                    [lastX, lastY] = [pos.x, pos.y];
+                };
+                
+                const stopDrawing = () => { isDrawing = false; };
+                
+                canvas.addEventListener('mousedown', startDrawing);
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('mouseup', stopDrawing);
+                canvas.addEventListener('mouseout', stopDrawing);
+                canvas.addEventListener('touchstart', startDrawing, {passive: false});
+                canvas.addEventListener('touchmove', draw, {passive: false});
+                canvas.addEventListener('touchend', stopDrawing);
+                
+                document.getElementById('swalClearSig').addEventListener('click', () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    window.swalSigEmpty = true;
+                });
+            },
+            preConfirm: () => {
+                const isApproved = document.getElementById('swalIsApproved').checked;
+                if (!isApproved) {
+                    Swal.showValidationMessage('You must approve the service details.');
+                    return false;
+                }
+                if (window.swalSigEmpty) {
+                    Swal.showValidationMessage('Customer signature is required.');
+                    return false;
+                }
+                return {
+                    isApproved: isApproved,
+                    signature: document.getElementById('swalSignaturePad').toDataURL('image/png')
+                };
+            }
+        });
+
+        if (!result.isConfirmed) return;
+
+        data.is_approved = result.value.isApproved ? 1 : 0;
+        data.customer_signature = result.value.signature;
+
+        const btn = form.querySelector('button[type="submit"]');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="margin-right:6px;"></i>Saving...';
+        }
 
         try {
             const res = isEdit
@@ -560,8 +661,10 @@ window.ServiceForm = {
             window.showToast('Failed to save maintenance record', 'error');
             console.error(err);
         }
-        btn.disabled = false;
-        btn.innerText = 'Save Service';
+        if (btn) {
+            btn.disabled = false;
+            btn.innerText = isEdit ? 'Save Changes' : 'Save Maintenance';
+        }
     },
 
     saveMaster: async () => {

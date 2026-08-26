@@ -66,6 +66,13 @@ window.AcUnitView = {
                                     <div style="font-weight: 600; color: #0f172a;">₹${record.total_amount || '0.00'}</div>
                                 </div>
                                 
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 12px; font-weight: 700; color: #0f172a; align-items: center;">
+                                    <div><i class="fa-solid fa-signature" style="margin-right: 8px;"></i> SIGNATURE :</div>
+                                    <div style="text-align: right; max-width: 60%;">
+                                        ${record.customer_signature ? `<img src="${record.customer_signature}" style="max-height: 40px; mix-blend-mode: multiply;" />` : '<span style="color: #94a3b8; font-style: italic; font-weight: 400;">No signature</span>'}
+                                    </div>
+                                </div>
+                                
                                 <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 16px;">
                                 
                                 <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; align-items: center;">

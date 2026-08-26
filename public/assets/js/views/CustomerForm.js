@@ -149,21 +149,21 @@ window.CustomerForm = {
                                 <input type="text" id="macCapacity" placeholder="e.g. 1.5 Ton" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Type</label>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Type</label>
+                                    <button type="button" onclick="window.CustomerForm.openMasterModal('ac_type')" style="background: var(--primary); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                                </div>
                                 <select id="macAcType" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                     <option value="">Select Type</option>
-                                    <option value="Split">Split</option>
-                                    <option value="Window">Window</option>
-                                    <option value="Cassette">Cassette</option>
-                                    <option value="Tower">Tower</option>
                                 </select>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Inverter Type</label>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label style="font-weight: 500; font-size: 14px; color: #334155;">Inverter Type</label>
+                                    <button type="button" onclick="window.CustomerForm.openMasterModal('inverter_type')" style="background: var(--primary); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                                </div>
                                 <select id="macInverterType" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                     <option value="">Select</option>
-                                    <option value="Inverter">Inverter</option>
-                                    <option value="Non-Inverter">Non-Inverter</option>
                                 </select>
                             </div>
                         </div>
@@ -199,7 +199,7 @@ window.CustomerForm = {
                         <!-- Buttons -->
                         <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
                             <button type="button" onclick="window.CustomerForm.closeAcModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
-                            <button type="button" id="macSaveBtn" onclick="window.CustomerForm.saveAcUnit()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #6366f1; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(99,102,241,0.35);">
+                            <button type="button" id="macSaveBtn" onclick="window.CustomerForm.saveAcUnit()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #ff9f43; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(255,159,67,0.35);">
                                 <i class="fa-solid fa-floppy-disk" style="margin-right: 6px;"></i>Save AC Unit
                             </button>
                         </div>
@@ -239,12 +239,12 @@ window.CustomerForm = {
                                 <div id="err_msvDate" style="color: #ef4444; font-size: 12px; margin-top: 2px; display: none;"></div>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Service Type <span style="color: red;">*</span></label>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <label style="font-weight: 500; font-size: 14px; color: #334155;">Service Type <span style="color: red;">*</span></label>
+                                    <button type="button" onclick="window.CustomerForm.openMasterModal('service_type')" style="background: var(--primary); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                                </div>
                                 <select id="msvServiceType" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                                    <option value="Regular Maintenance" selected>Regular Maintenance</option>
-                                    <option value="Repair">Repair</option>
-                                    <option value="Installation">Installation</option>
-                                    <option value="Inspection">Inspection</option>
+                                    <option value="">Select Service Type</option>
                                 </select>
                                 <div id="err_msvServiceType" style="color: #ef4444; font-size: 12px; margin-top: 2px; display: none;"></div>
                             </div>
@@ -268,7 +268,7 @@ window.CustomerForm = {
                             
                             <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
                                 <button type="button" onclick="window.CustomerForm.closeServiceModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
-                                <button type="button" onclick="window.CustomerForm.nextServiceStep()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #0ea5e9; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(14,165,233,0.35);">
+                                <button type="button" onclick="window.CustomerForm.nextServiceStep()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #ff9f43; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(255,159,67,0.35);">
                                     Next <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
                                 </button>
                             </div>
@@ -289,8 +289,12 @@ window.CustomerForm = {
                                 <input type="number" step="0.01" id="msvParts" value="0.00" oninput="window.CustomerForm.calcServiceTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Discount (&#8377;)</label>
-                                <input type="number" step="0.01" id="msvDiscount" value="0.00" oninput="window.CustomerForm.calcServiceTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Copper Pipe Miter</label>
+                                <input type="number" step="0.01" id="msvCopperMiter" value="0.00" oninput="window.CustomerForm.calcServiceTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Copper Pipe Miter Price (&#8377;)</label>
+                                <input type="number" step="0.01" id="msvCopperMiterPrice" value="0.00" oninput="window.CustomerForm.calcServiceTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
                                 <label style="font-weight: 500; font-size: 14px; color: #334155;">Total Amount (&#8377;)</label>
@@ -304,15 +308,25 @@ window.CustomerForm = {
                                 </select>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Payment Type</label>
+                                <select id="msvPaymentMethod" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                    <option value="">Pending</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Online">Online</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
                                 <label style="font-weight: 500; font-size: 14px; color: #334155;">Next Maintenance Date</label>
                                 <input type="date" id="msvNextDate" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
                         </div>
 
+
+
                         <!-- Buttons -->
                         <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
                             <button type="button" onclick="window.CustomerForm.prevServiceStep()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Previous</button>
-                            <button type="button" id="msvSaveBtn" onclick="window.CustomerForm.saveService()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #0ea5e9; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(14,165,233,0.35);">
+                            <button type="button" id="msvSaveBtn" onclick="window.CustomerForm.saveService()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #ff9f43; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(255,159,67,0.35);">
                                 <i class="fa-solid fa-floppy-disk" style="margin-right: 6px;"></i>Save Service
                             </button>
                         </div>
@@ -363,27 +377,27 @@ window.CustomerForm = {
                             <input type="text" id="msvIacCapacity" placeholder="e.g. 1.5 Ton" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Type</label>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Type</label>
+                                <button type="button" onclick="window.CustomerForm.openMasterModal('ac_type')" style="background: var(--primary); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                            </div>
                             <select id="msvIacAcType" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                 <option value="">Select Type</option>
-                                <option value="Split">Split</option>
-                                <option value="Window">Window</option>
-                                <option value="Cassette">Cassette</option>
-                                <option value="Tower">Tower</option>
                             </select>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Inverter Type</label>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="font-weight: 500; font-size: 14px; color: #334155;">Inverter Type</label>
+                                <button type="button" onclick="window.CustomerForm.openMasterModal('inverter_type')" style="background: var(--primary); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                            </div>
                             <select id="msvIacInverterType" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                 <option value="">Select</option>
-                                <option value="Inverter">Inverter</option>
-                                <option value="Non-Inverter">Non-Inverter</option>
                             </select>
                         </div>
                         </div>
                         <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
                             <button type="button" onclick="window.CustomerForm.closeMsvAcModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
-                            <button type="button" onclick="window.CustomerForm.nextAcStep()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #6366f1; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(99,102,241,0.3);">
+                            <button type="button" onclick="window.CustomerForm.nextAcStep()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #ff9f43; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(255,159,67,0.35);">
                                 Next <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
                             </button>
                         </div>
@@ -407,17 +421,43 @@ window.CustomerForm = {
                                 <option value="inactive">Inactive</option>
                             </select>
                         </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Notes</label>
+                            <textarea id="msvIacNotes" rows="2" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; resize: vertical;"></textarea>
+                        </div>
                         </div>
 
                         <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
                             <button type="button" onclick="window.CustomerForm.prevAcStep()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Previous</button>
-                            <button type="button" id="msvIacSaveBtn" onclick="window.CustomerForm.saveMsvAcUnit()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #6366f1; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(99,102,241,0.3); display: flex; align-items: center; gap: 6px;">
+                            <button type="button" id="msvIacSaveBtn" onclick="window.CustomerForm.saveMsvAcUnit()" style="padding: 10px 20px; border-radius: 8px; border: none; background: #ff9f43; color: white; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(255,159,67,0.35); display: flex; align-items: center; gap: 6px;">
                                 <i class="fa-solid fa-floppy-disk"></i> Save AC Unit
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Generic Master Quick Add Modal -->
+            <div id="addMasterModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2020; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+                <div style="background: #ffffff; padding: 24px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 id="masterModalTitle" style="margin: 0; font-size: 18px; color: #0f172a;">Add New Option</h3>
+                            <button type="button" onclick="document.getElementById('addMasterModal').style.display='none'" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #64748b;">&times;</button>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Option Name <span style="color: red;">*</span></label>
+                            <input type="text" id="masterNewName" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            <div id="err_masterNewName" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
+                        </div>
+                        <input type="hidden" id="masterNewType">
+                        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+                            <button type="button" onclick="document.getElementById('addMasterModal').style.display='none'" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
+                            <button type="button" id="qaSaveMasterBtn" onclick="window.CustomerForm.saveMaster()" style="padding: 10px 20px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600;">Save Option</button>
+                        </div>
+                    </div>
+                </div>
+
         `;
 
         container.innerHTML = window.renderLayout(content);
@@ -622,6 +662,22 @@ window.CustomerForm = {
             }
         } catch (e) { }
 
+        // Fetch types
+        try {
+            const atRes = await window.api.get('/masters?type=ac_type&status=active');
+            if (atRes.success) {
+                const types = atRes.data || [];
+                const acTypeSel = document.getElementById('macAcType');
+                if (acTypeSel) acTypeSel.innerHTML = '<option value="">Select Type</option>' + types.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+            }
+            const itRes = await window.api.get('/masters?type=inverter_type&status=active');
+            if (itRes.success) {
+                const types = itRes.data || [];
+                const invTypeSel = document.getElementById('macInverterType');
+                if (invTypeSel) invTypeSel.innerHTML = '<option value="">Select</option>' + types.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+            }
+        } catch (e) { }
+
         ['macBrand', 'macModel', 'macSerial', 'macCapacity', 'macNotes', 'macRoom'].forEach(id => {
             const el = document.getElementById(id); if (el) el.value = '';
         });
@@ -726,6 +782,20 @@ window.CustomerForm = {
                 shouldSort: false
             });
         }
+        
+        try {
+            const stRes = await window.api.get('/masters?type=service_type&status=active');
+            if (stRes.success) {
+                const serviceTypes = stRes.data || [];
+                const stSelect = document.getElementById('msvServiceType');
+                if (stSelect) {
+                    stSelect.innerHTML = '<option value="">Select Service Type</option>' + 
+                        serviceTypes.map(st => `<option value="${st.name}">${st.name}</option>`).join('');
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
 
         // Pre-load customers into the inline quick-add AC section
         try {
@@ -759,9 +829,11 @@ window.CustomerForm = {
         document.getElementById('msvWorkDone').value = '';
         document.getElementById('msvLabor').value = '0.00';
         document.getElementById('msvParts').value = '0.00';
-        document.getElementById('msvDiscount').value = '0.00';
+        document.getElementById('msvCopperMiter').value = '0.00';
+        document.getElementById('msvCopperMiterPrice').value = '0.00';
         document.getElementById('msvTotal').value = '0.00';
         document.getElementById('msvPaymentStatus').value = 'unpaid';
+        document.getElementById('msvPaymentMethod').value = '';
         document.getElementById('msvNextDate').value = '';
 
 
@@ -831,6 +903,22 @@ window.CustomerForm = {
         document.getElementById('msvAddAcModal').style.display = 'flex';
         // Fetch next AC code
         await window.CustomerForm.loadMsvAcCode();
+
+        // Fetch types
+        try {
+            const atRes = await window.api.get('/masters?type=ac_type&status=active');
+            if (atRes.success) {
+                const types = atRes.data || [];
+                const acTypeSel = document.getElementById('msvIacAcType');
+                if (acTypeSel) acTypeSel.innerHTML = '<option value="">Select Type</option>' + types.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+            }
+            const itRes = await window.api.get('/masters?type=inverter_type&status=active');
+            if (itRes.success) {
+                const types = itRes.data || [];
+                const invTypeSel = document.getElementById('msvIacInverterType');
+                if (invTypeSel) invTypeSel.innerHTML = '<option value="">Select</option>' + types.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+            }
+        } catch (e) { }
     },
 
     nextAcStep: () => {
@@ -905,6 +993,7 @@ window.CustomerForm = {
             installation_date: document.getElementById('msvIacInstDate').value,
             room: document.getElementById('msvIacRoom').value,
             status: document.getElementById('msvIacStatus').value,
+            notes: document.getElementById('msvIacNotes').value,
         };
 
         try {
@@ -971,15 +1060,22 @@ window.CustomerForm = {
     calcServiceTotal: () => {
         const labor = parseFloat(document.getElementById('msvLabor')?.value) || 0;
         const parts = parseFloat(document.getElementById('msvParts')?.value) || 0;
-        const discount = parseFloat(document.getElementById('msvDiscount')?.value) || 0;
+        const miter = parseFloat(document.getElementById('msvCopperMiter')?.value) || 0;
+        const miterPrice = parseFloat(document.getElementById('msvCopperMiterPrice')?.value) || 0;
         const el = document.getElementById('msvTotal');
-        if (el) el.value = Math.max(0, (labor + parts) - discount).toFixed(2);
+        if (el) el.value = Math.max(0, (labor + parts + (miter * miterPrice))).toFixed(2);
+    },
+
+    clearMsvSignature: () => {
+        const canvas = document.getElementById('msvSignaturePad');
+        if (canvas && window.msvSignatureCtx) {
+            window.msvSignatureCtx.clearRect(0, 0, canvas.width, canvas.height);
+            window.msvSignatureIsEmpty = true;
+        }
     },
 
     saveService: async () => {
         const btn = document.getElementById('msvSaveBtn');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="margin-right:6px;"></i>Saving...';
 
         ['msvAcUnit', 'msvDate', 'msvServiceType'].forEach(id => {
             const errEl = document.getElementById('err_' + id);
@@ -1010,10 +1106,104 @@ window.CustomerForm = {
             valid = false;
         }
         if (!valid) {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-floppy-disk" style="margin-right:6px;"></i>Save Service';
             return;
         }
+
+        // --- SweetAlert Signature ---
+        const result = await Swal.fire({
+            title: 'Customer Approval',
+            html: `
+                <div style="text-align: left; margin-top: 10px;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #334155; cursor: pointer; margin-bottom: 16px;">
+                        <input type="checkbox" id="swalIsApproved" style="width: 18px; height: 18px; cursor: pointer;">
+                        I approve the service details and charges
+                    </label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="font-weight: 500; font-size: 14px; color: #334155;">Customer Signature</label>
+                        <button type="button" id="swalClearSig" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-eraser"></i> Clear</button>
+                    </div>
+                    <div style="border: 1px solid var(--border-glass); border-radius: 8px; background: #f8fafc; overflow: hidden; touch-action: none;">
+                        <canvas id="swalSignaturePad" width="400" height="150" style="width: 100%; touch-action: none; display: block;"></canvas>
+                    </div>
+                    <p style="font-size: 12px; color: #64748b; margin-top: 8px;">Please sign in the box above. Both approval and signature are required.</p>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Submit Service',
+            confirmButtonColor: '#ff9f43',
+            didOpen: () => {
+                const canvas = document.getElementById('swalSignaturePad');
+                const ctx = canvas.getContext('2d');
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.strokeStyle = '#0f172a';
+                
+                let isDrawing = false;
+                let lastX = 0; let lastY = 0;
+                window.swalSigEmpty = true;
+                
+                const getPos = (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    const evt = e.touches ? e.touches[0] : e;
+                    return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+                };
+                
+                const startDrawing = (e) => {
+                    isDrawing = true;
+                    const pos = getPos(e);
+                    [lastX, lastY] = [pos.x, pos.y];
+                    window.swalSigEmpty = false;
+                };
+                
+                const draw = (e) => {
+                    if (!isDrawing) return;
+                    e.preventDefault();
+                    const pos = getPos(e);
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(pos.x, pos.y);
+                    ctx.stroke();
+                    [lastX, lastY] = [pos.x, pos.y];
+                };
+                
+                const stopDrawing = () => { isDrawing = false; };
+                
+                canvas.addEventListener('mousedown', startDrawing);
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('mouseup', stopDrawing);
+                canvas.addEventListener('mouseout', stopDrawing);
+                
+                canvas.addEventListener('touchstart', startDrawing, {passive: false});
+                canvas.addEventListener('touchmove', draw, {passive: false});
+                canvas.addEventListener('touchend', stopDrawing);
+                
+                document.getElementById('swalClearSig').addEventListener('click', () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    window.swalSigEmpty = true;
+                });
+            },
+            preConfirm: () => {
+                const isApproved = document.getElementById('swalIsApproved').checked;
+                if (!isApproved) {
+                    Swal.showValidationMessage('You must approve the service details.');
+                    return false;
+                }
+                if (window.swalSigEmpty) {
+                    Swal.showValidationMessage('Customer signature is required.');
+                    return false;
+                }
+                return {
+                    isApproved: isApproved,
+                    signature: document.getElementById('swalSignaturePad').toDataURL('image/png')
+                };
+            }
+        });
+
+        if (!result.isConfirmed) return;
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="margin-right:6px;"></i>Saving...';
 
         const payload = {
             ac_unit_id: acVal,
@@ -1024,10 +1214,14 @@ window.CustomerForm = {
             work_done: document.getElementById('msvWorkDone').value,
             labor_charge: document.getElementById('msvLabor').value,
             parts_charge: document.getElementById('msvParts').value,
-            discount: document.getElementById('msvDiscount').value,
+            copper_pipe_charge: document.getElementById('msvCopperMiter').value,
+            miter_charge: document.getElementById('msvCopperMiterPrice').value,
             total_amount: document.getElementById('msvTotal').value,
             payment_status: document.getElementById('msvPaymentStatus').value,
+            payment_method: document.getElementById('msvPaymentMethod').value,
             next_maintenance_date: document.getElementById('msvNextDate').value,
+            is_approved: result.value.isApproved ? 1 : 0,
+            customer_signature: result.value.signature
         };
 
         try {
@@ -1071,4 +1265,68 @@ window.CustomerForm = {
             btn.innerHTML = '<i class="fa-solid fa-floppy-disk" style="margin-right:6px;"></i>Save Service';
         }
     },
+
+    openMasterModal: (type) => {
+        try {
+            document.getElementById('masterNewType').value = type;
+            document.getElementById('masterNewName').value = '';
+            const errEl = document.getElementById('err_masterNewName');
+            if (errEl) errEl.style.display = 'none';
+            let title = 'Add New Option';
+            if (type === 'service_type') title = 'Add Service Type';
+            if (type === 'ac_type') title = 'Add AC Type';
+            if (type === 'inverter_type') title = 'Add Inverter Type';
+            document.getElementById('masterModalTitle').innerText = title;
+            document.getElementById('addMasterModal').style.display = 'flex';
+        } catch (e) {
+            console.error(e);
+        }
+    },
+
+    saveMaster: async () => {
+        const type = document.getElementById('masterNewType').value;
+        const name = document.getElementById('masterNewName').value.trim();
+        const errEl = document.getElementById('err_masterNewName');
+        const btn = document.getElementById('qaSaveMasterBtn');
+
+        if (!name) {
+            errEl.innerText = "Name is required";
+            errEl.style.display = 'block';
+            return;
+        }
+        errEl.style.display = 'none';
+        btn.disabled = true;
+        btn.innerText = "Saving...";
+
+        try {
+            const res = await window.api.post('/masters', { type, name, status: 'active' });
+            if (res.success) {
+                window.showToast("Option added successfully", "success");
+                document.getElementById('addMasterModal').style.display = 'none';
+                
+                let selectEls = [];
+                if (type === 'service_type') selectEls.push(document.getElementById('msvServiceType'));
+                else if (type === 'ac_type') selectEls.push(document.getElementById('macAcType'), document.getElementById('msvIacAcType'));
+                else if (type === 'inverter_type') selectEls.push(document.getElementById('macInverterType'), document.getElementById('msvIacInverterType'));
+
+                selectEls.forEach(selectEl => {
+                    if (selectEl) {
+                        const newOption = new Option(name, name, true, true);
+                        selectEl.add(newOption);
+                    }
+                });
+            } else {
+                if (res.errors && res.errors.name) {
+                    errEl.innerText = res.errors.name[0];
+                    errEl.style.display = 'block';
+                } else {
+                    window.showToast(res.message || "Error saving option", "error");
+                }
+            }
+        } catch (e) {
+            window.showToast("An error occurred", "error");
+        }
+        btn.disabled = false;
+        btn.innerText = "Save Option";
+    }
 };
