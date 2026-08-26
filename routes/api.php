@@ -75,16 +75,26 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/admin/staff/{id}', [\App\Http\Controllers\AdminController::class, 'destroy']);
     Route::put('/admin/staff/{id}/permissions', [\App\Http\Controllers\AdminController::class, 'assignPermissions'])->middleware('permission:staff.edit');
 
-    // QR Scan API (Token based)
     Route::get('/qr/{token}', function ($token) {
+        $acUnitId = null;
         $qrCode = \App\Models\AcQrCode::where('token', $token)->first();
-        if (!$qrCode) return response()->json(['success' => false, 'message' => 'Invalid QR token'], 404);
+        
+        if ($qrCode) {
+            $acUnitId = $qrCode->ac_unit_id;
+        } else {
+            $acUnitByCode = \App\Models\AcUnit::where('ac_code', $token)->first();
+            if ($acUnitByCode) {
+                $acUnitId = $acUnitByCode->id;
+            }
+        }
+
+        if (!$acUnitId) return response()->json(['success' => false, 'message' => 'Invalid QR token or AC Code'], 404);
         
         $acUnit = \App\Models\AcUnit::with([
             'customer',
             'qrCode',
             'serviceRecords' => function($q) { $q->orderBy('id', 'desc'); }
-        ])->find($qrCode->ac_unit_id);
+        ])->find($acUnitId);
         if (!$acUnit) return response()->json(['success' => false, 'message' => 'AC Unit not found'], 404);
         
         return response()->json(['success' => true, 'data' => ['ac' => $acUnit, 'customer' => $acUnit->customer]]);

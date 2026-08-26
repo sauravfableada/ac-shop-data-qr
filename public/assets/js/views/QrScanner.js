@@ -330,7 +330,10 @@ window.QrScanner = {
 
         const scanner = new Html5QrcodeScanner("reader", {
             fps: 10,
-            qrbox: { width: 220, height: 220 },
+            formatsToSupport: [
+                Html5QrcodeSupportedFormats.QR_CODE,
+                Html5QrcodeSupportedFormats.CODE_128
+            ],
             rememberLastUsedCamera: true,
             videoConstraints: {
                 facingMode: "environment"
