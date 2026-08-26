@@ -818,3 +818,10 @@ input[type="date"]::-webkit-datetime-edit {
         width: 100%;
     }
 }
+/* Ensure SweetAlert Customer Approval appears above all modals */
+.swal-on-top {
+    z-index: 99999 !important;
+}
+.swal2-container.swal-on-top {
+    z-index: 99999 !important;
+}

@@ -1164,6 +1164,9 @@ window.CustomerForm = {
             showCancelButton: true,
             confirmButtonText: 'Submit Service',
             confirmButtonColor: '#ff9f43',
+            customClass: {
+                container: 'swal-on-top'
+            },
             didOpen: () => {
                 const canvas = document.getElementById('swalSignaturePad');
                 const ctx = canvas.getContext('2d');
