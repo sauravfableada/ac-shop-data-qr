@@ -139,7 +139,7 @@ window.AcUnitView = {
                 ? (() => {
                     const codeType = window.appSettings?.code_type || 'qr';
                     const qrImgUrl = codeType === 'barcode' 
-                        ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${ac.qr_code.token}`
+                        ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${ac.ac_code}`
                         : `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${ac.qr_code.token}`;
                     
                     return `
@@ -213,7 +213,7 @@ window.AcUnitView = {
             
             const codeType = window.appSettings?.code_type || 'qr';
             const qrImgUrl = codeType === 'barcode' 
-                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${token}`
+                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${code}`
                 : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
             
             const canvas = document.createElement('canvas');
@@ -286,7 +286,7 @@ window.AcUnitView = {
             
             const codeType = window.appSettings?.code_type || 'qr';
             const qrImgUrl = codeType === 'barcode' 
-                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${token}`
+                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${code}`
                 : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
             const qrCardUrl = `${window.location.origin}/qr-card/${token}`;
             const messageText = `AC Code: ${ac.ac_code}\nCustomer: ${ac.customer ? ac.customer.full_name : 'Unknown'}\nQR Card Link: ${qrCardUrl}`;
