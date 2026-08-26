@@ -12,6 +12,12 @@ class SettingController extends Controller
     public function index()
     {
         $settings = Setting::pluck('value', 'key')->toArray();
+        if (isset($settings['company_logo']) && strpos($settings['company_logo'], 'http') === false) {
+            $settings['company_logo'] = public_asset($settings['company_logo']);
+        }
+        if (isset($settings['company_favicon']) && strpos($settings['company_favicon'], 'http') === false) {
+            $settings['company_favicon'] = public_asset($settings['company_favicon']);
+        }
         return response()->json(['success' => true, 'data' => $settings]);
     }
 
@@ -52,6 +58,12 @@ class SettingController extends Controller
             }
 
             $settings = Setting::pluck('value', 'key')->toArray();
+            if (isset($settings['company_logo']) && strpos($settings['company_logo'], 'http') === false) {
+                $settings['company_logo'] = public_asset($settings['company_logo']);
+            }
+            if (isset($settings['company_favicon']) && strpos($settings['company_favicon'], 'http') === false) {
+                $settings['company_favicon'] = public_asset($settings['company_favicon']);
+            }
             return response()->json(['success' => true, 'message' => 'Settings saved successfully', 'data' => $settings]);
 
         } catch (\Exception $e) {

@@ -14,5 +14,11 @@ Route::get('/qr-card/{token}', function ($token) {
 
 Route::get('/{any}', function () {
     $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+    if (isset($settings['company_logo']) && strpos($settings['company_logo'], 'http') === false) {
+        $settings['company_logo'] = public_asset($settings['company_logo']);
+    }
+    if (isset($settings['company_favicon']) && strpos($settings['company_favicon'], 'http') === false) {
+        $settings['company_favicon'] = public_asset($settings['company_favicon']);
+    }
     return view('spa', compact('settings'));
 })->where('any', '.*');
