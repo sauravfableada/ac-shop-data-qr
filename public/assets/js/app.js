@@ -283,7 +283,9 @@ window.renderLayout = (content) => {
                                 <div id="profileDropdown" class="profile-dropdown">
                                     <a href="/profile" class="dropdown-item" data-link><i class="fa-regular fa-user"></i> Profile</a>
                                     <a href="/masters" class="dropdown-item" data-link><i class="fa-solid fa-database"></i> Masters</a>
+                                    ${window.appUser && window.appUser.roles && window.appUser.roles[0].name === 'admin' ? `
                                     <a href="/settings" class="dropdown-item" data-link><i class="fa-solid fa-gear"></i> Settings</a>
+                                    ` : ''}
                                     <a href="/customers" class="dropdown-item desktop-only" data-link>
                                     <i class="fa-solid fa-users"></i> Customers
                                 </a>
@@ -345,7 +347,12 @@ window.renderLayout = (content) => {
                         <i class="fa-solid fa-chart-bar"></i>
                         <span>Reports</span>
                     </a>
-                    ` : ''}
+                    ` : `
+                    <a href="/masters" data-link class="bottom-nav-item ${window.location.pathname === '/masters' ? 'active' : ''}">
+                        <i class="fa-solid fa-database"></i>
+                        <span>Masters</span>
+                    </a>
+                    `}
                 </div>
                 
                 <!-- Mobile Scanner FAB -->
