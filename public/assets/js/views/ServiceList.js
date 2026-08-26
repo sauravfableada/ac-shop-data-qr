@@ -3,6 +3,10 @@ window.ServiceList = {
 
         let state = {
             search: '',
+            filterServiceId: '',
+            filterCustomerId: '',
+            filterAcUnitId: '',
+            filterStaffId: '',
             page: 1,
             perPage: 10,
             services: [],
@@ -14,9 +18,13 @@ window.ServiceList = {
                 search: state.search,
                 page: state.page,
                 per_page: state.perPage
-            }).toString();
+            });
+            if (state.filterServiceId) query.append('service_id', state.filterServiceId);
+            if (state.filterCustomerId) query.append('customer_id', state.filterCustomerId);
+            if (state.filterAcUnitId) query.append('ac_unit_id', state.filterAcUnitId);
+            if (state.filterStaffId) query.append('created_by', state.filterStaffId);
 
-            const response = await window.api.get('/services?' + query);
+            const response = await window.api.get('/services?' + query.toString());
 
             if (response.success) {
                 state.services = response.data.data;
@@ -140,21 +148,51 @@ window.ServiceList = {
 
                     <div>
                         <div class="table-filter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap;">
-                            <!-- Search Input -->
-                            <div style="position: relative;">
-                                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;"></i>
-                                <input type="text" id="searchInput" value="${state.search}" placeholder="Search service #, customer..." style="width: 260px; padding: 9px 12px 9px 38px !important; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
-                            </div>
-
-                            <!-- Per Page (desktop only) -->
-                            <div class="desktop-only" style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px; white-space: nowrap;">
-                                Show:
-                                <select id="perPageSelect" style="padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; cursor: pointer;">
-                                    <option value="10" ${state.perPage == 10 ? 'selected' : ''}>10</option>
-                                    <option value="25" ${state.perPage == 25 ? 'selected' : ''}>25</option>
-                                    <option value="50" ${state.perPage == 50 ? 'selected' : ''}>50</option>
-                                </select>
-                                per page
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap; flex: 1;">
+                                <!-- Search Input -->
+                                <div style="position: relative; flex: 1 1 140px; min-width: 140px;">
+                                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;"></i>
+                                    <input type="text" id="searchInput" value="${state.search}" placeholder="Search service #..." style="width: 100%; padding: 9px 12px 9px 38px !important; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
+                                </div>
+                                
+                                <!-- Service Filter -->
+                                <div style="flex: 1 1 140px; min-width: 140px;">
+                                    <select id="filterServiceSelect" class="choices-select" data-placeholder="All Services">
+                                        <option value="">All Services</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Customer Filter -->
+                                <div style="flex: 1 1 140px; min-width: 140px;">
+                                    <select id="filterCustomerSelect" class="choices-select" data-placeholder="All Customers">
+                                        <option value="">All Customers</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- AC Unit Filter -->
+                                <div style="flex: 1 1 140px; min-width: 140px;">
+                                    <select id="filterAcUnitSelect" class="choices-select" data-placeholder="All AC Units">
+                                        <option value="">All AC Units</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Staff Filter -->
+                                <div style="flex: 1 1 140px; min-width: 140px;">
+                                    <select id="filterStaffSelect" class="choices-select" data-placeholder="All Staff">
+                                        <option value="">All Staff</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Per Page -->
+                                <div style="flex: 1 1 140px; min-width: 140px; display: flex; align-items: center; gap: 0px; color: var(--text-muted); font-size: 11px; white-space: nowrap;">
+                                    Show:
+                                    <select id="perPageSelect" style="padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; cursor: pointer;">
+                                        <option value="10" ${state.perPage == 10 ? 'selected' : ''}>10</option>
+                                        <option value="25" ${state.perPage == 25 ? 'selected' : ''}>25</option>
+                                        <option value="50" ${state.perPage == 50 ? 'selected' : ''}>50</option>
+                                    </select>
+                                    per page
+                                </div>
                             </div>
                         </div>
 
@@ -210,6 +248,108 @@ window.ServiceList = {
                     updateDOM();
                 });
             }
+
+            // Load filters data
+            (async () => {
+                try {
+                    // Services Filter (using same endpoint just to list service numbers, or we can just let users type it)
+                    // Wait, listing all services in a dropdown might be huge, but for consistency with others:
+                    const srvRes = await window.api.get('/services?per_page=1000');
+                    const srvSelect = document.getElementById('filterServiceSelect');
+                    if (!srvSelect) return; // Prevent error if user navigated away
+
+                    if (srvRes.success) {
+                        const services = srvRes.data?.data || srvRes.data || [];
+                        services.forEach(s => {
+                            const opt = document.createElement('option');
+                            opt.value = s.id;
+                            opt.textContent = s.service_number;
+                            if (s.id == state.filterServiceId) opt.selected = true;
+                            srvSelect.appendChild(opt);
+                        });
+                    }
+
+                    const custRes = await window.api.get('/customers?per_page=1000');
+                    const custSelect = document.getElementById('filterCustomerSelect');
+                    if (!custSelect) return;
+
+                    if (custRes.success) {
+                        const customers = custRes.data?.data || custRes.data || [];
+                        customers.forEach(c => {
+                            const opt = document.createElement('option');
+                            opt.value = c.id;
+                            opt.textContent = c.full_name + (c.mobile ? ` (${c.mobile})` : '');
+                            if (c.id == state.filterCustomerId) opt.selected = true;
+                            custSelect.appendChild(opt);
+                        });
+                    }
+
+                    const acRes = await window.api.get('/ac-units?per_page=1000');
+                    const acSelect = document.getElementById('filterAcUnitSelect');
+                    if (!acSelect) return;
+
+                    if (acRes.success) {
+                        const units = acRes.data?.data || acRes.data || [];
+                        units.forEach(u => {
+                            const opt = document.createElement('option');
+                            opt.value = u.id;
+                            opt.textContent = u.ac_code + (u.brand ? ` - ${u.brand}` : '');
+                            if (u.id == state.filterAcUnitId) opt.selected = true;
+                            acSelect.appendChild(opt);
+                        });
+                    }
+
+                    const staffRes = await window.api.get('/admin/staff?per_page=1000');
+                    const staffSelect = document.getElementById('filterStaffSelect');
+                    if (!staffSelect) return;
+
+                    if (staffRes.success) {
+                        const staffList = staffRes.data || [];
+                        staffList.forEach(s => {
+                            const opt = document.createElement('option');
+                            opt.value = s.id;
+                            opt.textContent = s.name;
+                            if (s.id == state.filterStaffId) opt.selected = true;
+                            staffSelect.appendChild(opt);
+                        });
+                    }
+
+                    if (window.Choices) {
+                        const srvChoices = new Choices(srvSelect, { searchEnabled: true, itemSelectText: '', shouldSort: false });
+                        const custChoices = new Choices(custSelect, { searchEnabled: true, itemSelectText: '', shouldSort: false });
+                        const acChoices = new Choices(acSelect, { searchEnabled: true, itemSelectText: '', shouldSort: false });
+                        const staffChoices = new Choices(staffSelect, { searchEnabled: true, itemSelectText: '', shouldSort: false });
+
+                        srvSelect.addEventListener('change', async (e) => {
+                            state.filterServiceId = e.target.value;
+                            state.page = 1;
+                            await fetchServices();
+                            updateDOM();
+                        });
+
+                        custSelect.addEventListener('change', async (e) => {
+                            state.filterCustomerId = e.target.value;
+                            state.page = 1;
+                            await fetchServices();
+                            updateDOM();
+                        });
+
+                        acSelect.addEventListener('change', async (e) => {
+                            state.filterAcUnitId = e.target.value;
+                            state.page = 1;
+                            await fetchServices();
+                            updateDOM();
+                        });
+
+                        staffSelect.addEventListener('change', async (e) => {
+                            state.filterStaffId = e.target.value;
+                            state.page = 1;
+                            await fetchServices();
+                            updateDOM();
+                        });
+                    }
+                } catch (e) { console.error("Failed to load filter dropdowns", e); }
+            })();
 
             // Delegation for pagination clicks
             const paginationContainer = document.getElementById('servicePagination');

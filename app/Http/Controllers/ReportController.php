@@ -22,6 +22,9 @@ class ReportController extends Controller
         $query = ServiceRecord::with(['customer', 'acUnit', 'technician']);
 
         // Filters
+        if ($request->filled('service_id')) {
+            $query->where('id', $request->service_id);
+        }
         if ($request->filled('customer_id')) {
             $query->where('customer_id', $request->customer_id);
         }
@@ -154,7 +157,10 @@ class ReportController extends Controller
 
         $query = ServiceRecord::with(['customer', 'acUnit']);
 
-        // Filters (Same as income method)
+        // Filters
+        if ($request->filled('service_id')) {
+            $query->where('id', $request->service_id);
+        }
         if ($request->filled('customer_id')) {
             $query->where('customer_id', $request->customer_id);
         }

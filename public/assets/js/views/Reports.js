@@ -1,6 +1,7 @@
 window.Reports = {
     state: {
         dateRange: 'all',
+        serviceId: '',
         customerId: '',
         acUnitId: '',
         startDate: '',
@@ -28,19 +29,25 @@ window.Reports = {
                     
                     <!-- Filters Row -->
                     <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; align-items: center;">
-                        <div style="flex: 1; min-width: 200px; max-width: 300px;">
+                        <div style="flex: 1 1 140px; min-width: 140px;">
+                            <select id="reportServiceSelect" onchange="window.Reports.applyFilters()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; background: white; width: 100%;">
+                                <option value="">All Services</option>
+                            </select>
+                        </div>
+
+                        <div style="flex: 1 1 140px; min-width: 140px;">
                             <select id="reportCustomerSelect" onchange="window.Reports.applyFilters()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; background: white; width: 100%;">
                                 <option value="">All Customers</option>
                             </select>
                         </div>
                         
-                        <div style="flex: 1; min-width: 200px; max-width: 300px;">
+                        <div style="flex: 1 1 140px; min-width: 140px;">
                             <select id="reportAcSelect" onchange="window.Reports.applyFilters()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; background: white; width: 100%;">
                                 <option value="">All AC Units</option>
                             </select>
                         </div>
 
-                        <select id="reportDateRange" onchange="window.Reports.handleDateRangeChange()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; min-width: 160px; background: white; flex: 1; max-width: 200px;">
+                        <select id="reportDateRange" onchange="window.Reports.handleDateRangeChange()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; background: white; flex: 1 1 140px; min-width: 140px;">
                             <option value="all" selected>select filter</option>
                             <option value="daily">Daily</option>
                             <option value="weekly">Weekly</option>
@@ -49,14 +56,14 @@ window.Reports = {
                             <option value="custom">Custom Range</option>
                         </select>
 
-                        <div id="customStartWrapper" style="display: none; flex: 1; max-width: 150px;">
+                        <div id="customStartWrapper" style="display: none; flex: 1 1 140px; min-width: 140px;">
                             <input type="date" id="reportStartDate" onchange="window.Reports.applyFilters()" style="width: 100%; padding: 7px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; background: white;">
                         </div>
-                        <div id="customEndWrapper" style="display: none; flex: 1; max-width: 150px;">
+                        <div id="customEndWrapper" style="display: none; flex: 1 1 140px; min-width: 140px;">
                             <input type="date" id="reportEndDate" onchange="window.Reports.applyFilters()" style="width: 100%; padding: 7px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; background: white;">
                         </div>
 
-                        <div style="display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 13px; white-space: nowrap; margin-left: auto;">
+                        <div style="flex: 1 1 140px; min-width: 140px; display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 13px; white-space: nowrap;">
                             Show:
                             <select id="reportPerPage" onchange="window.Reports.applyFilters()" style="padding: 7px 10px; border-radius: 4px; border: 1px solid #d1d5db; background: white; color: #374151; outline: none; font-size: 13px; cursor: pointer;">
                                 <option value="10" selected>10</option>
@@ -134,6 +141,19 @@ window.Reports = {
 
     loadDropdowns: async () => {
         try {
+            // Fetch Services
+            const srvRes = await window.api.get('/services?per_page=1000');
+            const srvSelect = document.getElementById('reportServiceSelect');
+            if (srvRes.success) {
+                const services = srvRes.data?.data || srvRes.data || [];
+                services.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.id;
+                    opt.textContent = s.service_number;
+                    srvSelect.appendChild(opt);
+                });
+            }
+
             // Fetch customers
             const custRes = await window.api.get('/customers?per_page=1000');
             const custSelect = document.getElementById('reportCustomerSelect');
@@ -162,6 +182,13 @@ window.Reports = {
 
             // Initialize Choices.js
             if (window.Choices) {
+                if (window.reportServiceChoices) window.reportServiceChoices.destroy();
+                window.reportServiceChoices = new Choices(srvSelect, {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    shouldSort: false
+                });
+
                 if (window.reportCustomerChoices) window.reportCustomerChoices.destroy();
                 window.reportCustomerChoices = new Choices(custSelect, {
                     searchEnabled: true,
@@ -177,6 +204,7 @@ window.Reports = {
                 });
 
                 // Ensure the change event triggers applyFilters
+                srvSelect.addEventListener('change', () => { window.Reports.applyFilters(); }, { once: false });
                 custSelect.addEventListener('change', () => { window.Reports.applyFilters(); }, { once: false });
                 acSelect.addEventListener('change', () => { window.Reports.applyFilters(); }, { once: false });
             }
@@ -205,6 +233,7 @@ window.Reports = {
     },
 
     applyFilters: () => {
+        window.Reports.state.serviceId = document.getElementById('reportServiceSelect').value;
         window.Reports.state.customerId = document.getElementById('reportCustomerSelect').value;
         window.Reports.state.acUnitId = document.getElementById('reportAcSelect').value;
         window.Reports.state.dateRange = document.getElementById('reportDateRange').value;
@@ -220,6 +249,7 @@ window.Reports = {
         if (!token) return;
 
         let url = `/api/reports/export?format=${format}`;
+        if (window.Reports.state.serviceId) url += `&service_id=${window.Reports.state.serviceId}`;
         if (window.Reports.state.customerId) url += `&customer_id=${window.Reports.state.customerId}`;
         if (window.Reports.state.acUnitId) url += `&ac_unit_id=${window.Reports.state.acUnitId}`;
         if (window.Reports.state.dateRange) url += `&date_range=${window.Reports.state.dateRange}`;
@@ -271,6 +301,7 @@ window.Reports = {
         document.getElementById('reportsTableBody').innerHTML = '<tr><td colspan="6" style="padding: 32px; text-align: center; color: #94a3b8;"><i class="fa-solid fa-circle-notch fa-spin"></i> Fetching records...</td></tr>';
         
         let url = `/reports/income?page=${window.Reports.state.page}&per_page=${window.Reports.state.perPage}`;
+        if (window.Reports.state.serviceId) url += `&service_id=${window.Reports.state.serviceId}`;
         if (window.Reports.state.customerId) url += `&customer_id=${window.Reports.state.customerId}`;
         if (window.Reports.state.acUnitId) url += `&ac_unit_id=${window.Reports.state.acUnitId}`;
         if (window.Reports.state.dateRange) url += `&date_range=${window.Reports.state.dateRange}`;
