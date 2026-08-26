@@ -330,13 +330,14 @@ window.QrScanner = {
 
         const scanner = new Html5QrcodeScanner("reader", {
             fps: 10,
-            formatsToSupport: [
-                Html5QrcodeSupportedFormats.QR_CODE,
-                Html5QrcodeSupportedFormats.CODE_128
-            ],
+            qrbox: function(viewfinderWidth, viewfinderHeight) {
+                const width = Math.min(viewfinderWidth * 0.9, 400);
+                const height = Math.min(viewfinderHeight * 0.4, 150);
+                return { width: width, height: height };
+            },
             rememberLastUsedCamera: true,
-            videoConstraints: {
-                facingMode: "environment"
+            experimentalFeatures: {
+                useBarCodeDetectorIfSupported: true
             }
         }, false);
         scanner.render(onScanSuccess);
