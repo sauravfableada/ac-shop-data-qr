@@ -34,6 +34,9 @@ window.AcUnitList = {
         };
 
         const renderTable = () => {
+            const codeType = window.appSettings?.code_type || 'qr';
+            const codeText = codeType === 'barcode' ? 'Barcode' : 'QR';
+            
             if (!state.acUnits.length) {
                 return `<tr><td colspan="6" style="padding: 16px; text-align: center; color: var(--text-muted);">No AC Units found</td></tr>`;
             }
@@ -52,9 +55,9 @@ window.AcUnitList = {
                         <button class="mobile-expand-btn" onclick="window.AcUnitList.toggleMobileRow(${ac.id}, this)"><i class="fa-solid fa-plus"></i></button>
                         <div class="desktop-only" style="display: flex; gap: 8px; justify-content: flex-end;">
                             <button onclick="window.router.navigate('/services/add?ac_id=${ac.id}')" title="Add Service" style="background: #0ea5e9; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-plus"></i> Service</button>
-                            <button onclick="window.AcUnitList.downloadQrImage(${ac.id})" title="Save QR" style="background: #8b5cf6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-download"></i> Save QR</button>
+                            <button onclick="window.AcUnitList.downloadQrImage(${ac.id})" title="Save ${codeText}" style="background: #8b5cf6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-download"></i> Save ${codeText}</button>
                             <button onclick="window.AcUnitList.shareQrWhatsapp(${ac.id})" title="Share WhatsApp" style="background: #25D366; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
-                            <button onclick="window.AcUnitList.printAcUnit(${ac.id})" title="Print QR" style="background: #0f172a; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-print"></i> Print</button>
+                            <button onclick="window.AcUnitList.printAcUnit(${ac.id})" title="Print ${codeText}" style="background: #0f172a; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-print"></i> Print</button>
                             <button onclick="window.router.navigate('/ac-units/view/${ac.id}')" title="View" style="background: #3b82f6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-eye"></i> View</button>
                             <button onclick="window.router.navigate('/ac-units/edit/${ac.id}')" title="Edit" style="background: #f59e0b; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
                             <button onclick="window.AcUnitList.deleteUnit(${ac.id})" title="Delete" style="background: #ef4444; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-trash"></i> Delete</button>
@@ -77,7 +80,7 @@ window.AcUnitList = {
                                 <div style="font-weight: 400; color: #64748b;">${ac.customer ? ac.customer.full_name : '--'}</div>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
-                                <div><i class="fa-solid fa-qrcode" style="margin-right: 8px;"></i> QR :</div>
+                                <div><i class="fa-solid fa-${codeType === 'barcode' ? 'barcode' : 'qrcode'}" style="margin-right: 8px;"></i> ${codeText.toUpperCase()} :</div>
                                 <div style="font-weight: 400; color: #64748b;">${ac.qr_code && ac.qr_code.token ? 'Yes' : 'No'}</div>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 12px; font-weight: 700; color: #0f172a;">
@@ -89,7 +92,7 @@ window.AcUnitList = {
                             
                             <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; align-items: center;">
                                 <button onclick="window.router.navigate('/services/add?ac_id=${ac.id}')" style="background: #0ea5e9; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-plus" style="margin-right: 4px;"></i> Service</button>
-                                <button onclick="window.AcUnitList.downloadQrImage(${ac.id})" style="background: #8b5cf6; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-download" style="margin-right: 4px;"></i> Save QR</button>
+                                <button onclick="window.AcUnitList.downloadQrImage(${ac.id})" style="background: #8b5cf6; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-download" style="margin-right: 4px;"></i> Save ${codeText}</button>
                                 <button onclick="window.AcUnitList.shareQrWhatsapp(${ac.id})" style="background: #25D366; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-brands fa-whatsapp" style="margin-right: 4px;"></i> WhatsApp</button>
                                 <button onclick="window.AcUnitList.printAcUnit(${ac.id})" style="background: #0f172a; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-print" style="margin-right: 4px;"></i> Print</button>
                                 <button onclick="window.router.navigate('/ac-units/view/${ac.id}')" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-regular fa-eye" style="margin-right: 4px;"></i> View</button>
@@ -131,6 +134,9 @@ window.AcUnitList = {
         };
 
         const renderView = () => {
+            const codeType = window.appSettings?.code_type || 'qr';
+            const codeIcon = codeType === 'barcode' ? 'fa-barcode' : 'fa-qrcode';
+            
             const content = `
                 <div class="glass-panel" style="padding: 24px; background: #ffffff;">
                     <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
@@ -140,7 +146,7 @@ window.AcUnitList = {
                         </div>
                         <div style="display: flex; gap: 12px;">
                             <button class="hide-on-mobile" onclick="window.router.navigate('/scanner')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
-                                <i class="fa-solid fa-qrcode"></i> Scan QR
+                                <i class="fa-solid ${codeIcon}"></i> Scan ${codeType === 'barcode' ? 'Barcode' : 'QR'}
                             </button>
                             <button onclick="window.router.navigate('/ac-units/add')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #ff9f43; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap;">
                                 <i class="fa-solid fa-plus"></i> Add AC Unit
@@ -154,13 +160,13 @@ window.AcUnitList = {
                                 <!-- Search Input -->
                                 <div style="position: relative; flex: 1 1 140px; min-width: 140px;">
                                     <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;"></i>
-                                    <input type="text" id="searchInput" value="${state.search}" placeholder="Search AC code..." style="width: 100%; padding: 9px 12px 9px 38px !important; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
+                                    <input type="text" id="searchInput" value="${state.search}" placeholder="Search Serial No..." style="width: 100%; padding: 9px 12px 9px 38px !important; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
                                 </div>
                                 
                                 <!-- Code Filter -->
                                 <div style="flex: 1 1 140px; min-width: 140px;">
-                                    <select id="filterCodeSelect" class="choices-select" data-placeholder="All Codes">
-                                        <option value="">All Codes</option>
+                                    <select id="filterCodeSelect" class="choices-select" data-placeholder="All Serial Nos">
+                                        <option value="">All Serial Nos</option>
                                     </select>
                                 </div>
                                 
@@ -195,7 +201,7 @@ window.AcUnitList = {
                             <table style="width: 100%; border-collapse: collapse; text-align: left;">
                                 <thead>
                                     <tr style="border-bottom: 2px solid var(--border-glass); color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 700;">
-                                        <th style="padding: 12px 16px;">Code</th>
+                                        <th style="padding: 12px 16px;">Serial No</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">Brand/Model</th>
                                         <th style="padding: 12px 16px;">Customer</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">AC Type & Capacity</th>
@@ -418,7 +424,10 @@ window.AcUnitList = {
                 return;
             }
 
-            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+            const codeType = window.appSettings?.code_type || 'qr';
+            const qrImgUrl = codeType === 'barcode' 
+                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${token}`
+                : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
 
             printWindow.document.open();
             printWindow.document.write(`
@@ -444,8 +453,9 @@ window.AcUnitList = {
                             width: 280px;
                         }
                         .card img {
-                            width: 220px;
-                            height: 220px;
+                            max-width: 100%;
+                            height: ${codeType === 'barcode' ? '80px' : '200px'};
+                            object-fit: contain;
                             display: block;
                             margin: 0 auto 16px;
                         }
@@ -500,7 +510,10 @@ window.AcUnitList = {
             const token = ac.qr_code ? ac.qr_code.token : null;
             if (!token) { window.showToast('No QR code found', 'error'); return; }
             
-            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+            const codeType = window.appSettings?.code_type || 'qr';
+            const qrImgUrl = codeType === 'barcode' 
+                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${token}`
+                : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
             
             // Create canvas for the card
             const canvas = document.createElement('canvas');
@@ -530,8 +543,12 @@ window.AcUnitList = {
                 img.onerror = reject;
             });
             
-            // Draw QR Code
-            ctx.drawImage(img, 60, 40, 220, 220);
+            // Draw Code
+            if (codeType === 'barcode') {
+                ctx.drawImage(img, 40, 80, 260, 100);
+            } else {
+                ctx.drawImage(img, 60, 40, 220, 220);
+            }
             
             // Draw Texts
             ctx.textAlign = 'center';
@@ -577,7 +594,10 @@ window.AcUnitList = {
             const token = ac.qr_code ? ac.qr_code.token : null;
             if (!token) { window.showToast('No QR code found', 'error'); return; }
             
-            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+            const codeType = window.appSettings?.code_type || 'qr';
+            const qrImgUrl = codeType === 'barcode' 
+                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${token}`
+                : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
             const qrCardUrl = `${window.location.origin}/qr-card/${token}`;
             const messageText = `AC Code: ${ac.ac_code}\nCustomer: ${ac.customer ? ac.customer.full_name : 'Unknown'}\nQR Card Link: ${qrCardUrl}`;
             

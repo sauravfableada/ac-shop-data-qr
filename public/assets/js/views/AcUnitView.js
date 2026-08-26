@@ -134,14 +134,25 @@ window.AcUnitView = {
                         <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.creator ? ac.creator.name : '--'}</p>
                     </div>
                     <div>
-                        <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">QR Code</div>
+                        <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">QR/Barcode Code</div>
                         ${ac.qr_code
-                ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${ac.qr_code.token}" alt="QR Code" style="border-radius: 8px; border: 1px solid var(--border-glass); padding: 4px; background: white; margin-bottom: 8px;">
-                               <div style="font-size: 11px; color: #64748b; word-break: break-all;">${ac.qr_code.token}</div>
-                               <div style="display: flex; gap: 8px; margin-top: 12px;">
-                                   <button onclick="window.AcUnitView.downloadQrImage(${ac.id})" title="Save QR" style="background: #8b5cf6; border: none; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-download"></i> Save QR</button>
-                                   <button onclick="window.AcUnitView.shareQrWhatsapp(${ac.id})" title="Share WhatsApp" style="background: #25D366; border: none; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: 0.2s;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
-                               </div>`
+                ? (() => {
+                    const codeType = window.appSettings?.code_type || 'qr';
+                    const qrImgUrl = codeType === 'barcode' 
+                        ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${ac.qr_code.token}`
+                        : `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${ac.qr_code.token}`;
+                    
+                    return `
+                        <div style="text-align: center;">
+                            <img src="${qrImgUrl}" alt="${codeType === 'barcode' ? 'Barcode' : 'QR Code'}" style="border-radius: 8px; border: 1px solid var(--border-glass); padding: 8px; background: white; margin-bottom: 8px; max-width: 100%; height: auto; max-height: ${codeType === 'barcode' ? '80px' : '120px'}; object-fit: contain;">
+                            <div style="font-size: 13px; font-weight: 700; color: #0f172a;">${codeType === 'barcode' ? 'Barcode' : 'QR Code'} Active</div>
+                            <div style="font-size: 11px; color: #64748b; word-break: break-all;">${ac.qr_code.token}</div>
+                            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                <button onclick="window.AcUnitView.downloadQrImage(${ac.id})" title="Save QR" style="background: #8b5cf6; border: none; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-download"></i> Save</button>
+                                <button onclick="window.AcUnitView.shareQrWhatsapp(${ac.id})" title="Share WhatsApp" style="background: #25D366; border: none; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: 0.2s;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                            </div>
+                        </div>`;
+                })()
                 : `<div style="font-size: 14px; color: #64748b;">None generated</div>`}
                     </div>
                 </div>
@@ -200,7 +211,10 @@ window.AcUnitView = {
             const token = ac.qr_code ? ac.qr_code.token : null;
             if (!token) { window.showToast('No QR code found', 'error'); return; }
             
-            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+            const codeType = window.appSettings?.code_type || 'qr';
+            const qrImgUrl = codeType === 'barcode' 
+                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${token}`
+                : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
             
             const canvas = document.createElement('canvas');
             canvas.width = 340;
@@ -226,7 +240,11 @@ window.AcUnitView = {
                 img.onerror = reject;
             });
             
-            ctx.drawImage(img, 60, 40, 220, 220);
+            if (codeType === 'barcode') {
+                ctx.drawImage(img, 40, 80, 260, 100);
+            } else {
+                ctx.drawImage(img, 60, 40, 220, 220);
+            }
             
             ctx.textAlign = 'center';
             ctx.font = 'bold 22px "Segoe UI", sans-serif';
@@ -266,7 +284,10 @@ window.AcUnitView = {
             const token = ac.qr_code ? ac.qr_code.token : null;
             if (!token) { window.showToast('No QR code found', 'error'); return; }
             
-            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+            const codeType = window.appSettings?.code_type || 'qr';
+            const qrImgUrl = codeType === 'barcode' 
+                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${token}`
+                : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
             const qrCardUrl = `${window.location.origin}/qr-card/${token}`;
             const messageText = `AC Code: ${ac.ac_code}\nCustomer: ${ac.customer ? ac.customer.full_name : 'Unknown'}\nQR Card Link: ${qrCardUrl}`;
             
@@ -308,7 +329,11 @@ window.AcUnitView = {
                             img.onerror = reject;
                         });
                         
-                        ctx.drawImage(img, 60, 40, 220, 220);
+                        if (codeType === 'barcode') {
+                            ctx.drawImage(img, 40, 80, 260, 100);
+                        } else {
+                            ctx.drawImage(img, 60, 40, 220, 220);
+                        }
                         
                         ctx.textAlign = 'center';
                         ctx.font = 'bold 22px "Segoe UI", sans-serif';
