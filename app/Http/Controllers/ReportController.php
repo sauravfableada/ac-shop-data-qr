@@ -211,7 +211,8 @@ class ReportController extends Controller
         $format = $request->input('format', 'csv');
 
         if ($format === 'pdf') {
-            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.pdf', compact('records', 'totalBilled', 'totalPaid', 'totalPending', 'startDate', 'endDate'));
+            $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.pdf', compact('records', 'totalBilled', 'totalPaid', 'totalPending', 'startDate', 'endDate', 'settings'));
             return $pdf->download('Service_Income_Report.pdf');
         }
 
@@ -234,7 +235,7 @@ class ReportController extends Controller
             foreach ($records as $row) {
                 fputcsv($file, [
                     $row->service_number,
-                    $row->customer ? $row->customer->name : 'N/A',
+                    $row->customer ? $row->customer->full_name : 'N/A',
                     $row->acUnit ? $row->acUnit->ac_code : 'N/A',
                     Carbon::parse($row->service_date)->format('Y-m-d'),
                     $row->total_amount,

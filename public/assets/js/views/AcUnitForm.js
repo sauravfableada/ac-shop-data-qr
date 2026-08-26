@@ -99,7 +99,7 @@ window.AcUnitForm = {
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Code <span style="color: red;">*</span></label>
+                        <label style="font-weight: 500; font-size: 14px; color: #334155;">Serial No <span style="color: red;">*</span></label>
                         <input type="text" id="acCode" name="ac_code" value="${ac.ac_code || dynamicCode}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                         <div id="err_ac_code" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                     </div>

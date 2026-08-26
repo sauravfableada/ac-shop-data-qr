@@ -40,13 +40,25 @@
     <table class="header-table">
         <tr>
             <td class="header-logo">
-                <!-- Using a text placeholder for the logo, as we might not have the Fablead image on this server. -->
-                <h2 style="margin:0; color:#ef4444; font-size: 20px; font-style: italic;">AC Shop<span style="color:#333;">Data</span></h2>
+                @if(isset($settings['company_logo']) && $settings['company_logo'])
+                    <img src="{{ public_path(ltrim($settings['company_logo'], '/')) }}" alt="Company Logo" style="max-width: 150px; max-height: 60px;">
+                @else
+                    <h2 style="margin:0; color:#ef4444; font-size: 20px; font-style: italic;">{{ $settings['company_name'] ?? 'AC ShopData' }}</h2>
+                @endif
             </td>
             <td class="header-company">
-                <h1>FABLEAD DEVELOPERS TECHNOLAB</h1>
-                <p>A-5001, ASCON PLAZA, ADAJAN, SURAT, GUJARAT 395009 INDIA</p>
-                <p>PHONE: 9824734531 | EMAIL: info@fableadtechnolabs.com</p>
+                <h1>{{ $settings['company_name'] ?? 'FABLEAD DEVELOPERS TECHNOLAB' }}</h1>
+                @if(isset($settings['address']) && $settings['address'])
+                    <p>{{ $settings['address'] }}</p>
+                @endif
+                <p>
+                    @if(isset($settings['company_number']) && $settings['company_number']) PHONE: {{ $settings['company_number'] }} @endif
+                    @if(isset($settings['company_number']) && $settings['company_number'] && isset($settings['company_email']) && $settings['company_email']) | @endif
+                    @if(isset($settings['company_email']) && $settings['company_email']) EMAIL: {{ $settings['company_email'] }} @endif
+                </p>
+                @if(isset($settings['gst']) && $settings['gst'])
+                    <p>GST: {{ $settings['gst'] }}</p>
+                @endif
             </td>
         </tr>
     </table>
@@ -82,7 +94,7 @@
             <tr>
                 <td>{{ $row->service_number }}</td>
                 <td>{{ \Carbon\Carbon::parse($row->service_date)->format('d M Y') }}</td>
-                <td>{{ $row->customer ? $row->customer->name : 'N/A' }}</td>
+                <td>{{ $row->customer ? $row->customer->full_name : 'N/A' }}</td>
                 <td>{{ $row->acUnit ? $row->acUnit->ac_code : 'N/A' }}</td>
                 <td>{{ number_format($row->total_amount, 2) }}</td>
                 <td style="text-transform: capitalize;">{{ $row->status }}</td>
