@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Define Routes
     window.router.addRoute('/login', window.LoginView.render, false);
-    
+
     // Fetch user if authenticated
     const token = localStorage.getItem('auth_token');
     if (token) {
@@ -97,14 +97,14 @@ window.markOneNotificationRead = async (id) => {
     try {
         await window.api.post(`/notifications/${id}/read`);
         window.loadNotifications();
-    } catch (e) {}
+    } catch (e) { }
 };
 
 window.markAllNotificationsRead = async () => {
     try {
         await window.api.post('/notifications/read-all');
         window.loadNotifications();
-    } catch (e) {}
+    } catch (e) { }
 };
 
 window.loadNotifications = async () => {
@@ -154,10 +154,10 @@ window.loadNotifications = async () => {
             } else {
                 listContainer.innerHTML = unreadNotifications.map(n => {
                     let icon = 'fa-info-circle', iconColor = '#3b82f6', bgLight = '#eff6ff';
-                    if (n.type === 'staff')        { icon = 'fa-user-tie';       iconColor = '#ef4444'; bgLight = '#fef2f2'; }
-                    else if (n.type === 'customer') { icon = 'fa-users';          iconColor = '#3b82f6'; bgLight = '#eff6ff'; }
-                    else if (n.type === 'ac_unit' || n.type === 'ac-unit')  { icon = 'fa-snowflake';      iconColor = '#8b5cf6'; bgLight = '#f5f3ff'; }
-                    else if (n.type === 'service_record' || n.type === 'service')  { icon = 'fa-clipboard-list'; iconColor = '#10b981'; bgLight = '#ecfdf5'; }
+                    if (n.type === 'staff') { icon = 'fa-user-tie'; iconColor = '#ef4444'; bgLight = '#fef2f2'; }
+                    else if (n.type === 'customer') { icon = 'fa-users'; iconColor = '#3b82f6'; bgLight = '#eff6ff'; }
+                    else if (n.type === 'ac_unit' || n.type === 'ac-unit') { icon = 'fa-snowflake'; iconColor = '#8b5cf6'; bgLight = '#f5f3ff'; }
+                    else if (n.type === 'service_record' || n.type === 'service') { icon = 'fa-clipboard-list'; iconColor = '#10b981'; bgLight = '#ecfdf5'; }
 
                     return `
                         <div style="padding: 12px 16px; border-bottom: 1px solid var(--border-glass); display: flex; gap: 10px; background: #f0f9ff; position: relative; align-items: flex-start;">
@@ -212,8 +212,8 @@ window.renderLayout = (content) => {
                 <!-- Top Header -->
                 <div class="top-header" style="background-color: var(--bg-glass); border-bottom: 1px solid var(--border-glass);">
                     <a href="/customers" data-link class="header-left" style="display: flex; align-items: center; gap: 15px; text-decoration: none; cursor: pointer;">
-                        <img src="${window.appSettings?.company_logo || '/public/assets/logos/crmfavicon.png'}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; margin-left: 20px;">
-                        <span style="font-weight: 700; font-size: 18px; color: var(--text-main); margin-right: 20px;">${window.appSettings?.company_name || 'Maimoon Sales'}</span>
+                        <img src="${window.appSettings?.company_logo || '/public/assets/logos/crmfavicon.png'}" alt="Logo" style="width: 200px; height: 65px; object-fit: contain;">
+                        
                     </a>
                     
                     <div class="header-nav desktop-only" style="display: flex; gap: 10px; flex-grow: 1; margin-left: 20px;">
