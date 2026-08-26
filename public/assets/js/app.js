@@ -212,7 +212,7 @@ window.renderLayout = (content) => {
                 <!-- Top Header -->
                 <div class="top-header" style="background-color: var(--bg-glass); border-bottom: 1px solid var(--border-glass);">
                     <a href="/customers" data-link class="header-left" style="display: flex; align-items: center; gap: 15px; text-decoration: none; cursor: pointer;">
-                        <img src="${window.appSettings?.company_logo || '/public/assets/logos/crmfavicon.png'}" alt="Logo" style="width: 200px; height: 65px; object-fit: contain;">
+                        <img src="${window.appSettings?.company_logo || '/public/assets/logos/crmfavicon.png'}" alt="Logo" style="width: 200px; height: 65px; object-fit: contain; margin-left: -35px;">
                         
                     </a>
                     

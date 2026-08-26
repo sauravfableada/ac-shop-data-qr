@@ -6,7 +6,7 @@ window.LoginView = {
 
                     <!-- Logo -->
                     <div style="text-align: center; margin-bottom: 20px;">
-                        <img src="/public/assets/logos/fableadLogo.jpg" alt="Fablead Logo" style="max-width: 160px; height: auto; border-radius: 8px;">
+                        <img src="/assets/logos/E3GM7yErLBb7Iuzpw9EjTUPjaIEcdWahr2GIaI6n.png" alt="Fablead Logo" style="max-width: 200px; height: auto; border-radius: 8px;">
                     </div>
 
 
@@ -15,12 +15,12 @@ window.LoginView = {
                     <form id="loginForm">
                         <div class="input-group" style="text-align: left;">
                             <label for="email">Email Address</label>
-                            <input type="email" id="email" class="input-glass" required placeholder="admin@example.com">
+                            <input type="email" id="email" class="input-glass" required placeholder="Enter your email address">
                         </div>
                         <div class="input-group" style="text-align: left;">
                             <label for="password">Password</label>
                             <div style="position: relative;">
-                                <input type="password" id="password" class="input-glass" required placeholder="••••••••" style="padding-right: 40px; width: 100%;">
+                                <input type="password" id="password" class="input-glass" required placeholder="Enter your password" style="padding-right: 40px; width: 100%;">
                                 <i class="fa-regular fa-eye" id="toggleLoginPwd" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; cursor: pointer; font-size: 16px;"></i>
                             </div>
                         </div>
@@ -45,6 +45,9 @@ window.LoginView = {
                 .body {
     overflow-y:hidden !important;
 }
+    .glass-panel {
+    padding: 20px !important;
+    }
                </style>
             </div>
         `;
