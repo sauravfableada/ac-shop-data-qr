@@ -153,6 +153,22 @@ window.ServiceView = {
                                 ${service.next_service_date ? new Date(service.next_service_date).toLocaleDateString() : 'Not scheduled'}
                             </div>
                         </div>
+
+                        <!-- Customer Signature block -->
+                        <div style="margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Customer Approval</div>
+                                ${service.is_approved ? '<span style="padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; background: rgba(16,185,129,0.1); color: #10B981;">APPROVED</span>' : '<span style="padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; background: rgba(244,63,94,0.1); color: #F43F5E;">NOT APPROVED</span>'}
+                            </div>
+                            
+                            <div style="background: #f8fafc; border: 1px solid var(--border-glass); border-radius: 8px; padding: 12px; text-align: center;">
+                                <div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Customer Signature</div>
+                                ${service.customer_signature 
+                                    ? `<img src="${service.customer_signature}" style="max-width: 100%; max-height: 100px; display: block; margin: 0 auto; mix-blend-mode: multiply;" />`
+                                    : `<div style="padding: 24px 0; color: #94a3b8; font-style: italic; font-size: 13px;">No signature captured</div>`
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
 

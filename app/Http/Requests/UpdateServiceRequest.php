@@ -63,6 +63,8 @@ class UpdateServiceRequest extends FormRequest
             'payment_method' => 'nullable|string',
             'next_service_date' => 'nullable|date',
             'technician_notes' => 'nullable|string',
+            'is_approved' => 'nullable|boolean',
+            'customer_signature' => 'nullable|string',
         ];
     }
 }

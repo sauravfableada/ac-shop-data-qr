@@ -28,13 +28,17 @@ window.Reports = {
                     
                     <!-- Filters Row -->
                     <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; align-items: center;">
-                        <select id="reportCustomerSelect" onchange="window.Reports.applyFilters()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; min-width: 160px; background: white; flex: 1; max-width: 250px;">
-                            <option value="">All Customers</option>
-                        </select>
+                        <div style="flex: 1; min-width: 200px; max-width: 300px;">
+                            <select id="reportCustomerSelect" onchange="window.Reports.applyFilters()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; background: white; width: 100%;">
+                                <option value="">All Customers</option>
+                            </select>
+                        </div>
                         
-                        <select id="reportAcSelect" onchange="window.Reports.applyFilters()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; min-width: 160px; background: white; flex: 1; max-width: 250px;">
-                            <option value="">All AC Units</option>
-                        </select>
+                        <div style="flex: 1; min-width: 200px; max-width: 300px;">
+                            <select id="reportAcSelect" onchange="window.Reports.applyFilters()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; background: white; width: 100%;">
+                                <option value="">All AC Units</option>
+                            </select>
+                        </div>
 
                         <select id="reportDateRange" onchange="window.Reports.handleDateRangeChange()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; min-width: 160px; background: white; flex: 1; max-width: 200px;">
                             <option value="all" selected>select filter</option>
@@ -93,15 +97,16 @@ window.Reports = {
                 <!-- Data Table Section -->
                 <div>
                 <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; min-width: 800px;" id="reportsTable">
+                    <table style="width: 100%; border-collapse: collapse;" id="reportsTable">
                         <thead>
                             <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
                                 <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Service #</th>
                                 <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Customer</th>
-                                <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">AC Unit</th>
-                                <th style="padding: 16px; text-align: left; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Date</th>
-                                <th style="padding: 16px; text-align: right; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Total Billed</th>
-                                <th style="padding: 16px; text-align: center; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Status</th>
+                                <th class="hide-on-mobile" style="padding: 16px; text-align: left; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">AC Unit</th>
+                                <th class="hide-on-mobile" style="padding: 16px; text-align: left; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Date</th>
+                                <th class="hide-on-mobile" style="padding: 16px; text-align: right; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Total Billed</th>
+                                <th class="hide-on-mobile" style="padding: 16px; text-align: center; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Status</th>
+                                <th style="padding: 16px; text-align: right; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="reportsTableBody">
@@ -131,28 +136,49 @@ window.Reports = {
         try {
             // Fetch customers
             const custRes = await window.api.get('/customers?per_page=1000');
+            const custSelect = document.getElementById('reportCustomerSelect');
             if (custRes.success) {
                 window.Reports.customers = custRes.data?.data || custRes.data || [];
-                const custSelect = document.getElementById('reportCustomerSelect');
                 window.Reports.customers.forEach(c => {
                     const opt = document.createElement('option');
                     opt.value = c.id;
-                    opt.textContent = c.full_name;
+                    opt.textContent = c.full_name + (c.mobile ? ` (${c.mobile})` : '');
                     custSelect.appendChild(opt);
                 });
             }
 
             // Fetch AC Units
             const acRes = await window.api.get('/ac-units?per_page=1000');
+            const acSelect = document.getElementById('reportAcSelect');
             if (acRes.success) {
                 window.Reports.acUnits = acRes.data?.data || acRes.data || [];
-                const acSelect = document.getElementById('reportAcSelect');
                 window.Reports.acUnits.forEach(ac => {
                     const opt = document.createElement('option');
                     opt.value = ac.id;
-                    opt.textContent = ac.ac_code + (ac.customer ? ` (${ac.customer.full_name})` : '');
+                    opt.textContent = ac.ac_code + (ac.customer ? ` - ${ac.customer.full_name}` : '');
                     acSelect.appendChild(opt);
                 });
+            }
+
+            // Initialize Choices.js
+            if (window.Choices) {
+                if (window.reportCustomerChoices) window.reportCustomerChoices.destroy();
+                window.reportCustomerChoices = new Choices(custSelect, {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    shouldSort: false
+                });
+
+                if (window.reportAcChoices) window.reportAcChoices.destroy();
+                window.reportAcChoices = new Choices(acSelect, {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    shouldSort: false
+                });
+
+                // Ensure the change event triggers applyFilters
+                custSelect.addEventListener('change', () => { window.Reports.applyFilters(); }, { once: false });
+                acSelect.addEventListener('change', () => { window.Reports.applyFilters(); }, { once: false });
             }
         } catch (e) {
             console.error("Failed to load filter dropdowns", e);
@@ -286,15 +312,69 @@ window.Reports = {
             tbody.innerHTML = '<tr><td colspan="6" style="padding: 32px; text-align: center; color: #94a3b8;">No records found for the selected filters.</td></tr>';
         } else {
             tbody.innerHTML = tableData.data.map(s => `
-                <tr style="border-bottom: 1px solid #f1f5f9;">
+                <tr style="border-bottom: 1px solid #f1f5f9; background: #ffffff;">
                     <td style="padding: 16px; font-size: 13px; font-weight: 600; color: #0f172a;">${s.service_number || ('#' + s.id)}</td>
                     <td style="padding: 16px; font-size: 13px; color: #475569;">${s.customer ? s.customer.full_name : '—'}</td>
-                    <td style="padding: 16px; font-size: 13px; color: #475569;">${s.ac_unit ? s.ac_unit.ac_code : '—'}</td>
-                    <td style="padding: 16px; font-size: 13px; color: #475569;">${s.service_date ? new Date(s.service_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</td>
-                    <td style="padding: 16px; font-size: 13px; font-weight: 700; color: #0f172a; text-align: right;">₹${parseFloat(s.total_amount || 0).toFixed(2)}</td>
-                    <td style="padding: 16px; text-align: center;">${getStatusBadge(s.status)}</td>
+                    <td class="hide-on-mobile" style="padding: 16px; font-size: 13px; color: #475569;">${s.ac_unit ? s.ac_unit.ac_code : '—'}</td>
+                    <td class="hide-on-mobile" style="padding: 16px; font-size: 13px; color: #475569;">${s.service_date ? new Date(s.service_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</td>
+                    <td class="hide-on-mobile" style="padding: 16px; font-size: 13px; font-weight: 700; color: #0f172a; text-align: right;">₹${parseFloat(s.total_amount || 0).toFixed(2)}</td>
+                    <td class="hide-on-mobile" style="padding: 16px; text-align: center;">${getStatusBadge(s.status)}</td>
+                    <td style="padding: 16px; text-align: right;">
+                        <button class="mobile-expand-btn" data-id="${s.id}"><i class="fa-solid fa-plus"></i></button>
+                        <div class="desktop-only" style="display: flex; gap: 8px; justify-content: flex-end;">
+                            <button onclick="window.router.navigate('/services/view/${s.id}')" style="background: #3b82f6; border: none; color: white; border-radius: 4px; padding: 6px 10px; cursor: pointer; transition: 0.2s;" title="View Details"><i class="fa-solid fa-eye"></i> View</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="mobile-expand-${s.id}" class="mobile-expanded-row">
+                    <td colspan="7" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
+                        <div style="background: #ffffff; border-radius: 12px; border-left: 4px solid #0f172a; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                <div><i class="fa-solid fa-user" style="margin-right: 8px;"></i> CUSTOMER :</div>
+                                <div style="font-weight: 400; text-align: right; max-width: 60%; color: #64748b;">${s.customer ? s.customer.full_name : '—'}</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                <div><i class="fa-solid fa-snowflake" style="margin-right: 8px;"></i> AC UNIT :</div>
+                                <div style="font-weight: 400; text-align: right; max-width: 60%; color: #64748b;">${s.ac_unit ? s.ac_unit.ac_code : '—'}</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                <div><i class="fa-solid fa-calendar" style="margin-right: 8px;"></i> DATE :</div>
+                                <div style="font-weight: 400; text-align: right; max-width: 60%; color: #64748b;">${s.service_date ? new Date(s.service_date).toLocaleDateString('en-GB') : '—'}</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                <div><i class="fa-solid fa-indian-rupee-sign" style="margin-right: 8px;"></i> TOTAL BILLED :</div>
+                                <div style="font-weight: 700; text-align: right; max-width: 60%; color: #0f172a;">₹${parseFloat(s.total_amount || 0).toFixed(2)}</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                                <div><i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> STATUS :</div>
+                                <div style="font-weight: 400; text-align: right; max-width: 60%;">${getStatusBadge(s.status)}</div>
+                            </div>
+                            
+                            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 16px;">
+                            
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; align-items: center;">
+                                <button onclick="window.router.navigate('/services/view/${s.id}')" style="background: #3b82f6; border: none; color: white; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-eye" style="margin-right: 4px;"></i> View Details</button>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             `).join('');
+            
+            // Attach mobile expand events
+            document.querySelectorAll('#reportsTableBody .mobile-expand-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    const row = document.getElementById(`mobile-expand-${id}`);
+                    const icon = e.currentTarget.querySelector('i');
+                    if (row.classList.contains('show')) {
+                        row.classList.remove('show');
+                        icon.className = 'fa-solid fa-plus';
+                    } else {
+                        row.classList.add('show');
+                        icon.className = 'fa-solid fa-minus';
+                    }
+                });
+            });
         }
 
         // Build Pagination
@@ -303,7 +383,7 @@ window.Reports = {
         
         let pagHtml = ``;
         
-        pagHtml += `<div style="display: flex; gap: 8px;">`;
+        pagHtml += `<div style="display: flex; flex-wrap: wrap; gap: 8px;">`;
         
         // Previous Button
         if (meta.current_page > 1) {
@@ -344,8 +424,8 @@ window.Reports = {
         
         pagHtml += `</div>`;
 
-        pagContainer.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px solid #e2e8f0; padding-top: 16px;">
-            <div style="font-size: 13px; color: #64748b; font-weight: 500;">Showing ${meta.data?.length > 0 ? (meta.current_page - 1) * meta.per_page + 1 : 0} to ${Math.min(meta.current_page * meta.per_page, meta.total)} of ${meta.total} results</div>
+        pagContainer.innerHTML = `<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; width: 100%; border-top: 1px solid #e2e8f0; padding-top: 16px;">
+            <div style="font-size: 13px; color: #64748b; font-weight: 500;">Showing ${tableData.data?.length > 0 ? (meta.current_page - 1) * meta.per_page + 1 : 0} to ${Math.min(meta.current_page * meta.per_page, meta.total)} of ${meta.total} results</div>
             ${pagHtml}
         </div>`;
     }

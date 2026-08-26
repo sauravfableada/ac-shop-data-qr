@@ -138,7 +138,8 @@ class ReportController extends Controller
                 'meta' => [
                     'current_page' => $paginatedRecords->currentPage(),
                     'last_page' => $paginatedRecords->lastPage(),
-                    'total' => $paginatedRecords->total()
+                    'total' => $paginatedRecords->total(),
+                    'per_page' => $paginatedRecords->perPage()
                 ]
             ]
         ], 'Income reports retrieved successfully.');
