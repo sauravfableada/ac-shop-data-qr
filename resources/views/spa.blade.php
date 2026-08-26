@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Maimoon Sales - AC Service Management</title>
-    <link rel="icon" type="image/png" href="/public/assets/logos/crmfavicon.png">
-    <link rel="shortcut icon" type="image/png" href="/public/assets/logos/crmfavicon.png">
+    <title>{{ $settings['company_name'] ?? 'Maimoon Sales' }} - AC Service Management</title>
+    <link rel="icon" type="image/png" href="{{ $settings['company_favicon'] ?? '/public/assets/logos/crmfavicon.png' }}">
+    <link rel="shortcut icon" type="image/png" href="{{ $settings['company_favicon'] ?? '/public/assets/logos/crmfavicon.png' }}">
+    <script>
+        window.appSettings = {!! json_encode($settings ?? []) !!};
+    </script>
     
     <!-- Google Fonts for Premium Look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,6 +69,7 @@
     <script src="{{ public_asset('assets/js/views/NotificationList.js') }}?v={{ time() }}"></script>
     <script src="{{ public_asset('assets/js/views/MastersDashboard.js') }}?v={{ time() }}"></script>
     <script src="{{ public_asset('assets/js/views/MasterList.js') }}?v={{ time() }}"></script>
+    <script src="{{ public_asset('assets/js/views/Settings.js') }}?v={{ time() }}"></script>
     
     <!-- App Entry -->
     <script src="{{ public_asset('assets/js/app.js') }}?v={{ time() }}"></script>

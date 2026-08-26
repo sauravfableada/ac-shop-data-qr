@@ -99,4 +99,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index']);
     Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead']);
     Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead']);
+    // Settings
+    Route::get('/settings', [\App\Http\Controllers\SettingController::class, 'index'])->middleware('permission:dashboard.admin');
+    Route::post('/settings', [\App\Http\Controllers\SettingController::class, 'store'])->middleware('permission:dashboard.admin');
+
 });
