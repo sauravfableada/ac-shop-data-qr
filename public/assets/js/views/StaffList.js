@@ -48,7 +48,9 @@ window.StaffList = {
                     <td style="padding: 16px; font-size: 14px; font-weight: 600;">${c.name}<br><span style="font-size: 12px; color: var(--text-muted); font-weight: 400;">${c.email}</span></td>
                     <td style="padding: 16px; font-size: 14px; font-weight: 500; color: var(--text-main);">${c.phone || '--'}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${roleNames}</td>
-                    <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; font-weight: 600;"><span style="background-color: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Active</span></td>
+                    <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; font-weight: 600;">
+                        <span style="background-color: ${c.status === 'inactive' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)'}; color: ${c.status === 'inactive' ? '#ef4444' : '#10b981'}; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: capitalize;">${c.status || 'Active'}</span>
+                    </td>
                     <td style="padding: 16px;">
                         <button class="mobile-expand-btn" data-id="${c.id}"><i class="fa-solid fa-plus"></i></button>
                         <div class="desktop-only" style="display: flex; gap: 8px;">
@@ -67,7 +69,7 @@ window.StaffList = {
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> STATUS :</div>
-                                <div style="font-weight: 400; color: #64748b;"><span style="color: #10b981; font-weight: 600;">Active</span></div>
+                                <div style="font-weight: 400; color: #64748b;"><span style="color: ${c.status === 'inactive' ? '#ef4444' : '#10b981'}; font-weight: 600; text-transform: capitalize;">${c.status || 'Active'}</span></div>
                             </div>
                             
                             <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 16px;">

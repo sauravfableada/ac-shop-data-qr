@@ -759,6 +759,35 @@ window.CustomerForm = {
                 }
                 window.showToast('AC Unit added successfully!', 'success');
                 window.CustomerForm.closeAcModal();
+
+                // If Service Modal is open, update the AC Unit dropdown
+                if (window._cfSavedCustomerId) {
+                    const acSelect = document.getElementById('msvAcUnit');
+                    if (acSelect) {
+                        try {
+                            const acRes = await window.api.get('/ac-units?per_page=1000');
+                            const acUnits = (acRes.success ? (acRes.data?.data || acRes.data || []) : []);
+                            const customerAcUnits = acUnits.filter(ac => String(ac.customer_id) === String(window._cfSavedCustomerId));
+                            
+                            acSelect.innerHTML = '<option value="">Select AC Unit</option>' +
+                                customerAcUnits.map(ac => '<option value="' + ac.id + '">' + ac.ac_code + ' - ' + (ac.brand||'') + ' ' + (ac.model||'') + '</option>').join('');
+                            
+                            // Pre-select the newly added AC unit if available
+                            if (res.data?.id) acSelect.value = res.data.id;
+
+                            if (window.msvAcChoices) {
+                                window.msvAcChoices.destroy();
+                            }
+                            if (window.Choices) {
+                                window.msvAcChoices = new Choices(acSelect, {
+                                    searchEnabled: true,
+                                    itemSelectText: '',
+                                    shouldSort: false
+                                });
+                            }
+                        } catch(e) {}
+                    }
+                }
             } else {
                 if (res.errors) {
                     const map = { ac_code: 'macAcCode' };
@@ -798,9 +827,13 @@ window.CustomerForm = {
         acSelect.innerHTML = '<option value="">Loading AC units\u2026</option>';
         try {
             const acRes = await window.api.get('/ac-units?per_page=1000');
-            const acUnits = (acRes.success ? (acRes.data?.data || acRes.data || []) : []);
+            const allAcUnits = (acRes.success ? (acRes.data?.data || acRes.data || []) : []);
+            const customerAcUnits = window._cfSavedCustomerId 
+                 ? allAcUnits.filter(ac => String(ac.customer_id) === String(window._cfSavedCustomerId))
+                 : allAcUnits;
+                 
             acSelect.innerHTML = '<option value="">Select AC Unit</option>' +
-                acUnits.map(ac => '<option value="' + ac.id + '">' + ac.ac_code + ' - ' + (ac.customer ? ac.customer.full_name : '') + '</option>').join('');
+                customerAcUnits.map(ac => '<option value="' + ac.id + '">' + ac.ac_code + ' - ' + (ac.brand||'') + ' ' + (ac.model||'') + '</option>').join('');
         } catch (e) {
             acSelect.innerHTML = '<option value="">Select AC Unit</option>';
         }

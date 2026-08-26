@@ -9,7 +9,8 @@ window.StaffForm = {
             email: '',
             phone: '',
             password: '',
-            profile_image: ''
+            profile_image: '',
+            status: 'active'
         };
 
         if (isEdit && id) {
@@ -65,12 +66,20 @@ window.StaffForm = {
                             </div>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 32px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Profile Image</label>
                                 ${staff.profile_image ? `<div style="margin-bottom: 12px;"><img src="${staff.profile_image}" style="height: 64px; border-radius: 8px; border: 1px solid var(--border-glass); object-fit: cover;"></div>` : ''}
                                 <input type="file" id="profile_image" accept="image/*" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                 <div id="err_profile_image" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Status *</label>
+                                <select id="status" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit;">
+                                    <option value="active" ${staff.status === 'active' ? 'selected' : ''}>Active</option>
+                                    <option value="inactive" ${staff.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+                                </select>
+                                <div id="err_status" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                         </div>
 
@@ -105,6 +114,7 @@ window.StaffForm = {
             formData.append('name', document.getElementById('name').value);
             formData.append('email', document.getElementById('email').value);
             formData.append('phone', document.getElementById('phone').value);
+            formData.append('status', document.getElementById('status').value);
             
             const password = document.getElementById('password').value;
             if (password) {
