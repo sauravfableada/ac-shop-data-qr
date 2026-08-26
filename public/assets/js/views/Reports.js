@@ -9,7 +9,7 @@ window.Reports = {
         page: 1,
         perPage: 10
     },
-    
+
     customers: [],
     acUnits: [],
     chartInstance: null,
@@ -48,7 +48,7 @@ window.Reports = {
                         </div>
 
                         <select id="reportDateRange" onchange="window.Reports.handleDateRangeChange()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 4px; outline: none; font-size: 13px; color: #374151; background: white; flex: 1 1 140px; min-width: 140px;">
-                            <option value="all" selected>select filter</option>
+                            <option value="all" selected>Select Days</option>
                             <option value="daily">Daily</option>
                             <option value="weekly">Weekly</option>
                             <option value="monthly">Monthly</option>
@@ -219,7 +219,7 @@ window.Reports = {
         const endWrap = document.getElementById('customEndWrapper');
         const startInput = document.getElementById('reportStartDate');
         const endInput = document.getElementById('reportEndDate');
-        
+
         if (val === 'custom') {
             startWrap.style.display = 'block';
             endWrap.style.display = 'block';
@@ -299,7 +299,7 @@ window.Reports = {
     fetchData: async () => {
         // Show loading in table
         document.getElementById('reportsTableBody').innerHTML = '<tr><td colspan="6" style="padding: 32px; text-align: center; color: #94a3b8;"><i class="fa-solid fa-circle-notch fa-spin"></i> Fetching records...</td></tr>';
-        
+
         let url = `/reports/income?page=${window.Reports.state.page}&per_page=${window.Reports.state.perPage}`;
         if (window.Reports.state.serviceId) url += `&service_id=${window.Reports.state.serviceId}`;
         if (window.Reports.state.customerId) url += `&customer_id=${window.Reports.state.customerId}`;
@@ -390,7 +390,7 @@ window.Reports = {
                     </td>
                 </tr>
             `).join('');
-            
+
             // Attach mobile expand events
             document.querySelectorAll('#reportsTableBody .mobile-expand-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -411,11 +411,11 @@ window.Reports = {
         // Build Pagination
         const pagContainer = document.getElementById('reportsPagination');
         const meta = tableData.meta;
-        
+
         let pagHtml = ``;
-        
+
         pagHtml += `<div style="display: flex; flex-wrap: wrap; gap: 8px;">`;
-        
+
         // Previous Button
         if (meta.current_page > 1) {
             pagHtml += `<button class="page-btn" onclick="window.Reports.goToPage(${meta.current_page - 1})" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #e2e8f0; background: transparent; color: #475569; cursor: pointer; font-size: 14px; font-family: inherit;">Previous</button>`;
@@ -426,7 +426,7 @@ window.Reports = {
         // Page Numbers
         let startPage = Math.max(1, meta.current_page - 2);
         let endPage = Math.min(meta.last_page, startPage + 4);
-        
+
         if (endPage - startPage < 4 && startPage > 1) {
             startPage = Math.max(1, endPage - 4);
         }
@@ -452,7 +452,7 @@ window.Reports = {
         } else {
             pagHtml += `<button class="page-btn" disabled style="padding: 6px 12px; border-radius: 6px; border: 1px solid #e2e8f0; background: transparent; color: #cbd5e1; cursor: not-allowed; font-size: 14px; font-family: inherit;">Next</button>`;
         }
-        
+
         pagHtml += `</div>`;
 
         pagContainer.innerHTML = `<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; width: 100%; border-top: 1px solid #e2e8f0; padding-top: 16px;">

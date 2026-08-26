@@ -133,27 +133,35 @@ window.AcUnitView = {
                         <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Created By</p>
                         <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.creator ? ac.creator.name : '--'}</p>
                     </div>
-                    <div>
-                        <div style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">QR/Barcode Code</div>
+                    <div style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
+                        <div style="font-size: 14px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 16px;">${window.appSettings?.code_type === 'barcode' ? 'Barcode' : 'QR Code'} Card Preview</div>
                         ${ac.qr_code
                 ? (() => {
-                    const codeType = window.appSettings?.code_type || 'qr';
+                    let codeType = 'qr';
+                    try { codeType = window.appSettings?.code_type || 'qr'; } catch (e) {}
+                    
                     const qrImgUrl = codeType === 'barcode' 
-                        ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${ac.ac_code}`
-                        : `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${ac.qr_code.token}`;
+                        ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(ac.ac_code)}&includetext&guardwhitespace`
+                        : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${ac.qr_code.token}`;
                     
                     return `
-                        <div style="text-align: center;">
-                            <img src="${qrImgUrl}" alt="${codeType === 'barcode' ? 'Barcode' : 'QR Code'}" style="border-radius: 8px; border: 1px solid var(--border-glass); padding: 8px; background: white; margin-bottom: 8px; max-width: 100%; height: auto; max-height: ${codeType === 'barcode' ? '80px' : '120px'}; object-fit: contain;">
-                            <div style="font-size: 13px; font-weight: 700; color: #0f172a;">${codeType === 'barcode' ? 'Barcode' : 'QR Code'} Active</div>
-                            <div style="font-size: 11px; color: #64748b; word-break: break-all;">${ac.qr_code.token}</div>
-                            <div style="display: flex; gap: 8px; margin-top: 12px;">
-                                <button onclick="window.AcUnitView.downloadQrImage(${ac.id})" title="Save QR" style="background: #8b5cf6; border: none; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: 0.2s;"><i class="fa-solid fa-download"></i> Save</button>
-                                <button onclick="window.AcUnitView.shareQrWhatsapp(${ac.id})" title="Share WhatsApp" style="background: #25D366; border: none; color: white; border-radius: 4px; padding: 6px 12px; cursor: pointer; transition: 0.2s;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
-                            </div>
-                        </div>`;
+                        <div style="background-color: #ffffff; width: 320px; border: 2px dashed #e2e8f0; border-radius: 16px; display: flex; flex-direction: column; align-items: center; padding: 30px 20px; box-sizing: border-box; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+                            <img src="${qrImgUrl}" alt="${codeType === 'barcode' ? 'Barcode' : 'QR Code'}" style="${codeType === 'barcode' ? 'width: 280px; height: auto;' : 'width: 220px; height: 220px;'} margin-bottom: 20px; object-fit: contain;">
+                            
+                            <h2 style="font-size: 22px; font-weight: bold; color: #0f172a; margin: 0 0 10px 0;">${ac.ac_code}</h2>
+                            <p style="font-size: 14px; color: #64748b; margin: 0 0 8px 0;">${ac.customer ? ac.customer.full_name : ''}</p>
+                            ${ac.brand ? `<p style="font-size: 14px; color: #64748b; margin: 0 0 20px 0;">${ac.brand} ${ac.model || ''}</p>` : ''}
+                            ${codeType !== 'barcode' ? `<p style="font-size: 10px; color: #94a3b8; margin: 16px 0 0 0; word-break: break-all; text-align: center;">${ac.qr_code.token}</p>` : ''}
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-top: 20px;">
+                            <button onclick="window.AcUnitView.printQrImage(${ac.id})" title="Print Image" style="background: #3b82f6; border: none; color: white; border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: 0.2s; font-weight: 600;"><i class="fa-solid fa-print" style="margin-right: 6px;"></i> Print</button>
+                            <button onclick="window.AcUnitView.downloadQrImage(${ac.id})" title="Save Image" style="background: #8b5cf6; border: none; color: white; border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: 0.2s; font-weight: 600;"><i class="fa-solid fa-download" style="margin-right: 6px;"></i> Download Card</button>
+                            <button onclick="window.AcUnitView.shareQrWhatsapp(${ac.id})" title="Share WhatsApp" style="background: #25D366; border: none; color: white; border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: 0.2s; font-weight: 600;"><i class="fa-brands fa-whatsapp" style="margin-right: 6px;"></i> Share via WhatsApp</button>
+                        </div>
+                    `;
                 })()
-                : `<div style="font-size: 14px; color: #64748b;">None generated</div>`}
+                : `<div style="font-size: 14px; color: #64748b; padding: 30px;">No code generated for this AC unit</div>`}
                     </div>
                 </div>
 
@@ -201,6 +209,122 @@ window.AcUnitView = {
                 }
             });
         });
+    },
+
+    printQrImage: async (id) => {
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            window.showToast('Please allow popups to print', 'warning');
+            return;
+        }
+
+        try {
+            const res = await window.api.get(`/ac-units/${id}`);
+            if (!res.success) { 
+                printWindow.close();
+                window.showToast('Could not load AC Unit data', 'error'); 
+                return; 
+            }
+            const ac = res.data;
+            const token = ac.qr_code ? ac.qr_code.token : null;
+
+            if (!token) {
+                printWindow.close();
+                window.showToast('No QR code found for this AC Unit', 'error');
+                return;
+            }
+
+            let codeType = 'qr';
+            try {
+                const settingsRes = await window.api.get('/settings');
+                if (settingsRes.success && settingsRes.data) {
+                    codeType = settingsRes.data.code_type || window.appSettings?.code_type || 'qr';
+                } else {
+                    codeType = window.appSettings?.code_type || 'qr';
+                }
+            } catch (e) {
+                codeType = window.appSettings?.code_type || 'qr';
+            }
+
+            const qrImgUrl = codeType === 'barcode' 
+                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(ac.ac_code)}&includetext&guardwhitespace`
+                : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+
+            printWindow.document.open();
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${codeType === 'barcode' ? 'Barcode' : 'QR Code'} - ${ac.ac_code}</title>
+                    <style>
+                        * { margin: 0; padding: 0; box-sizing: border-box; }
+                        body {
+                            font-family: 'Segoe UI', sans-serif;
+                            background: #fff;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            min-height: 100vh;
+                        }
+                        .card {
+                            text-align: center;
+                            border: 2px dashed #e2e8f0;
+                            border-radius: 16px;
+                            padding: 32px 40px;
+                            width: 320px;
+                        }
+                        .card img {
+                            max-width: 100%;
+                            height: ${codeType === 'barcode' ? 'auto' : '220px'};
+                            width: ${codeType === 'barcode' ? '280px' : '220px'};
+                            object-fit: contain;
+                            display: block;
+                            margin: 0 auto 20px;
+                        }
+                        .ac-code {
+                            font-size: 22px;
+                            font-weight: bold;
+                            color: #0f172a;
+                            margin-bottom: 10px;
+                        }
+                        .customer {
+                            font-size: 14px;
+                            color: #64748b;
+                            margin-bottom: 8px;
+                        }
+                        .token {
+                            font-size: 10px;
+                            color: #94a3b8;
+                            word-break: break-all;
+                            margin-top: 16px;
+                        }
+                        @media print {
+                            body { min-height: auto; align-items: flex-start; justify-content: flex-start; margin: 20px; }
+                            .card { border: 1px dashed #ccc; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="card">
+                        <img src="${qrImgUrl}" alt="Code Image">
+                        <div class="ac-code">${ac.ac_code}</div>
+                        <div class="customer">${ac.customer ? ac.customer.full_name : ''}</div>
+                        ${ac.brand ? `<div class="customer">${ac.brand} ${ac.model || ''}</div>` : ''}
+                        ${codeType !== 'barcode' ? `<div class="token">${token}</div>` : ''}
+                    </div>
+                    <script>
+                        window.onload = function() { 
+                            setTimeout(() => { window.print(); }, 500);
+                        }
+                    </script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        } catch (err) {
+            if (printWindow) printWindow.close();
+            window.showToast('Error generating print view', 'error');
+        }
     },
 
     downloadQrImage: async (id) => {
