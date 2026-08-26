@@ -281,6 +281,8 @@ window.renderLayout = (content) => {
                                 <!-- Dropdown Menu -->
                                 <div id="profileDropdown" class="profile-dropdown">
                                     <a href="/profile" class="dropdown-item" data-link><i class="fa-regular fa-user"></i> Profile</a>
+                                    <a href="/masters" class="dropdown-item" data-link><i class="fa-solid fa-database"></i> Masters</a>
+                                    <a href="/settings" class="dropdown-item" data-link><i class="fa-solid fa-gear"></i> Settings</a>
                                     <a href="/customers" class="dropdown-item desktop-only" data-link>
                                     <i class="fa-solid fa-users"></i> Customers
                                 </a>

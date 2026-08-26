@@ -126,24 +126,24 @@ window.StaffList = {
                     </div>
 
                     <div>
-                        <div class="table-filter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap;">
-                            <div style="display: flex; gap: 12px; flex-wrap: wrap; flex: 1;">
+                        <div class="table-filter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px;">
+                            <div style="display: flex; gap: 12px; flex: 1;">
                                 <!-- Search Input -->
-                                <div style="position: relative; flex: 1 1 140px; min-width: 140px;">
+                                <div style="position: relative; flex: 1 1 140px; min-width: 140px; max-width: 350px;">
                                     <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;"></i>
                                     <input type="text" id="searchInput" value="${state.search}" placeholder="Search by name, phone no..." style="width: 100%; padding: 9px 12px 9px 38px !important; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
                                 </div>
+                            </div>
                                 
-                                <!-- Per Page -->
-                                <div style="flex: 1 1 140px; min-width: 140px; display: flex; align-items: center; gap: 0px; color: var(--text-muted); font-size: 11px; white-space: nowrap;">
-                                    Show:
-                                    <select id="perPageSelect" style="padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; cursor: pointer;">
-                                        <option value="10" ${state.perPage == 10 ? 'selected' : ''}>10</option>
-                                        <option value="25" ${state.perPage == 25 ? 'selected' : ''}>25</option>
-                                        <option value="50" ${state.perPage == 50 ? 'selected' : ''}>50</option>
-                                    </select>
-                                    per page
-                                </div>
+                            <!-- Per Page -->
+                            <div style="flex: none; display: flex; align-items: center; gap: 0px; color: var(--text-muted); font-size: 11px; white-space: nowrap;">
+                                Show:
+                                <select id="perPageSelect" style="width: auto !important; height: auto !important; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; cursor: pointer; margin: 0 6px;">
+                                    <option value="10" ${state.perPage == 10 ? 'selected' : ''}>10</option>
+                                    <option value="25" ${state.perPage == 25 ? 'selected' : ''}>25</option>
+                                    <option value="50" ${state.perPage == 50 ? 'selected' : ''}>50</option>
+                                </select>
+                                per page
                             </div>
                         </div>
 
