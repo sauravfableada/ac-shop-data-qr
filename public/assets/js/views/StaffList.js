@@ -11,7 +11,7 @@ window.StaffList = {
         const fetchStaff = async () => {
             // Fetch staff from the endpoint we created
             const response = await window.api.get('/admin/staff');
-            
+
             if (response.success) {
                 let data = response.data;
                 // Basic client-side filtering if search is used
@@ -19,14 +19,14 @@ window.StaffList = {
                     const s = state.search.toLowerCase();
                     data = data.filter(u => u.name.toLowerCase().includes(s) || (u.phone && u.phone.includes(s)) || (u.email && u.email.toLowerCase().includes(s)));
                 }
-                
+
                 state.meta = {
                     total: data.length,
                     current_page: state.page,
                     per_page: state.perPage,
                     last_page: Math.ceil(data.length / state.perPage) || 1
                 };
-                
+
                 // Pagination slice
                 const start = (state.page - 1) * state.perPage;
                 state.staff = data.slice(start, start + state.perPage);
@@ -127,21 +127,23 @@ window.StaffList = {
 
                     <div>
                         <div class="table-filter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap;">
-                            <!-- Search Input -->
-                            <div style="position: relative;">
-                                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;"></i>
-                                <input type="text" id="searchInput" value="${state.search}" placeholder="Search by name, phone no..." style="width: 260px; padding: 9px 12px 9px 38px !important; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
-                            </div>
-
-                            <!-- Per Page (desktop only) -->
-                            <div class="desktop-only" style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px; white-space: nowrap;">
-                                Show:
-                                <select id="perPageSelect" style="padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; cursor: pointer;">
-                                    <option value="10" ${state.perPage == 10 ? 'selected' : ''}>10</option>
-                                    <option value="25" ${state.perPage == 25 ? 'selected' : ''}>25</option>
-                                    <option value="50" ${state.perPage == 50 ? 'selected' : ''}>50</option>
-                                </select>
-                                per page
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap; flex: 1;">
+                                <!-- Search Input -->
+                                <div style="position: relative; flex: 1 1 140px; min-width: 140px;">
+                                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px; pointer-events: none; z-index: 1;"></i>
+                                    <input type="text" id="searchInput" value="${state.search}" placeholder="Search by name, phone no..." style="width: 100%; padding: 9px 12px 9px 38px !important; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px;">
+                                </div>
+                                
+                                <!-- Per Page -->
+                                <div style="flex: 1 1 140px; min-width: 140px; display: flex; align-items: center; gap: 0px; color: var(--text-muted); font-size: 11px; white-space: nowrap;">
+                                    Show:
+                                    <select id="perPageSelect" style="padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; cursor: pointer;">
+                                        <option value="10" ${state.perPage == 10 ? 'selected' : ''}>10</option>
+                                        <option value="25" ${state.perPage == 25 ? 'selected' : ''}>25</option>
+                                        <option value="50" ${state.perPage == 50 ? 'selected' : ''}>50</option>
+                                    </select>
+                                    per page
+                                </div>
                             </div>
                         </div>
 
@@ -166,7 +168,7 @@ window.StaffList = {
                     </div>
                 </div>
             `;
-            
+
             container.innerHTML = window.renderLayout(content);
             attachListeners();
         };
@@ -239,7 +241,7 @@ window.StaffList = {
             document.querySelectorAll('.delete-staff-btn').forEach(btn => {
                 btn.addEventListener('click', async (e) => {
                     const id = e.currentTarget.dataset.id;
-                    
+
                     const result = await Swal.fire({
                         title: 'Are you sure?',
                         text: "You won't be able to revert this!",
@@ -260,7 +262,7 @@ window.StaffList = {
                                     'Accept': 'application/json'
                                 }
                             });
-                            
+
                             const jsonResult = await response.json();
                             if (jsonResult.success) {
                                 const staffName = e.currentTarget.dataset.name || 'Staff member';

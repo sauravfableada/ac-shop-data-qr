@@ -35,6 +35,22 @@ class ServiceController extends Controller
             });
         }
         
+        if ($request->filled('service_id')) {
+            $query->where('id', $request->service_id);
+        }
+
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', $request->customer_id);
+        }
+
+        if ($request->filled('ac_unit_id')) {
+            $query->where('ac_unit_id', $request->ac_unit_id);
+        }
+
+        if ($request->filled('created_by')) {
+            $query->where('created_by', $request->created_by);
+        }
+        
         // Removed staff filtering constraint as staff should be able to view and manage any service
 
         $perPage = $request->input('per_page', 20);

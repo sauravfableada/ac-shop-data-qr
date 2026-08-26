@@ -32,15 +32,29 @@ class AcUnitController extends Controller
     {
         $query = AcUnit::with(['customer', 'qrCode', 'creator']);
 
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where('ac_code', 'like', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('ac_code', 'like', "%{$search}%")
                   ->orWhere('brand', 'like', "%{$search}%")
                   ->orWhere('model', 'like', "%{$search}%");
+            });
         }
 
         if ($request->has('status')) {
             $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('ac_unit_id')) {
+            $query->where('id', $request->ac_unit_id);
+        }
+
+        if ($request->filled('customer_id')) {
+            $query->where('customer_id', $request->customer_id);
+        }
+
+        if ($request->filled('created_by')) {
+            $query->where('created_by', $request->created_by);
         }
 
         // Removed staff filtering constraint as staff should be able to service any AC Unit

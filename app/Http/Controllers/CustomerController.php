@@ -41,11 +41,17 @@ class CustomerController extends Controller
             });
         }
 
+        if ($request->filled('customer_id')) {
+            $query->where('id', $request->customer_id);
+        }
+
+        if ($request->filled('created_by')) {
+            $query->where('created_by', $request->created_by);
+        }
+
         if ($request->has('status')) {
             $query->where('status', $request->input('status'));
         }
-
-        // Removed staff filtering constraint as staff should be able to service any customer
 
         $query->orderBy('id', 'desc');
         
