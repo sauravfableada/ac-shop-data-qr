@@ -48,9 +48,12 @@ window.ServiceView = {
                         <h1 style="font-size: 24px; margin-bottom: 4px; color: #0f172a;">Service Details: ${service.service_number}</h1>
                         <p style="color: #64748b; font-size: 14px;">Date: ${new Date(service.service_date).toLocaleDateString()}</p>
                     </div>
-                    <div style="display: flex; gap: 12px;">
+                    <div style="display: flex; gap: 12px;" class="no-print">
                         <button onclick="window.history.back()" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #ffffff; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                             <i class="fa-solid fa-arrow-left"></i> <span class="hide-on-mobile">Back</span>
+                        </button>
+                        <button onclick="window.print()" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                            <i class="fa-solid fa-print"></i> <span class="hide-on-mobile">Print</span>
                         </button>
                         <button onclick="window.router.navigate('/services/edit/${service.id}')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #f59e0b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                             <i class="fa-solid fa-pen-to-square"></i> <span class="hide-on-mobile">Edit Service</span>
@@ -60,6 +63,40 @@ window.ServiceView = {
                         </button>
                     </div>
                 </div>
+
+                <!-- Print Header (Hidden on screen) -->
+                <div class="print-only">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <img src="${window.appSettings?.company_logo || '/assets/images/logo.png'}" style="height: 60px; object-fit: contain;">
+                        <div style="text-align: right;">
+                            <h2 style="margin: 0; font-size: 24px; color: #000; font-weight: 800; text-transform: uppercase;">${window.appSettings?.company_name || 'MAIMOON SALES'}</h2>
+                            <div style="font-size: 14px; color: #333; margin-top: 4px;">${window.appSettings?.address || 'Haladiya Sheri, Sagrampura, Surat, Gujarat 395002'}</div>
+                            <div style="font-size: 14px; color: #333;">PHONE: ${window.appSettings?.company_number || '98243 92576'}</div>
+                            <div style="font-size: 14px; color: #333;">GST: ${window.appSettings?.gst || '24EDSPR0221M1Z8'}</div>
+                        </div>
+                    </div>
+                    <div style="border-bottom: 2px solid #bae6fd; margin-bottom: 24px;"></div>
+                </div>
+
+                <style>
+                    .print-only { display: none; }
+                    @media print {
+                        html, body, #app, .dashboard-wrapper, .main-content, .content-area {
+                            height: auto !important;
+                            min-height: auto !important;
+                            overflow: visible !important;
+                            position: static !important;
+                        }
+                        .no-print, .sidebar, .top-header, .bottom-nav, .mobile-scanner-fab, .app-footer { 
+                            display: none !important; 
+                        }
+                        .print-only { display: block; }
+                        .glass-panel { box-shadow: none !important; border: 1px solid #ccc !important; break-inside: avoid; }
+                        .responsive-grid { display: block !important; }
+                        .responsive-grid > div { margin-bottom: 16px; }
+                        .glass-panel h3 { margin-top: 0; }
+                    }
+                </style>
 
                 <!-- Info Cards -->
                 <div class="responsive-grid glass-panel" style="padding: 24px; border-radius: 12px; margin-bottom: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">

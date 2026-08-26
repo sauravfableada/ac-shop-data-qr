@@ -47,6 +47,7 @@ class AdminController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6',
             'phone' => 'nullable|string',
+            'status' => 'nullable|string|in:active,inactive',
             'profile_image' => 'nullable|image|max:2048'
         ]);
 
@@ -55,6 +56,7 @@ class AdminController extends Controller
             'email' => $request->email,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
             'phone' => $request->phone,
+            'status' => $request->status ?? 'active',
         ];
 
         if ($request->hasFile('profile_image')) {
@@ -96,6 +98,7 @@ class AdminController extends Controller
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:6',
             'phone' => 'nullable|string',
+            'status' => 'nullable|string|in:active,inactive',
             'profile_image' => 'nullable|image|max:2048'
         ]);
 
@@ -103,6 +106,7 @@ class AdminController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'status' => $request->status ?? 'active',
         ];
         
         if ($request->filled('password')) {

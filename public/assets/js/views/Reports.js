@@ -76,17 +76,38 @@ window.Reports = {
                     </div>
 
                     <!-- Totals Row and Action Buttons -->
+                    <style>
+                        .report-metric-box {
+                            padding: 8px 16px; 
+                            border-radius: 4px; 
+                            font-weight: 700; 
+                            font-size: 14px;
+                            display: flex;
+                            align-items: center;
+                            gap: 6px;
+                        }
+                        @media (max-width: 768px) {
+                            .report-metric-box {
+                                width: 100% !important;
+                                flex: 1 1 100% !important;
+                                justify-content: space-between;
+                            }
+                            .report-metric-wrapper {
+                                width: 100% !important;
+                            }
+                        }
+                    </style>
                     <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;">
                         
-                        <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
-                            <div style="padding: 8px 16px; border-radius: 4px; font-weight: 700; font-size: 14px; border: 1px solid #fecaca; background: #fef2f2; color: #ef4444;">
-                                Total Pending: <span id="metricTotalPending">₹0.00</span>
+                        <div class="report-metric-wrapper" style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                            <div class="report-metric-box" style="border: 1px solid #fecaca; background: #fef2f2; color: #ef4444;">
+                                <span>Total Pending:</span> <span id="metricTotalPending">₹0.00</span>
                             </div>
-                            <div style="padding: 8px 16px; border-radius: 4px; font-weight: 700; font-size: 14px; border: 1px solid #bbf7d0; background: #f0fdf4; color: #10b981;">
-                                Total Paid: <span id="metricTotalReceived">₹0.00</span>
+                            <div class="report-metric-box" style="border: 1px solid #bbf7d0; background: #f0fdf4; color: #10b981;">
+                                <span>Total Paid:</span> <span id="metricTotalReceived">₹0.00</span>
                             </div>
-                            <div style="padding: 8px 16px; border-radius: 4px; font-weight: 700; font-size: 14px; border: 1px solid #fde68a; background: #fffbeb; color: #d97706;">
-                                Total: <span id="metricTotalBilled">₹0.00</span>
+                            <div class="report-metric-box" style="border: 1px solid #fde68a; background: #fffbeb; color: #d97706;">
+                                <span>Total:</span> <span id="metricTotalBilled">₹0.00</span>
                             </div>
                         </div>
 
