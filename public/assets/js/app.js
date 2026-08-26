@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.router.addRoute('/notifications', window.NotificationList.render, true);
     window.router.addRoute('/masters', window.MastersDashboard.render, true);
     window.router.addRoute('/masters/:type', window.MasterList.render, true);
+    window.router.addRoute('/settings', window.Settings.render, true);
 
     // Initial Route Handling
     await window.router.handleRoute();
@@ -211,8 +212,8 @@ window.renderLayout = (content) => {
                 <!-- Top Header -->
                 <div class="top-header" style="background-color: var(--bg-glass); border-bottom: 1px solid var(--border-glass);">
                     <a href="/customers" data-link class="header-left" style="display: flex; align-items: center; gap: 15px; text-decoration: none; cursor: pointer;">
-                        <img src="/public/assets/logos/crmfavicon.png" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; margin-left: 20px;">
-                        <span style="font-weight: 700; font-size: 18px; color: var(--text-main); margin-right: 20px;">Maimoon Sales</span>
+                        <img src="${window.appSettings?.company_logo || '/public/assets/logos/crmfavicon.png'}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain; margin-left: 20px;">
+                        <span style="font-weight: 700; font-size: 18px; color: var(--text-main); margin-right: 20px;">${window.appSettings?.company_name || 'Maimoon Sales'}</span>
                     </a>
                     
                     <div class="header-nav desktop-only" style="display: flex; gap: 10px; flex-grow: 1; margin-left: 20px;">

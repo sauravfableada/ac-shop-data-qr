@@ -13,5 +13,6 @@ Route::get('/qr-card/{token}', function ($token) {
 });
 
 Route::get('/{any}', function () {
-    return view('spa');
+    $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+    return view('spa', compact('settings'));
 })->where('any', '.*');
