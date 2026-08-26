@@ -54,13 +54,13 @@ window.CustomerForm = {
                         <div class="grid-2-col">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Mobile *</label>
-                                <input type="text" id="cMobile" value="${customer?.mobile || ''}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                                <input type="text" id="cMobile" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="${customer?.mobile || ''}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                 <div id="err_cMobile" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">WhatsApp No.</label>
                                 <div style="display: flex; gap: 8px; align-items: center;">
-                                    <input type="text" id="cWhatsapp" value="${customer?.whatsapp_no || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                                    <input type="text" id="cWhatsapp" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="${customer?.whatsapp_no || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                     <button type="button" onclick="document.getElementById('cWhatsapp').value = document.getElementById('cMobile').value" style="padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: #f1f5f9; color: #475569; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 48px;" title="Copy from Mobile">
                                         <i class="fa-solid fa-copy"></i>
                                     </button>
@@ -486,6 +486,34 @@ window.CustomerForm = {
         document.getElementById('customerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            // Clear previous error styles
+            document.querySelectorAll('#customerForm input, #customerForm textarea').forEach(input => {
+                input.style.borderColor = 'var(--border-glass)';
+            });
+            document.querySelectorAll('[id^="err_"]').forEach(el => {
+                el.style.display = 'none';
+                el.innerText = '';
+            });
+
+            const mobileVal = document.getElementById('cMobile').value;
+            const whatsappVal = document.getElementById('cWhatsapp').value;
+            let isFormValid = true;
+
+            if (mobileVal && !/^\d{10}$/.test(mobileVal)) {
+                document.getElementById('cMobile').style.borderColor = '#ef4444';
+                document.getElementById('err_cMobile').innerText = 'Mobile number must be 10 digits.';
+                document.getElementById('err_cMobile').style.display = 'block';
+                isFormValid = false;
+            }
+            if (whatsappVal && !/^\d{10}$/.test(whatsappVal)) {
+                document.getElementById('cWhatsapp').style.borderColor = '#ef4444';
+                document.getElementById('err_cWhatsapp').innerText = 'WhatsApp number must be 10 digits.';
+                document.getElementById('err_cWhatsapp').style.display = 'block';
+                isFormValid = false;
+            }
+
+            if (!isFormValid) return;
+
             const payload = new FormData();
             payload.append('customer_code', document.getElementById('cCode').value);
             payload.append('full_name', document.getElementById('cName').value);
@@ -600,6 +628,11 @@ window.CustomerForm = {
             if (mobileInput) mobileInput.style.borderColor = '#ef4444';
             const errMobile = document.getElementById('err_cMobile');
             if (errMobile) { errMobile.innerText = 'Mobile is required to auto-save.'; errMobile.style.display = 'block'; }
+            isValid = false;
+        } else if (!/^\d{10}$/.test(mobileVal)) {
+            if (mobileInput) mobileInput.style.borderColor = '#ef4444';
+            const errMobile = document.getElementById('err_cMobile');
+            if (errMobile) { errMobile.innerText = 'Mobile number must be exactly 10 digits.'; errMobile.style.display = 'block'; }
             isValid = false;
         } else {
             if (mobileInput) mobileInput.style.borderColor = 'var(--border-glass)';
