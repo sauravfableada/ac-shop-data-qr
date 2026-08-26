@@ -156,9 +156,9 @@ window.CustomerList = {
                                 </div>
                                 
                                 <!-- Per Page -->
-                                <div style="flex: 1 1 140px; min-width: 140px; display: flex; align-items: center; gap: 0px; color: var(--text-muted); font-size: 11px; white-space: nowrap;">
+                                <div style="flex: none; display: flex; align-items: center; gap: 0px; color: var(--text-muted); font-size: 11px; white-space: nowrap;">
                                     Show:
-                                    <select id="perPageSelect" style="padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; cursor: pointer;">
+                                    <select id="perPageSelect" style="width: auto !important; height: auto !important; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-size: 14px; cursor: pointer;">
                                         <option value="10" ${state.perPage == 10 ? 'selected' : ''}>10</option>
                                         <option value="25" ${state.perPage == 25 ? 'selected' : ''}>25</option>
                                         <option value="50" ${state.perPage == 50 ? 'selected' : ''}>50</option>

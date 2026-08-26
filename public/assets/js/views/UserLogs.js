@@ -105,14 +105,23 @@ window.UserLogs = {
 
         const attachLogEvents = () => {
             document.querySelectorAll('.clear-log-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    if (confirm('Clear this log?')) {
-                        const id = e.currentTarget.dataset.id;
-                        const res = await window.api.delete('/user-logs/' + id);
-                        if (res.success) {
-                            document.getElementById('refreshLogsBtn').click();
+                btn.addEventListener('click', (e) => {
+                    Swal.fire({
+                        title: 'Clear this log?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#64748b',
+                        confirmButtonText: 'Yes, clear it!'
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            const id = e.currentTarget.dataset.id;
+                            const res = await window.api.delete('/user-logs/' + id);
+                            if (res.success) {
+                                document.getElementById('refreshLogsBtn').click();
+                            }
                         }
-                    }
+                    });
                 });
             });
         };
@@ -125,13 +134,23 @@ window.UserLogs = {
             attachLogEvents();
         });
 
-        document.getElementById('deleteAllLogsBtn').addEventListener('click', async () => {
-            if (confirm('Are you sure you want to delete ALL logs? This cannot be undone.')) {
-                const res = await window.api.delete('/user-logs/clear');
-                if (res.success) {
-                    document.getElementById('refreshLogsBtn').click();
+        document.getElementById('deleteAllLogsBtn').addEventListener('click', () => {
+            Swal.fire({
+                title: 'Delete ALL logs?',
+                text: "This cannot be undone.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Yes, delete all!'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const res = await window.api.delete('/user-logs/clear');
+                    if (res.success) {
+                        document.getElementById('refreshLogsBtn').click();
+                    }
                 }
-            }
+            });
         });
     }
 };
