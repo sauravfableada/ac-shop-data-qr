@@ -824,6 +824,17 @@ window.CustomerForm = {
                 if (stSelect) {
                     stSelect.innerHTML = '<option value="">Select Service Type</option>' + 
                         serviceTypes.map(st => `<option value="${st.name}">${st.name}</option>`).join('');
+                        
+                    if (window.msvServiceTypeChoices) {
+                        window.msvServiceTypeChoices.destroy();
+                    }
+                    if (window.Choices) {
+                        window.msvServiceTypeChoices = new Choices(stSelect, {
+                            searchEnabled: true,
+                            itemSelectText: '',
+                            shouldSort: false
+                        });
+                    }
                 }
             }
         } catch (e) {

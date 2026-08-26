@@ -125,7 +125,7 @@ window.ServiceForm = {
                                 <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">Service Type <span style="color: red;">*</span></label>
                                 <button type="button" onclick="window.ServiceForm.openMasterModal('service_type')" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
                             </div>
-                            <select name="service_type" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                            <select id="serviceTypeSelect" name="service_type" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                 <option value="">Select Service Type</option>
                                 ${serviceTypeOptions}
                             </select>
@@ -331,6 +331,12 @@ window.ServiceForm = {
                 });
                 
                 window.customerChoices = new Choices(document.getElementById('qaCustomer'), {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    shouldSort: false
+                });
+                
+                window.serviceTypeChoices = new Choices(document.getElementById('serviceTypeSelect'), {
                     searchEnabled: true,
                     itemSelectText: '',
                     shouldSort: false
@@ -698,6 +704,16 @@ window.ServiceForm = {
                     if (selectEl) {
                         const newOption = new Option(name, name, true, true);
                         selectEl.add(newOption);
+                        
+                        // If it's the Service Type dropdown and has Choices initialized, reinitialize it
+                        if (type === 'service_type' && window.serviceTypeChoices) {
+                            window.serviceTypeChoices.destroy();
+                            window.serviceTypeChoices = new Choices(selectEl, {
+                                searchEnabled: true,
+                                itemSelectText: '',
+                                shouldSort: false
+                            });
+                        }
                     }
                 } else {
                     if (res.errors && res.errors.name) {
