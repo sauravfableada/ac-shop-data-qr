@@ -510,10 +510,33 @@ window.AcUnitList = {
             const token = ac.qr_code ? ac.qr_code.token : null;
             if (!token) { window.showToast('No QR code found', 'error'); return; }
             
-            const codeType = window.appSettings?.code_type || 'qr';
+            // Always fetch fresh settings to get latest code_type selection
+            let codeType = 'qr';
+            try {
+                const settingsRes = await window.api.get('/settings');
+                if (settingsRes.success && settingsRes.data) {
+                    codeType = settingsRes.data.code_type || window.appSettings?.code_type || 'qr';
+                } else {
+                    codeType = window.appSettings?.code_type || 'qr';
+                }
+            } catch (e) {
+                codeType = window.appSettings?.code_type || 'qr';
+            }
+
             const qrImgUrl = codeType === 'barcode' 
-                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${ac.ac_code}`
+                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(ac.ac_code)}&includetext&guardwhitespace`
                 : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+
+            // Fetch image as blob to bypass CORS canvas taint
+            let blobUrl;
+            try {
+                const imgFetch = await fetch(qrImgUrl);
+                const imgBlob = await imgFetch.blob();
+                blobUrl = URL.createObjectURL(imgBlob);
+            } catch (e) {
+                window.showToast('Could not load image. Check internet connection.', 'error');
+                return;
+            }
             
             // Create canvas for the card
             const canvas = document.createElement('canvas');
@@ -534,18 +557,18 @@ window.AcUnitList = {
             ctx.stroke();
             ctx.setLineDash([]);
             
-            // Load QR Image
+            // Load image from blob URL
             const img = new Image();
-            img.crossOrigin = 'Anonymous';
-            img.src = qrImgUrl;
+            img.src = blobUrl;
             await new Promise((resolve, reject) => {
                 img.onload = resolve;
                 img.onerror = reject;
             });
+            URL.revokeObjectURL(blobUrl);
             
             // Draw Code
             if (codeType === 'barcode') {
-                ctx.drawImage(img, 40, 80, 260, 100);
+                ctx.drawImage(img, 20, 60, 300, 120);
             } else {
                 ctx.drawImage(img, 60, 40, 220, 220);
             }
@@ -556,33 +579,30 @@ window.AcUnitList = {
             // AC Code
             ctx.font = 'bold 22px "Segoe UI", sans-serif';
             ctx.fillStyle = '#0f172a';
-            ctx.fillText(ac.ac_code, 170, 300);
+            ctx.fillText(ac.ac_code, 170, codeType === 'barcode' ? 210 : 300);
             
             // Customer Name
             ctx.font = '14px "Segoe UI", sans-serif';
             ctx.fillStyle = '#64748b';
-            ctx.fillText(ac.customer ? ac.customer.full_name : '', 170, 330);
+            ctx.fillText(ac.customer ? ac.customer.full_name : '', 170, codeType === 'barcode' ? 235 : 330);
             
             // Brand/Model
             if (ac.brand) {
-                ctx.fillText(`${ac.brand} ${ac.model || ''}`, 170, 355);
+                ctx.fillText(`${ac.brand} ${ac.model || ''}`, 170, codeType === 'barcode' ? 258 : 355);
             }
-            
-            // Token
-            ctx.font = '10px "Segoe UI", sans-serif';
-            ctx.fillStyle = '#94a3b8';
-            ctx.fillText(token, 170, 400);
             
             const dataUrl = canvas.toDataURL('image/png');
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = dataUrl;
-            a.download = `QR_Card_${ac.ac_code}.png`;
+            a.download = `${codeType === 'barcode' ? 'Barcode' : 'QR'}_${ac.ac_code}.png`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+            window.showToast('Downloaded successfully!', 'success');
         } catch (err) {
-            window.showToast('Error downloading QR', 'error');
+            console.error(err);
+            window.showToast('Error downloading image', 'error');
         }
     },
 
@@ -594,12 +614,26 @@ window.AcUnitList = {
             const token = ac.qr_code ? ac.qr_code.token : null;
             if (!token) { window.showToast('No QR code found', 'error'); return; }
             
-            const codeType = window.appSettings?.code_type || 'qr';
+            // Always fetch fresh settings to get latest code_type selection
+            let codeType = 'qr';
+            try {
+                const settingsRes = await window.api.get('/settings');
+                if (settingsRes.success && settingsRes.data) {
+                    codeType = settingsRes.data.code_type || window.appSettings?.code_type || 'qr';
+                } else {
+                    codeType = window.appSettings?.code_type || 'qr';
+                }
+            } catch (e) {
+                codeType = window.appSettings?.code_type || 'qr';
+            }
+
             const qrImgUrl = codeType === 'barcode' 
-                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${ac.ac_code}`
+                ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(ac.ac_code)}&includetext&guardwhitespace`
                 : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${token}`;
+
+            // Build the share message - always include the card link
             const qrCardUrl = `${window.location.origin}/qr-card/${token}`;
-            const messageText = `AC Code: ${ac.ac_code}\nCustomer: ${ac.customer ? ac.customer.full_name : 'Unknown'}\nQR Card Link: ${qrCardUrl}`;
+            const messageText = `AC Serial No: ${ac.ac_code}\nCustomer: ${ac.customer ? ac.customer.full_name : 'Unknown'}\nQR Card/Barcode Link: ${qrCardUrl}`;
             
             let phoneToUse = null;
             if (ac.customer) {
@@ -609,7 +643,18 @@ window.AcUnitList = {
                 }
             }
 
-            // Always generate the beautiful QR Card image first
+            // Fetch image as blob to bypass CORS canvas taint
+            let blobUrl;
+            try {
+                const imgFetch = await fetch(qrImgUrl);
+                const imgBlob = await imgFetch.blob();
+                blobUrl = URL.createObjectURL(imgBlob);
+            } catch (e) {
+                window.showToast('Could not load image. Check internet connection.', 'error');
+                return;
+            }
+
+            // Always generate the card image
             const canvas = document.createElement('canvas');
             canvas.width = 340;
             canvas.height = 480;
@@ -627,31 +672,32 @@ window.AcUnitList = {
             ctx.setLineDash([]);
             
             const img = new Image();
-            img.crossOrigin = 'Anonymous';
-            img.src = qrImgUrl;
+            img.src = blobUrl;
             await new Promise((resolve, reject) => {
                 img.onload = resolve;
                 img.onerror = reject;
             });
-            
-            ctx.drawImage(img, 60, 40, 220, 220);
+            URL.revokeObjectURL(blobUrl);
+
+            // Draw code image with correct dimensions for barcode vs QR
+            if (codeType === 'barcode') {
+                ctx.drawImage(img, 20, 60, 300, 120);
+            } else {
+                ctx.drawImage(img, 60, 40, 220, 220);
+            }
             
             ctx.textAlign = 'center';
             ctx.font = 'bold 22px "Segoe UI", sans-serif';
             ctx.fillStyle = '#0f172a';
-            ctx.fillText(ac.ac_code, 170, 300);
+            ctx.fillText(ac.ac_code, 170, codeType === 'barcode' ? 210 : 300);
             
             ctx.font = '14px "Segoe UI", sans-serif';
             ctx.fillStyle = '#64748b';
-            ctx.fillText(ac.customer ? ac.customer.full_name : '', 170, 330);
+            ctx.fillText(ac.customer ? ac.customer.full_name : '', 170, codeType === 'barcode' ? 235 : 330);
             
             if (ac.brand) {
-                ctx.fillText(`${ac.brand} ${ac.model || ''}`, 170, 355);
+                ctx.fillText(`${ac.brand} ${ac.model || ''}`, 170, codeType === 'barcode' ? 258 : 355);
             }
-            
-            ctx.font = '10px "Segoe UI", sans-serif';
-            ctx.fillStyle = '#94a3b8';
-            ctx.fillText(token, 170, 400);
 
             const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
             
@@ -672,12 +718,13 @@ window.AcUnitList = {
             }
 
             // If no specific phone, fallback to native Web Share API
-            const file = new File([blob], `QR_Card_${ac.ac_code}.png`, { type: 'image/png' });
+            const label = codeType === 'barcode' ? 'Barcode' : 'QR';
+            const file = new File([blob], `${label}_${ac.ac_code}.png`, { type: 'image/png' });
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 try {
                     await navigator.share({
                         files: [file],
-                        title: `QR Code - ${ac.ac_code}`,
+                        title: `${codeType === 'barcode' ? 'Barcode' : 'QR Code'} - ${ac.ac_code}`,
                         text: messageText
                     });
                     return; 

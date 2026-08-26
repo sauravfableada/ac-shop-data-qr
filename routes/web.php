@@ -9,7 +9,10 @@ Route::get('/qr-card/{token}', function ($token) {
     $acUnit = \App\Models\AcUnit::with('customer')->find($qrCode->ac_unit_id);
     if (!$acUnit) abort(404);
 
-    return view('qr_card', compact('acUnit', 'token'));
+    $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+    $codeType = $settings['code_type'] ?? 'qr';
+
+    return view('qr_card', compact('acUnit', 'token', 'codeType'));
 });
 
 Route::get('/{any}', function () {
