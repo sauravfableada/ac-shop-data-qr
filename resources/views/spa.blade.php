@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow">
     <title>{{ $settings['company_name'] ?? 'Maimoon Sales' }} - AC Service Management</title>
     <link rel="icon" type="image/png" href="{{ $settings['company_favicon'] ?? '/public/assets/logos/crmfavicon.png' }}">
     <link rel="shortcut icon" type="image/png" href="{{ $settings['company_favicon'] ?? '/public/assets/logos/crmfavicon.png' }}">
