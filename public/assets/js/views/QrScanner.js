@@ -173,6 +173,61 @@ window.QrScanner = {
             return `<span style="padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; background: ${s.bg}; color: ${s.color}; letter-spacing: 0.5px;">${(status || 'PENDING').toUpperCase()}</span>`;
         };
 
+        const ensureCustomer = async (ac) => {
+            if (ac.customer_id && ac.customer) return true;
+            const dialog = document.createElement('dialog');
+            dialog.style.cssText = 'position:fixed;inset:0;margin:auto;width:calc(100% - 32px);max-width:400px;max-height:90vh;overflow:auto;padding:24px;border:1px solid #e2e8f0;border-radius:16px;background:white;color:#0f172a;';
+            dialog.innerHTML = `
+                <form>
+                    <h2 style="font-size:20px;margin-bottom:8px;">Add Customer</h2>
+                    <p style="font-size:13px;color:#64748b;margin-bottom:18px;">Enter customer details for this AC unit.</p>
+                    <label for="scanCustomerName">Customer Name</label>
+                    <input id="scanCustomerName" name="full_name" autocomplete="name" required maxlength="255" style="display:block;width:100%;padding:12px;margin:8px 0 16px;border:1px solid #e2e8f0;border-radius:8px;">
+                    <label for="scanCustomerPhone">Customer Phone</label>
+                    <input id="scanCustomerPhone" name="mobile" type="tel" autocomplete="tel" required maxlength="20" style="display:block;width:100%;padding:12px;margin:8px 0 16px;border:1px solid #e2e8f0;border-radius:8px;">
+                    <p class="customer-error" role="alert" style="color:#ef4444;font-size:13px;margin-bottom:12px;"></p>
+                    <div style="display:flex;justify-content:flex-end;gap:10px;">
+                        <button type="button" class="cancel-customer" style="padding:10px 16px;border:1px solid #e2e8f0;border-radius:8px;background:white;">Cancel</button>
+                        <button type="submit" style="padding:10px 16px;border:0;border-radius:8px;background:#ff9f43;color:white;font-weight:600;">Save Customer</button>
+                    </div>
+                </form>`;
+            container.appendChild(dialog);
+            return new Promise(resolve => {
+                let saving = false;
+                const finish = saved => { dialog.close(); dialog.remove(); resolve(saved); };
+                dialog.addEventListener('cancel', event => { event.preventDefault(); if (!saving) finish(false); });
+                dialog.querySelector('.cancel-customer').onclick = () => { if (!saving) finish(false); };
+                dialog.querySelector('form').onsubmit = async event => {
+                    event.preventDefault();
+                    if (saving) return;
+                    const form = event.currentTarget;
+                    const error = dialog.querySelector('.customer-error');
+                    const full_name = form.elements.full_name.value.trim();
+                    const mobile = form.elements.mobile.value.trim();
+                    if (!full_name || !mobile) { error.textContent = 'Enter customer name and phone.'; return; }
+                    saving = true;
+                    form.querySelectorAll('button').forEach(button => button.disabled = true);
+                    error.textContent = '';
+                    try {
+                        const response = await window.api.post(`/ac-units/${ac.id}/customer`, { full_name, mobile });
+                        if (!response.success) {
+                            error.textContent = Object.values(response.errors || {}).flat().join(' ') || response.message || 'Could not save customer.';
+                            return;
+                        }
+                        Object.assign(ac, response.data);
+                        window.showToast('Customer saved for this AC unit', 'success');
+                        finish(true);
+                    } catch (err) {
+                        error.textContent = 'Could not save customer. Please try again.';
+                    } finally {
+                        saving = false;
+                        form.querySelectorAll('button').forEach(button => button.disabled = false);
+                    }
+                };
+                dialog.showModal();
+                dialog.querySelector('input').focus();
+            });
+        };
         const onScanSuccess = async (decodedText) => {
             scanner.clear();
             // Hide the scanner frame completely after scan
@@ -190,6 +245,7 @@ window.QrScanner = {
 
             if (response.success) {
                 const ac = response.data.ac;
+                await ensureCustomer(ac);
                 const services = ac.service_records || [];
 
                 const serviceRows = services.length
@@ -268,7 +324,7 @@ window.QrScanner = {
                             <button onclick="window.router.navigate('/ac-units/view/${ac.id}')" style="flex: 1; padding: 13px; background: #0f172a; color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='#0f172a'">
                                 <i class="fa-solid fa-eye"></i> View AC Unit
                             </button>
-                            <button onclick="window.router.navigate('/services/add?ac_id=${ac.id}')" style="flex: 1; padding: 13px; background: #10B981; color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
+                            <button id="scanNewService" style="flex: 1; padding: 13px; background: #10B981; color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
                                 <i class="fa-solid fa-plus"></i> New Service
                             </button>
                         </div>
@@ -299,6 +355,10 @@ window.QrScanner = {
                     </div>
                 `;
                 
+                document.getElementById('scanNewService').onclick = async () => {
+                    if (await ensureCustomer(ac)) window.router.navigate(`/services/add?ac_id=${ac.id}`);
+                };
+
                 // Add accordion toggle logic after rendering
                 setTimeout(() => {
                     document.querySelectorAll('.mobile-expand-btn').forEach(btn => {

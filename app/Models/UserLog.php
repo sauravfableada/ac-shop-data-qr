@@ -26,6 +26,7 @@ class UserLog extends Model
                     $q->where('name', 'admin');
                 })->get();
 
+                $url = '#';
                 if ($admins->count() > 0) {
                     $url = '#';
                     $mod = strtolower($log->module);

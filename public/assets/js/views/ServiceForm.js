@@ -62,6 +62,11 @@ window.ServiceForm = {
             service.ac_unit_id = acUnits[0].id;
         }
 
+        // A scanned unit may be outside the first page of dropdown options.
+        if (service.ac_unit_id && !acUnits.some(ac => String(ac.id) === String(service.ac_unit_id))) {
+            const selectedAc = await window.api.get(`/ac-units/${service.ac_unit_id}`);
+            if (selectedAc.success) acUnits.push(selectedAc.data);
+        }
         const acOptions = acUnits.map(ac =>
             `<option value="${ac.id}" ${service.ac_unit_id == ac.id ? 'selected' : ''}>${ac.ac_code} - ${ac.customer ? ac.customer.full_name : ''}</option>`
         ).join('');
