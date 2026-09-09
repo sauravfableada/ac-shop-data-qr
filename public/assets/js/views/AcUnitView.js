@@ -92,7 +92,7 @@ window.AcUnitView = {
                 <div class="table-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <div>
                         <h1 style="font-size: 24px; margin-bottom: 4px; color: #0f172a;">AC Unit Profile: ${ac.ac_code}</h1>
-                        <p style="color: #64748b; font-size: 14px;">Customer: ${ac.customer ? ac.customer.full_name : 'Unknown'}</p>
+                        <p style="color: #64748b; font-size: 14px;"><i class="fa-solid fa-user" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Customer: ${ac.customer ? ac.customer.full_name : 'Unknown'}</p>
                     </div>
                     <div style="display: flex; gap: 12px;">
                         <button onclick="window.history.back()" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #ffffff; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
@@ -110,27 +110,27 @@ window.AcUnitView = {
                 <!-- Specs Card -->
                 <div class="responsive-grid glass-panel" style="background: #ffffff; padding: 32px; border-radius: 12px; margin-bottom: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
                     <div>
-                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Brand & Model</p>
+                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;"><i class="fa-solid fa-tag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Brand & Model</p>
                         <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.brand || '-'} ${ac.model || ''}</p>
                     </div>
                     <div>
-                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">AC Type & Capacity</p>
+                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;"><i class="fa-solid fa-snowflake" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>AC Type & Capacity</p>
                         <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.ac_type || '-'} - ${ac.capacity || '-'}</p>
                     </div>
                     <div>
-                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Serial Number</p>
+                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;"><i class="fa-solid fa-barcode" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Serial Number</p>
                         <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.serial_number || '--'}</p>
                     </div>
                     <div>
-                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Installation Date</p>
+                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;"><i class="fa-solid fa-calendar-days" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Installation Date</p>
                         <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.installation_date ? new Date(ac.installation_date).toLocaleDateString() : '--'}</p>
                     </div>
                     <div>
-                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Location/Room</p>
+                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;"><i class="fa-solid fa-location-dot" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Location/Room</p>
                         <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.room || '--'}</p>
                     </div>
                     <div>
-                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Created By</p>
+                        <p style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;"><i class="fa-solid fa-user-plus" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Created By</p>
                         <p style="font-size: 16px; color: #0f172a; font-weight: 500; margin-top: 4px;">${ac.creator ? ac.creator.name : '--'}</p>
                     </div>
                     <div style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; margin-top: 24px; border-top: 1px solid var(--border-glass); padding-top: 24px;">
