@@ -24,8 +24,6 @@ window.AcUnitForm = {
             console.error("Failed to load dependencies", e);
         }
 
-        let dynamicCode = '';
-
         if (isEdit) {
             try {
                 const res = await window.api.get(`/ac-units/${acId}`);
@@ -36,12 +34,6 @@ window.AcUnitForm = {
                 window.showToast("Failed to load AC unit", "error");
             }
         } else {
-            try {
-                const codeRes = await window.api.get('/ac-units/next-code');
-                if (codeRes.success) {
-                    dynamicCode = codeRes.code;
-                }
-            } catch (e) { }
             
             // Check for customer_id in URL to auto-select
             const urlParams = new URLSearchParams(window.location.search);
@@ -100,7 +92,7 @@ window.AcUnitForm = {
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                         <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-hashtag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Serial No <span style="color: red;">*</span></label>
-                        <input type="text" id="acCode" name="ac_code" value="${ac.ac_code || dynamicCode}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                        <input type="text" id="acCode" name="ac_code" value="${ac.ac_code || ''}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                         <div id="err_ac_code" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                     </div>
 
@@ -109,17 +101,13 @@ window.AcUnitForm = {
                         <input type="text" name="brand" value="${ac.brand || ''}" placeholder="e.g. Daikin, LG" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                     </div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="form-group ac-type-field" style="display: flex; flex-direction: column; gap: 8px;">
                         <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-fan" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Model <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                         <input type="text" name="model" value="${ac.model || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                     </div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-barcode" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Serial Number <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
-                        <input type="text" name="serial_number" value="${ac.serial_number || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                    </div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="form-group ac-type-field" style="display: flex; flex-direction: column; gap: 8px;">
                         <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-gauge-high" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Capacity <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                         <input type="text" name="capacity" value="${ac.capacity || ''}" placeholder="e.g. 1.5 Ton" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                     </div>
