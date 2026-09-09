@@ -124,7 +124,7 @@ window.AcUnitForm = {
                         <input type="text" name="capacity" value="${ac.capacity || ''}" placeholder="e.g. 1.5 Ton" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                     </div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="form-group ac-type-field" style="display: flex; flex-direction: column; gap: 8px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <label style="font-weight: 500; font-size: 14px; color: #334155;">AC Type</label>
                             <button type="button" onclick="window.AcUnitForm.openMasterModal('ac_type')" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
@@ -135,7 +135,7 @@ window.AcUnitForm = {
                         </select>
                     </div>
 
-                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="form-group ac-type-field" style="display: flex; flex-direction: column; gap: 8px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <label style="font-weight: 500; font-size: 14px; color: #334155;">Inverter Type</label>
                             <button type="button" onclick="window.AcUnitForm.openMasterModal('inverter_type')" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
