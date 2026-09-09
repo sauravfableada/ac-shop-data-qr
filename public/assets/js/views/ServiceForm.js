@@ -1,4 +1,49 @@
 window.ServiceForm = {
+    createAcChoices: (select) => {
+        const choices = new Choices(select, { searchEnabled: true, itemSelectText: '', shouldSort: false });
+        const dropdown = select.closest('.choices');
+        const addEditLinks = () => {
+            dropdown.querySelectorAll('[data-choice][data-value]').forEach(option => {
+                const id = option.dataset.value;
+                if (!/^\d+$/.test(id) || option.querySelector('.ac-option-edit')) return;
+                const edit = document.createElement('button');
+                edit.className = 'ac-option-edit';
+                edit.type = 'button';
+                edit.dataset.acId = id;
+
+
+                edit.title = 'Edit AC unit';
+                edit.setAttribute('aria-label', `Edit ${option.textContent.trim()}`);
+                edit.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;margin-left:8px;padding:4px;border:0;background:transparent;cursor:pointer;color:#ff9f43;text-decoration:none;position:relative;z-index:1;';
+                edit.innerHTML = '<i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>';
+                option.appendChild(edit);
+            });
+        };
+        // Intercept before Choices handles a row click, preserving the current selection.
+        const handleEdit = event => {
+            if (event.target.closest('.ac-option-edit')) {
+                event.stopPropagation();
+                event.preventDefault();
+                if (event.type === 'pointerdown' || event.type === 'click' || (event.type === 'keydown' && ['Enter', ' '].includes(event.key))) {
+                    const id = event.target.closest('.ac-option-edit').dataset.acId;
+                    choices.hideDropdown();
+                    window.ServiceForm.openEditAc(id);
+                }
+            }
+        };
+        ['mousedown', 'pointerdown', 'click', 'keydown'].forEach(type => dropdown.addEventListener(type, handleEdit, true));
+        const observer = new MutationObserver(addEditLinks);
+        observer.observe(dropdown, { childList: true, subtree: true });
+        addEditLinks();
+        const destroy = choices.destroy.bind(choices);
+        choices.destroy = () => {
+            observer.disconnect();
+            ['mousedown', 'pointerdown', 'click', 'keydown'].forEach(type => dropdown.removeEventListener(type, handleEdit, true));
+            destroy();
+        };
+        return choices;
+    },
+
     render: async (container) => {
         const urlParams = new URLSearchParams(window.location.search);
         const acIdQuery = urlParams.get('ac_id');
@@ -244,7 +289,7 @@ window.ServiceForm = {
                     
                     <div class="grid-2-col">
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Customer <span style="color: red;">*</span></label>
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><label style="font-weight: 500; font-size: 14px; color: #334155;">Customer <span style="color: red;">*</span></label><button type="button" onclick="window.ServiceForm.addModalCustomer()" style="background:#0f172a;color:white;border:0;border-radius:4px;padding:4px 8px;font-size:12px;cursor:pointer;"><i class="fa-solid fa-plus"></i> Add New</button></div>
                             <select id="qaCustomer" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                 <option value="">Select Customer</option>
                                 ${customers.map(c => `<option value="${c.id}">${c.full_name} (${c.mobile})</option>`).join('')}
@@ -335,11 +380,7 @@ window.ServiceForm = {
 
         setTimeout(() => {
             if (window.Choices) {
-                window.acChoices = scannedUnitLocked ? null : new Choices(document.getElementById('acSelect'), {
-                    searchEnabled: true,
-                    itemSelectText: '',
-                    shouldSort: false
-                });
+                window.acChoices = scannedUnitLocked ? null : window.ServiceForm.createAcChoices(document.getElementById('acSelect'));
                 
                 window.customerChoices = new Choices(document.getElementById('qaCustomer'), {
                     searchEnabled: true,
@@ -411,7 +452,114 @@ window.ServiceForm = {
         document.getElementById('serviceMainStep1').style.display = 'block';
     },
 
+    addModalCustomer: () => {
+        if (document.getElementById('acQuickCustomerDialog')) return;
+        const dialog = document.createElement('dialog');
+        dialog.id = 'acQuickCustomerDialog';
+        dialog.style.cssText = 'position:fixed;inset:0;margin:auto;width:calc(100% - 32px);max-width:380px;max-height:90vh;overflow:auto;padding:24px;border:1px solid #e2e8f0;border-radius:14px;background:white;color:#0f172a;';
+        dialog.innerHTML = `<form>
+            <h3 style="margin-bottom:18px;">Add Customer</h3>
+            <label for="acQuickCustomerName">Customer Name</label>
+            <input id="acQuickCustomerName" name="full_name" required maxlength="255" autocomplete="name" style="display:block;width:100%;padding:12px;margin:8px 0 16px;border:1px solid #e2e8f0;border-radius:8px;">
+            <label for="acQuickCustomerPhone">Phone Number</label>
+            <input id="acQuickCustomerPhone" name="mobile" type="tel" required maxlength="20" autocomplete="tel" style="display:block;width:100%;padding:12px;margin:8px 0 16px;border:1px solid #e2e8f0;border-radius:8px;">
+            <p role="alert" style="font-size:13px;color:#ef4444;margin-bottom:12px;"></p>
+            <div style="display:flex;justify-content:flex-end;gap:10px;">
+                <button type="button" style="padding:10px 16px;border:1px solid #e2e8f0;border-radius:8px;background:white;">Cancel</button>
+                <button type="submit" style="padding:10px 16px;border:0;border-radius:8px;background:#0f172a;color:white;">Save Customer</button>
+            </div>
+        </form>`;
+        document.getElementById('addAcModal').appendChild(dialog);
+        let saving = false;
+        const close = () => { dialog.close(); dialog.remove(); };
+        dialog.addEventListener('cancel', event => { event.preventDefault(); if (!saving) close(); });
+        dialog.querySelector('button[type="button"]').onclick = () => { if (!saving) close(); };
+        dialog.querySelector('form').onsubmit = async event => {
+            event.preventDefault();
+            if (saving) return;
+            const form = event.currentTarget;
+            const error = form.querySelector('[role="alert"]');
+            const full_name = form.elements.full_name.value.trim();
+            const mobile = form.elements.mobile.value.trim();
+            if (!full_name || !mobile) { error.textContent = 'Enter customer name and phone number.'; return; }
+            saving = true;
+            error.textContent = '';
+            form.querySelectorAll('button').forEach(button => button.disabled = true);
+            try {
+                const code = await window.api.get('/customers/next-code');
+                if (!code.success || !code.code) throw new Error('Could not prepare customer. Please try again.');
+                const response = await window.api.post('/customers', {full_name, mobile, customer_code:code.code});
+                if (!response.success) {
+                    error.textContent = Object.values(response.errors || {}).flat().join(' ') || response.message || 'Could not save customer.';
+                    return;
+                }
+                const customer = response.data;
+                const value = String(customer.id);
+                const label = `${customer.full_name} (${customer.mobile})`;
+                if (window.customerChoices) {
+                    window.customerChoices.setChoices([{value, label}], 'value', 'label', false);
+                    window.customerChoices.setChoiceByValue(value);
+                } else {
+                    const select = document.getElementById('qaCustomer');
+                    select.add(new Option(label, value));
+                    select.value = value;
+                }
+                close();
+                window.showToast('Customer added and selected', 'success');
+            } catch (err) {
+                error.textContent = err.message || 'Could not save customer. Please try again.';
+            } finally {
+                saving = false;
+                form.querySelectorAll('button').forEach(button => button.disabled = false);
+            }
+        };
+        dialog.showModal();
+        dialog.querySelector('input').focus();
+    },
+    openEditAc: async (id) => {
+        const modal = document.getElementById('addAcModal');
+        if (modal.dataset.loading === 'true') return;
+        modal.dataset.loading = 'true';
+        const button = document.getElementById('qaSaveAcBtn');
+        button.disabled = true;
+        try {
+            const response = await window.api.get(`/ac-units/${id}`);
+            if (!response.success) { window.showToast(response.message || 'Could not load AC unit', 'error'); return; }
+            const ac = response.data;
+            modal.dataset.editId = ac.id;
+            modal.querySelector('h3').textContent = 'Edit AC Unit';
+            const fields = {qaAcCode:'ac_code',qaBrand:'brand',qaModel:'model',qaSerialNumber:'serial_number',qaCapacity:'capacity',qaAcType:'ac_type',qaInverterType:'inverter_type'};
+            Object.entries(fields).forEach(([field, key]) => {
+                const input = document.getElementById(field);
+                if (input.tagName === 'SELECT' && ac[key] && !Array.from(input.options).some(option => option.value === ac[key])) input.add(new Option(ac[key], ac[key]));
+                input.value = ac[key] || '';
+            });
+            const customer = document.getElementById('qaCustomer');
+            if (window.customerChoices) {
+                if (ac.customer_id && !Array.from(customer.options).some(option => option.value === String(ac.customer_id))) {
+                    window.customerChoices.setChoices([{value:String(ac.customer_id),label:ac.customer?.full_name || 'Customer'}], 'value', 'label', false);
+                }
+                window.customerChoices.setChoiceByValue(String(ac.customer_id || ''));
+            } else {
+                if (ac.customer_id && !Array.from(customer.options).some(option => option.value === String(ac.customer_id))) customer.add(new Option(ac.customer?.full_name || 'Customer', ac.customer_id));
+                customer.value = ac.customer_id || '';
+            }
+            modal.querySelectorAll('[id^="err_"]').forEach(error => error.style.display = 'none');
+            modal.style.display = 'flex';
+            button.textContent = 'Save Changes';
+        } finally {
+            modal.dataset.loading = 'false';
+            button.disabled = false;
+        }
+    },
     loadAcCode: async () => {
+        const modal = document.getElementById('addAcModal');
+        delete modal.dataset.editId;
+        modal.querySelector('h3').textContent = 'Quick Add AC Unit';
+        modal.querySelectorAll('input').forEach(input => input.value = '');
+        modal.querySelectorAll('select').forEach(select => select.value = '');
+        window.customerChoices?.setChoiceByValue('');
+        document.getElementById('qaSaveAcBtn').textContent = 'Save AC Unit';
         try {
             const res = await window.api.get('/ac-units/next-code');
             if (res.success) {
@@ -449,13 +597,16 @@ window.ServiceForm = {
         };
 
         try {
-            const res = await window.api.post('/ac-units', payload);
+            const editId = document.getElementById('addAcModal').dataset.editId;
+            const previousSelection = document.getElementById('acSelect').value;
+            if (editId) delete payload.status;
+            const res = editId ? await window.api.put(`/ac-units/${editId}`, payload) : await window.api.post('/ac-units', payload);
             if (res.success) {
                 const acCode = document.getElementById('qaAcCode').value || '';
-                if (window.addNotification) {
+                if (window.addNotification && !editId) {
                     window.addNotification('AC Unit Created', `AC Unit "${acCode}" was successfully created.`, 'ac-unit');
                 }
-                window.showToast('AC Unit created successfully!', 'success');
+                window.showToast(editId ? 'AC Unit updated successfully!' : 'AC Unit created successfully!', 'success');
                 document.getElementById('addAcModal').style.display = 'none';
 
                 // Reload AC options
@@ -473,15 +624,11 @@ window.ServiceForm = {
                     ).join('');
 
                     if (res.data?.id) {
-                        select.value = res.data.id;
+                        select.value = editId ? previousSelection : res.data.id;
                     }
                     
                     if (window.Choices) {
-                        window.acChoices = new Choices(select, {
-                            searchEnabled: true,
-                            itemSelectText: '',
-                            shouldSort: false
-                        });
+                        window.acChoices = window.ServiceForm.createAcChoices(select);
                     }
                 }
             } else {
@@ -645,7 +792,7 @@ window.ServiceForm = {
 
             if (res.success) {
                 const serviceType = data.service_type || 'Maintenance';
-                if (window.addNotification) {
+                if (window.addNotification && !editId) {
                     window.addNotification(
                         isEdit ? 'Service Record Updated' : 'Service Record Created',
                         `Service record for "${serviceType}" was successfully ${isEdit ? 'updated' : 'created'}.`,
