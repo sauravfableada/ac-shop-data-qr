@@ -476,7 +476,13 @@ window.AcUnitList = {
                     .message { border-top: 1px solid #e2e8f0; margin: 2mm auto 0; padding-top: 2mm; max-width: 40mm; font-size: 9px; line-height: 1.4; color: #475569; }
                     .token { font-size: 7px; color: #94a3b8; margin-top: 2mm; }
                     @media screen { body { padding: 10mm; background: #f1f5f9; } .sheet { background: white; margin: 0 auto 10mm; } }
-                </style></head><body>${sheets.join('')}</body></html>`);
+                </style></head><body><style>
+.print-toolbar{max-width:210mm;margin:0 auto 16px;display:flex;justify-content:flex-end;gap:10px}
+.print-toolbar button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid #cbd5e1;border-radius:8px;background:white;font:600 14px 'Segoe UI',sans-serif;cursor:pointer}
+.print-toolbar button:first-child{background:#2563eb;color:white;border-color:#2563eb}
+.print-toolbar button:disabled{opacity:.6;cursor:wait}
+@media print{.print-toolbar{display:none!important}}
+</style><div class="print-toolbar"><button id="save-pdf" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 11v7m-3-3 3 3 3-3"/></svg><span>Save as PDF</span></button><button id="print-labels" disabled>Print</button></div>${sheets.join('')}</body></html>`);
             printWindow.document.close();
             await Promise.all(Array.from(printWindow.document.images, img => new Promise((resolve, reject) => {
                 const timeout = setTimeout(() => reject(new Error('Code images took too long to load. Please try again.')), 60000);
@@ -496,8 +502,82 @@ window.AcUnitList = {
             if (units.length > printable.length) {
                 window.showToast(`${units.length - printable.length} AC units without codes were skipped`, 'warning');
             }
+            const saveButton = printWindow.document.getElementById('save-pdf');
+            const printButton = printWindow.document.getElementById('print-labels');
+            saveButton.disabled = printButton.disabled = false;
+            printButton.onclick = () => printWindow.print();
+            saveButton.onclick = async () => {
+                saveButton.disabled = printButton.disabled = true;
+                const label = saveButton.querySelector('span');
+                label.textContent = 'Preparing PDF...';
+                try {
+                    const loadScript = src => new Promise((resolve, reject) => {
+                        const script = printWindow.document.createElement('script');
+                        script.src = src;
+                        const timer = setTimeout(() => { script.remove(); reject(new Error('PDF tools took too long to load. Please try again.')); }, 30000);
+                        script.onload = () => { clearTimeout(timer); resolve(); };
+                        script.onerror = () => { clearTimeout(timer); script.remove(); reject(new Error('Could not load PDF tools. Check your connection and try again.')); };
+                        printWindow.document.head.appendChild(script);
+                    });
+                    await Promise.all([
+                        printWindow.html2canvas ? Promise.resolve() : loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'),
+                        printWindow.jspdf ? Promise.resolve() : loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.3/jspdf.umd.min.js')
+                    ]);
+                    // Embed images first so failed requests cannot silently omit QR codes.
+                    for (const img of printWindow.document.images) {
+                        if (img.src.startsWith('data:')) continue;
+                        const response = await fetch(img.src, { signal: AbortSignal.timeout(30000) });
+                        if (!response.ok) throw new Error('Could not load a code image for the PDF. Please try again.');
+                        const blob = await response.blob();
+                        img.src = await new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = () => resolve(reader.result);
+                            reader.onerror = reject;
+                            reader.readAsDataURL(blob);
+                        });
+                        await img.decode();
+                    }
+                    const pdf = new printWindow.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+                    const pages = printWindow.document.querySelectorAll('.sheet');
+                    for (let pageIndex = 0; pageIndex < pages.length; pageIndex++) {
+                        if (pageIndex) pdf.addPage();
+                        const sheet = pages[pageIndex];
+                        const bounds = sheet.getBoundingClientRect();
+                        // Freeze the browser's grid positions for the canvas renderer.
+                        const slots = Array.from(sheet.querySelectorAll('.slot'), slot => {
+                            const rect = slot.getBoundingClientRect();
+                            return { left: rect.left - bounds.left, top: rect.top - bounds.top, width: rect.width, height: rect.height };
+                        });
+                        const canvas = await printWindow.html2canvas(sheet, {
+                            scale: 3,
+                            backgroundColor: '#ffffff',
+                            logging: false,
+                            onclone: (document, clonedSheet) => {
+                                Object.assign(clonedSheet.style, { display: 'block', position: 'relative' });
+                                clonedSheet.querySelectorAll('.slot').forEach((slot, index) => {
+                                    const rect = slots[index];
+                                    Object.assign(slot.style, {
+                                        position: 'absolute',
+                                        left: `${rect.left}px`,
+                                        top: `${rect.top}px`,
+                                        width: `${rect.width}px`,
+                                        height: `${rect.height}px`
+                                    });
+                                });
+                            }
+                        });
+                        pdf.addImage(canvas, 'PNG', 0, 0, 210, bounds.height * 210 / bounds.width, undefined, 'FAST');
+                        canvas.width = canvas.height = 0;
+                    }
+                    pdf.save(codeType === 'barcode' ? 'all-barcodes.pdf' : 'all-qr-codes.pdf');
+                } catch (error) {
+                    printWindow.alert(error.message || 'Could not save the PDF. Please try again.');
+                } finally {
+                    saveButton.disabled = printButton.disabled = false;
+                    label.textContent = 'Save as PDF';
+                }
+            };
             printWindow.focus();
-            printWindow.print();
         } catch (err) {
             if (!printWindow.closed) printWindow.close();
             window.showToast(err.message || 'Could not prepare labels for printing', 'error');
