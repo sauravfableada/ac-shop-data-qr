@@ -282,7 +282,7 @@ window.ServiceForm = {
             </div>
 
             <!-- Add AC Modal -->
-            <div id="addAcModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center;">
+            <div id="addAcModal" class="service-ac-modal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center;">
                 <div style="background: #ffffff; width: 100%; max-width: 700px; border-radius: 16px; padding: 32px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); position: relative; max-height: 90vh; overflow-y: auto;">
                     <button type="button" onclick="document.getElementById('addAcModal').style.display='none'" style="position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 20px; color: #64748b; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
                     <h3 style="font-size: 20px; color: #0f172a; margin-bottom: 24px;">Quick Add AC Unit</h3>
@@ -345,7 +345,7 @@ window.ServiceForm = {
                             </select>
                         </div>
 
-                        <div style="grid-column: span 2; display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px;">
+                        <div style="grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; margin-top: 8px;">
                             <button type="button" onclick="document.getElementById('addAcModal').style.display='none'" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); cursor: pointer; font-weight: 600;">Cancel</button>
                             <button type="button" id="qaSaveAcBtn" onclick="window.ServiceForm.saveAcUnit(event)" style="padding: 10px 20px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600;">Save AC Unit</button>
                         </div>
@@ -354,7 +354,7 @@ window.ServiceForm = {
             </div> <!-- End Add AC Modal -->
 
             <!-- Generic Master Quick Add Modal -->
-            <div id="addMasterModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1001; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+            <div id="addMasterModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2010; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
                 <div style="background: #ffffff; padding: 24px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                             <h3 id="masterModalTitle" style="margin: 0; font-size: 18px; color: #0f172a;">Add New Option</h3>
