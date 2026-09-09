@@ -298,9 +298,10 @@ window.AcUnitView = {
                             word-break: break-all;
                             margin-top: 16px;
                         }
+                        @page { margin: 0; }
                         @media print {
-                            body { min-height: auto; align-items: flex-start; justify-content: flex-start; margin: 20px; }
-                            .card { border: 1px dashed #ccc; }
+                            body { display: block; width: fit-content; min-height: 0; margin: 0; padding: 12px; }
+                            .card { break-inside: avoid; }
                         }
                     </style>
                 </head>
@@ -313,8 +314,15 @@ window.AcUnitView = {
                         ${codeType !== 'barcode' ? `<div class="token">${token}</div>` : ''}
                     </div>
                     <script>
-                        window.onload = function() { 
-                            setTimeout(() => { window.print(); }, 500);
+                        window.onload = function() {
+                            const card = document.querySelector('.card');
+                            const bounds = card.getBoundingClientRect();
+                            const pageWidth = Math.ceil(bounds.width) + 24;
+                            const pageHeight = Math.ceil(bounds.height) + 24;
+                            const pageStyle = document.createElement('style');
+                            pageStyle.textContent = '@page { size: ' + pageWidth + 'px ' + pageHeight + 'px; margin: 0; }';
+                            document.head.appendChild(pageStyle);
+                            requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
                         }
                     </script>
                 </body>

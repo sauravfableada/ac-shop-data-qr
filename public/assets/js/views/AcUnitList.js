@@ -467,9 +467,9 @@ window.AcUnitList = {
                             margin-bottom: 6px;
                         }
                         .customer {
-                            font-size: 13px;
-                            color: #64748b;
-                            margin-bottom: 4px;
+                            font-size: 18px;
+                            color: #1e293b;
+                            font-weight: 700;
                         }
                         .token {
                             font-size: 9px;
@@ -477,9 +477,10 @@ window.AcUnitList = {
                             word-break: break-all;
                             margin-top: 10px;
                         }
+                        @page { margin: 0; }
                         @media print {
-                            body { min-height: auto; }
-                            .card { border: 1px dashed #ccc; }
+                            body { display: block; width: fit-content; min-height: 0; margin: 0; padding: 12px; }
+                            .card { break-inside: avoid; }
                         }
                     </style>
                 </head>
@@ -487,11 +488,21 @@ window.AcUnitList = {
                     <div class="card">
                         <img src="${qrImgUrl}" alt="QR Code">
                         <div class="ac-code">${ac.ac_code}</div>
-                        <div class="customer">${ac.customer ? ac.customer.full_name : ''}</div>
-                        ${ac.brand ? `<div class="customer">${ac.brand} ${ac.model || ''}</div>` : ''}
+                        ${ac.customer?.full_name ? `<div class="customer">${ac.customer.full_name}</div>` : ''}
+                        ${ac.brand ? `<div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">${ac.brand} ${ac.model || ''}</div>` : ''}
+                        <div style="border-top: 1px solid #e2e8f0; color: #475569; font-size: 11px; font-weight: 600; line-height: 1.4; margin-top: 8px; padding-top: 9px;">Scan this code for AC service history &amp; support</div>
                         <div class="token">${token}</div>
                     </div>
-                    <script>window.onload = function() { window.print(); }<\/script>
+                    <script>window.onload = function() {
+                            const card = document.querySelector('.card');
+                            const bounds = card.getBoundingClientRect();
+                            const pageWidth = Math.ceil(bounds.width) + 24;
+                            const pageHeight = Math.ceil(bounds.height) + 24;
+                            const pageStyle = document.createElement('style');
+                            pageStyle.textContent = '@page { size: ' + pageWidth + 'px ' + pageHeight + 'px; margin: 0; }';
+                            document.head.appendChild(pageStyle);
+                            requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
+                        }<\/script>
                 </body>
                 </html>
             `);
@@ -582,14 +593,23 @@ window.AcUnitList = {
             ctx.fillText(ac.ac_code, 170, codeType === 'barcode' ? 210 : 300);
             
             // Customer Name
-            ctx.font = '14px "Segoe UI", sans-serif';
-            ctx.fillStyle = '#64748b';
-            ctx.fillText(ac.customer ? ac.customer.full_name : '', 170, codeType === 'barcode' ? 235 : 330);
-            
+            if (ac.customer?.full_name) {
+                ctx.font = 'bold 18px "Segoe UI", sans-serif';
+                ctx.fillStyle = '#1e293b';
+                ctx.fillText(ac.customer.full_name, 170, codeType === 'barcode' ? 240 : 330);
+            }
+
             // Brand/Model
             if (ac.brand) {
-                ctx.fillText(`${ac.brand} ${ac.model || ''}`, 170, codeType === 'barcode' ? 258 : 355);
+                ctx.font = '12px "Segoe UI", sans-serif';
+                ctx.fillStyle = '#64748b';
+                ctx.fillText(`${ac.brand} ${ac.model || ''}`, 170, codeType === 'barcode' ? 265 : 355);
             }
+
+            // Sticker message
+            ctx.font = 'bold 11px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#475569';
+            ctx.fillText('Scan this code for AC service history & support', 170, codeType === 'barcode' ? 295 : 390);
             
             const dataUrl = canvas.toDataURL('image/png');
             const a = document.createElement('a');
