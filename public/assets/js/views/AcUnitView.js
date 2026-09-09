@@ -145,18 +145,17 @@ window.AcUnitView = {
                         : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${ac.qr_code.token}`;
                     
                     return `
-                        <div style="background-color: #ffffff; width: 320px; border: 2px dashed #e2e8f0; border-radius: 16px; display: flex; flex-direction: column; align-items: center; padding: 30px 20px; box-sizing: border-box; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
-                            <img src="${qrImgUrl}" alt="${codeType === 'barcode' ? 'Barcode' : 'QR Code'}" style="${codeType === 'barcode' ? 'width: 280px; height: auto;' : 'width: 220px; height: 220px;'} margin-bottom: 20px; object-fit: contain;">
-                            
-                            <h2 style="font-size: 22px; font-weight: bold; color: #0f172a; margin: 0 0 10px 0;">${ac.ac_code}</h2>
-                            <p style="font-size: 14px; color: #64748b; margin: 0 0 8px 0;">${ac.customer ? ac.customer.full_name : ''}</p>
-                            ${ac.brand ? `<p style="font-size: 14px; color: #64748b; margin: 0 0 20px 0;">${ac.brand} ${ac.model || ''}</p>` : ''}
-                            ${codeType !== 'barcode' ? `<p style="font-size: 10px; color: #94a3b8; margin: 16px 0 0 0; word-break: break-all; text-align: center;">${ac.qr_code.token}</p>` : ''}
+                        <div style="background:#fff;width:280px;max-width:100%;border:2px dashed #e2e8f0;border-radius:16px;padding:32px 40px;box-sizing:border-box;text-align:center;font-family:'Segoe UI',sans-serif;">
+                            <img src="${qrImgUrl}" alt="${codeType === 'barcode' ? 'Barcode' : 'QR Code'}" style="display:block;max-width:100%;height:${codeType === 'barcode' ? '80px' : '200px'};object-fit:contain;margin:0 auto 16px;">
+                            <div style="font-size:20px;font-weight:800;letter-spacing:1px;color:#0f172a;margin-bottom:6px;">${ac.ac_code}</div>
+                            ${ac.customer?.full_name ? `<div style="font-size:18px;color:#1e293b;font-weight:700;">${ac.customer.full_name}</div>` : ''}
+                            ${ac.brand ? `<div style="font-size:12px;color:#64748b;margin-bottom:8px;">${ac.brand} ${ac.model || ''}</div>` : ''}
+                            <div style="border-top:1px solid #e2e8f0;color:#475569;font-size:11px;font-weight:600;line-height:1.4;margin-top:8px;padding-top:9px;">Scan this code for AC service history &amp; support</div>
+                            <div style="font-size:9px;color:#94a3b8;word-break:break-all;margin-top:10px;">${ac.qr_code.token}</div>
                         </div>
-                        
                         <div style="display: flex; gap: 12px; margin-top: 20px;">
-                            <button onclick="window.AcUnitView.printQrImage(${ac.id})" title="Print Image" style="background: #3b82f6; border: none; color: white; border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: 0.2s; font-weight: 600;"><i class="fa-solid fa-print" style="margin-right: 6px;"></i> Print</button>
-                            <button onclick="window.AcUnitView.downloadQrImage(${ac.id})" title="Save Image" style="background: #8b5cf6; border: none; color: white; border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: 0.2s; font-weight: 600;"><i class="fa-solid fa-download" style="margin-right: 6px;"></i> Download Card</button>
+                            <button onclick="window.AcUnitList.printAcUnit(${ac.id})" title="Print Image" style="background: #3b82f6; border: none; color: white; border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: 0.2s; font-weight: 600;"><i class="fa-solid fa-print" style="margin-right: 6px;"></i> Print</button>
+                            <button onclick="window.AcUnitList.downloadQrImage(${ac.id})" title="Save Image" style="background: #8b5cf6; border: none; color: white; border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: 0.2s; font-weight: 600;"><i class="fa-solid fa-download" style="margin-right: 6px;"></i> Download Card</button>
                             <button onclick="window.AcUnitView.shareQrWhatsapp(${ac.id})" title="Share WhatsApp" style="background: #25D366; border: none; color: white; border-radius: 8px; padding: 10px 20px; cursor: pointer; transition: 0.2s; font-weight: 600;"><i class="fa-brands fa-whatsapp" style="margin-right: 6px;"></i> Share via WhatsApp</button>
                         </div>
                     `;

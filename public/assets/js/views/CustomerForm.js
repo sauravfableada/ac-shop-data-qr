@@ -40,12 +40,12 @@ window.CustomerForm = {
                     <form id="customerForm" novalidate>
                         <div class="grid-2-col">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Customer Code *</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-hashtag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Customer Code *</label>
                                 <input type="text" id="cCode" value="${customer?.customer_code || dynamicCode}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                 <div id="err_cCode" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Full Name *</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-user" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Full Name *</label>
                                 <input type="text" id="cName" value="${customer?.full_name || ''}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                 <div id="err_cName" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
@@ -53,12 +53,12 @@ window.CustomerForm = {
 
                         <div class="grid-2-col">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Mobile *</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-phone" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Mobile *</label>
                                 <input type="text" id="cMobile" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="${customer?.mobile || ''}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                 <div id="err_cMobile" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">WhatsApp No.</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-brands fa-whatsapp" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>WhatsApp No.</label>
                                 <div style="display: flex; gap: 8px; align-items: center;">
                                     <input type="text" id="cWhatsapp" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="${customer?.whatsapp_no || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                     <button type="button" onclick="document.getElementById('cWhatsapp').value = document.getElementById('cMobile').value" style="padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: #f1f5f9; color: #475569; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 48px;" title="Copy from Mobile">
@@ -73,29 +73,24 @@ window.CustomerForm = {
 
                         <div class="grid-2-col">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Customer Photo</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-camera" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Customer Photo</label>
                                 ${customer?.image ? `<div style="margin-bottom: 12px;"><img src="${customer.image}" style="height: 64px; border-radius: 8px; border: 1px solid var(--border-glass);"></div>` : ''}
                                 <input type="file" id="cImage" accept="image/*" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                             </div>
 
+                            ${window.appUser?.roles?.some(role => role.name === 'admin') ? `
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Full Address</label>
-                                <textarea id="cAddress" rows="3" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit;">${customer?.address || ''}</textarea>
-                                <div id="err_cAddress" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
-                            </div>
-                        </div>
-
-                        ${window.appUser && window.appUser.roles && window.appUser.roles[0].name === 'admin' ? `
-                        <div class="grid-2-col" style="margin-bottom: 24px;">
-                            <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Assign Staff</label>
-                                <select id="cAssignStaff" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
+                                <label style="display:block;margin-bottom:8px;font-size:14px;font-weight:500;"><i class="fa-solid fa-user-tie" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Assign Staff</label>
+                                <select id="cAssignStaff" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border-glass);background:transparent;color:var(--text-main);outline:none;">
                                     <option value="">Unassigned</option>
                                 </select>
+                            </div>` : ''}
+                            <div style="grid-column:1 / -1;margin-bottom:24px;">
+                                <label style="display:block;margin-bottom:8px;font-size:14px;font-weight:500;"><i class="fa-solid fa-location-dot" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Full Address</label>
+                                <textarea id="cAddress" rows="3" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border-glass);background:transparent;color:var(--text-main);outline:none;font-family:inherit;">${customer?.address || ''}</textarea>
+                                <div id="err_cAddress" style="color:#ef4444;font-size:12px;margin-top:4px;display:none;"></div>
                             </div>
                         </div>
-                        ` : ''}
-
                         <!-- Bottom action row: quick-add buttons (left) + cancel/save (right) -->
                         <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
                             <div style="display: flex; gap: 12px; flex-wrap: wrap;">

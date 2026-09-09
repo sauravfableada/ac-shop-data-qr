@@ -858,3 +858,7 @@ input[type="date"]::-webkit-datetime-edit {
         grid-column: span 3;
     }
 }
+/* Match spacing between customer field rows to the gaps within each row. */
+#customerForm > .grid-2-col + .grid-2-col {
+    margin-top: 24px;
+}
