@@ -189,7 +189,7 @@ window.ServiceForm = {
                         </div>
 
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-flag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Status</label>
+                            <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-flag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Status <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                             <select name="status" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                 <option value="completed" ${service.status === 'completed' ? 'selected' : ''}>Completed</option>
                                 <option value="pending" ${service.status === 'pending' ? 'selected' : ''}>Pending</option>
@@ -199,12 +199,12 @@ window.ServiceForm = {
 
                         <div class="grid-2-col" style="grid-column: 1 / -1;">
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-comment-dots" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Customer Complaint / Issue</label>
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-comment-dots" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Customer Complaint / Issue <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <textarea name="complaint" rows="3" placeholder="What is the issue reported by the customer?" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; resize: vertical;">${service.complaint || ''}</textarea>
                             </div>
 
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-clipboard-check" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Diagnosis & Work Done</label>
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-clipboard-check" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Diagnosis & Work Done <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <textarea name="work_done" rows="3" placeholder="Describe the work performed..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; resize: vertical;">${service.work_done || ''}</textarea>
                             </div>
                         </div>
@@ -223,22 +223,22 @@ window.ServiceForm = {
                             </div>
 
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-indian-rupee-sign" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Labor / Service Charge (₹)</label>
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-indian-rupee-sign" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Labor / Service Charge (₹) <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <input type="number" step="0.01" min="0" name="labor_charge" id="labor_charge" value="${service.labor_charge || '0.00'}" oninput="if(this.value<0)this.value=0; window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
 
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-gears" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Spare Parts Charge (₹)</label>
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-gears" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Spare Parts Charge (₹) <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <input type="number" step="0.01" min="0" name="parts_charge" id="parts_charge" value="${service.parts_charge || '0.00'}" oninput="if(this.value<0)this.value=0; window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
 
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-ruler-horizontal" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Copper Pipe Miter</label>
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-ruler-horizontal" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Copper Pipe Miter <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <input type="number" step="0.01" min="0" name="copper_pipe_charge" id="copper_pipe_charge" value="${service.copper_pipe_charge || '0.00'}" oninput="if(this.value<0)this.value=0; window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
 
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-tag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Copper Pipe Miter Price (₹)</label>
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-tag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Copper Pipe Miter Price (₹) <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <input type="number" step="0.01" min="0" name="miter_charge" id="miter_charge" value="${service.miter_charge || '0.00'}" oninput="if(this.value<0)this.value=0; window.ServiceForm.calculateTotal()" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
 
@@ -248,7 +248,7 @@ window.ServiceForm = {
                             </div>
 
                             <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-circle-check" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Payment Status</label>
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-circle-check" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Payment Status <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <select name="payment_status" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                     <option value="unpaid" ${service.payment_status === 'unpaid' ? 'selected' : ''}>Unpaid</option>
                                     <option value="paid" ${service.payment_status === 'paid' ? 'selected' : ''}>Paid</option>
@@ -256,7 +256,7 @@ window.ServiceForm = {
                             </div>
 
                             <div class="form-group billing-half-width" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-credit-card" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Payment Type</label>
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-credit-card" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Payment Type <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <select name="payment_method" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                     <option value="">Pending</option>
                                     <option value="Cash" ${service.payment_method === 'Cash' ? 'selected' : ''}>Cash</option>
@@ -265,7 +265,7 @@ window.ServiceForm = {
                             </div>
 
                             <div class="form-group billing-half-width" style="display: flex; flex-direction: column; gap: 8px;">
-                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-calendar-check" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Next Maintenance Date</label>
+                                <label style="font-weight: 500; font-size: 14px; color: var(--text-main);"><i class="fa-solid fa-calendar-check" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Next Maintenance Date <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <input type="date" name="next_maintenance_date" value="${service.next_maintenance_date ? service.next_maintenance_date.split('T')[0] : ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             </div>
 

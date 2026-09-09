@@ -88,7 +88,7 @@ window.AcUnitForm = {
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-user" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Customer</label>
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-user" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Customer <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                             <button type="button" onclick="document.getElementById('addCustomerModal').style.display='flex'; window.AcUnitForm.loadCustomerCode();" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
                         </div>
                         <select id="customerSelect" name="customer_id" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
@@ -105,28 +105,28 @@ window.AcUnitForm = {
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-tag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Brand</label>
+                        <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-tag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Brand <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                         <input type="text" name="brand" value="${ac.brand || ''}" placeholder="e.g. Daikin, LG" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-fan" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Model</label>
+                        <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-fan" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Model <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                         <input type="text" name="model" value="${ac.model || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-barcode" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Serial Number</label>
+                        <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-barcode" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Serial Number <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                         <input type="text" name="serial_number" value="${ac.serial_number || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-gauge-high" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Capacity</label>
+                        <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-gauge-high" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Capacity <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                         <input type="text" name="capacity" value="${ac.capacity || ''}" placeholder="e.g. 1.5 Ton" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                     </div>
 
                     <div class="form-group ac-type-field" style="display: flex; flex-direction: column; gap: 8px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-snowflake" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>AC Type</label>
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-snowflake" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>AC Type <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                             <button type="button" onclick="window.AcUnitForm.openMasterModal('ac_type')" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
                         </div>
                         <select name="ac_type" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
@@ -137,7 +137,7 @@ window.AcUnitForm = {
 
                     <div class="form-group ac-type-field" style="display: flex; flex-direction: column; gap: 8px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-bolt" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Inverter Type</label>
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-bolt" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Inverter Type <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                             <button type="button" onclick="window.AcUnitForm.openMasterModal('inverter_type')" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
                         </div>
                         <select name="inverter_type" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
@@ -160,17 +160,17 @@ window.AcUnitForm = {
                         </div>
                         
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-calendar-days" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Installation Date</label>
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-calendar-days" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Installation Date <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                             <input type="date" name="installation_date" value="${ac.installation_date ? ac.installation_date.split('T')[0] : ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                         </div>
 
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-location-dot" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Installation Location / Room</label>
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-location-dot" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Installation Location / Room <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                             <input type="text" name="room" value="${ac.room || ''}" placeholder="e.g. Master Bedroom" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                         </div>
 
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-flag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Status</label>
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-flag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Status <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                             <select name="status" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                                 <option value="active" ${ac.status === 'active' ? 'selected' : ''}>Active</option>
                                 <option value="inactive" ${ac.status === 'inactive' ? 'selected' : ''}>Inactive</option>
@@ -178,7 +178,7 @@ window.AcUnitForm = {
                         </div>
 
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; grid-column: 1 / -1;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-note-sticky" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Notes</label>
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;"><i class="fa-solid fa-note-sticky" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Notes <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                             <textarea name="notes" rows="3" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; resize: vertical;">${ac.notes || ''}</textarea>
                         </div>
 

@@ -58,7 +58,7 @@ window.CustomerForm = {
                                 <div id="err_cMobile" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-brands fa-whatsapp" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>WhatsApp No.</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-brands fa-whatsapp" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>WhatsApp No. <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <div style="display: flex; gap: 8px; align-items: center;">
                                     <input type="text" id="cWhatsapp" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="${customer?.whatsapp_no || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                     <button type="button" onclick="document.getElementById('cWhatsapp').value = document.getElementById('cMobile').value" style="padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: #f1f5f9; color: #475569; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 48px;" title="Copy from Mobile">
@@ -73,20 +73,20 @@ window.CustomerForm = {
 
                         <div class="grid-2-col">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-camera" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Customer Photo</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-camera" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Customer Photo <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 ${customer?.image ? `<div style="margin-bottom: 12px;"><img src="${customer.image}" style="height: 64px; border-radius: 8px; border: 1px solid var(--border-glass);"></div>` : ''}
                                 <input type="file" id="cImage" accept="image/*" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                             </div>
 
                             ${window.appUser?.roles?.some(role => role.name === 'admin') ? `
                             <div>
-                                <label style="display:block;margin-bottom:8px;font-size:14px;font-weight:500;"><i class="fa-solid fa-user-tie" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Assign Staff</label>
+                                <label style="display:block;margin-bottom:8px;font-size:14px;font-weight:500;"><i class="fa-solid fa-user-tie" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Assign Staff <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <select id="cAssignStaff" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border-glass);background:transparent;color:var(--text-main);outline:none;">
                                     <option value="">Unassigned</option>
                                 </select>
                             </div>` : ''}
                             <div style="grid-column:1 / -1;margin-bottom:24px;">
-                                <label style="display:block;margin-bottom:8px;font-size:14px;font-weight:500;"><i class="fa-solid fa-location-dot" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Full Address</label>
+                                <label style="display:block;margin-bottom:8px;font-size:14px;font-weight:500;"><i class="fa-solid fa-location-dot" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Full Address <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <textarea id="cAddress" rows="3" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border-glass);background:transparent;color:var(--text-main);outline:none;font-family:inherit;">${customer?.address || ''}</textarea>
                                 <div id="err_cAddress" style="color:#ef4444;font-size:12px;margin-top:4px;display:none;"></div>
                             </div>

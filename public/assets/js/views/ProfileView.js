@@ -86,7 +86,7 @@ window.ProfileView = {
 
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 36px;">
                                 <div>
-                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">First Name</label>
+                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;"><i class="fa-solid fa-user" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>First Name</label>
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-regular fa-user" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="text" id="prof_first_name" value="${firstName}"
@@ -94,7 +94,7 @@ window.ProfileView = {
                                     </div>
                                 </div>
                                 <div>
-                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">Last Name</label>
+                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;"><i class="fa-solid fa-user" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Last Name</label>
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-regular fa-user" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="text" id="prof_last_name" value="${lastName}"
@@ -103,7 +103,7 @@ window.ProfileView = {
                                 </div>
 
                                 <div>
-                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">Email Address</label>
+                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;"><i class="fa-solid fa-envelope" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Email Address</label>
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-regular fa-envelope" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="email" id="prof_email" value="${user.email || ''}"
@@ -112,7 +112,7 @@ window.ProfileView = {
                                 </div>
 
                                 <div>
-                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">Phone Number</label>
+                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;"><i class="fa-solid fa-phone" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Phone Number</label>
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-solid fa-phone" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="text" id="prof_phone" value="${user.phone || ''}" placeholder="Enter phone number"
@@ -131,7 +131,7 @@ window.ProfileView = {
 
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 36px;">
                                 <div>
-                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">Current Password</label>
+                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;"><i class="fa-solid fa-lock" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Current Password</label>
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-solid fa-lock" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="password" id="prof_current_password" placeholder="Enter current password"
@@ -141,7 +141,7 @@ window.ProfileView = {
                                 </div>
 
                                 <div>
-                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;">New Password</label>
+                                    <label style="display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 8px;"><i class="fa-solid fa-key" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>New Password</label>
                                     <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
                                         <i class="fa-solid fa-lock" style="color: #94a3b8; font-size: 14px;"></i>
                                         <input type="password" id="prof_new_password" placeholder="Enter new password"
