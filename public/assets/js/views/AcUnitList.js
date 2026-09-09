@@ -550,67 +550,70 @@ window.AcUnitList = {
             }
             
             // Create canvas for the card
-            const canvas = document.createElement('canvas');
-            canvas.width = 340;
-            canvas.height = 480;
-            const ctx = canvas.getContext('2d');
-            
-            // White background
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Dashed border
-            ctx.strokeStyle = '#e2e8f0';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([8, 8]);
-            ctx.beginPath();
-            ctx.roundRect(10, 10, 320, 460, 16);
-            ctx.stroke();
-            ctx.setLineDash([]);
-            
-            // Load image from blob URL
             const img = new Image();
-            img.src = blobUrl;
+            img.crossOrigin = 'Anonymous';
             await new Promise((resolve, reject) => {
                 img.onload = resolve;
                 img.onerror = reject;
+                img.src = blobUrl;
             });
             URL.revokeObjectURL(blobUrl);
-            
-            // Draw Code
+
+            // Size the saved card to its content, including the complete bottom border.
+            const imageHeight = codeType === 'barcode' ? 120 : 220;
+            const customer = ac.customer?.full_name || '';
+            const brand = ac.brand ? `${ac.brand} ${ac.model || ''}`.trim() : '';
+            const canvas = document.createElement('canvas');
+            canvas.width = 340;
+            canvas.height = 40 + imageHeight + 42 + (customer ? 26 : 0) + (brand ? 22 : 0) + 100;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 3]);
+            ctx.beginPath();
+            ctx.roundRect(10, 10, 320, canvas.height - 20, 16);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
             if (codeType === 'barcode') {
-                ctx.drawImage(img, 20, 60, 300, 120);
+                ctx.drawImage(img, 30, 40, 280, imageHeight);
             } else {
-                ctx.drawImage(img, 60, 40, 220, 220);
+                ctx.drawImage(img, 60, 40, 220, imageHeight);
             }
-            
-            // Draw Texts
             ctx.textAlign = 'center';
-            
-            // AC Code
+            let textY = 40 + imageHeight + 32;
             ctx.font = 'bold 22px "Segoe UI", sans-serif';
             ctx.fillStyle = '#0f172a';
-            ctx.fillText(ac.ac_code, 170, codeType === 'barcode' ? 210 : 300);
-            
-            // Customer Name
-            if (ac.customer?.full_name) {
+            ctx.fillText(ac.ac_code, 170, textY, 280);
+            if (customer) {
+                textY += 26;
                 ctx.font = 'bold 18px "Segoe UI", sans-serif';
                 ctx.fillStyle = '#1e293b';
-                ctx.fillText(ac.customer.full_name, 170, codeType === 'barcode' ? 240 : 330);
+                ctx.fillText(customer, 170, textY, 280);
             }
-
-            // Brand/Model
-            if (ac.brand) {
+            if (brand) {
+                textY += 22;
                 ctx.font = '12px "Segoe UI", sans-serif';
                 ctx.fillStyle = '#64748b';
-                ctx.fillText(`${ac.brand} ${ac.model || ''}`, 170, codeType === 'barcode' ? 265 : 355);
+                ctx.fillText(brand, 170, textY, 280);
             }
 
-            // Sticker message
-            ctx.font = 'bold 11px "Segoe UI", sans-serif';
+            const dividerY = textY + 14;
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.beginPath();
+            ctx.moveTo(60, dividerY);
+            ctx.lineTo(280, dividerY);
+            ctx.stroke();
+            ctx.font = '11px "Segoe UI", sans-serif';
             ctx.fillStyle = '#475569';
-            ctx.fillText('Scan this code for AC service history & support', 170, codeType === 'barcode' ? 295 : 390);
-            
+            ctx.fillText('Scan this code for AC service history &', 170, dividerY + 19);
+            ctx.fillText('support', 170, dividerY + 34);
+            ctx.font = '9px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText(token, 170, dividerY + 59, 280);
+
             const dataUrl = canvas.toDataURL('image/png');
             const a = document.createElement('a');
             a.style.display = 'none';
