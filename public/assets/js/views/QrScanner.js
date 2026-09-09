@@ -356,7 +356,7 @@ window.QrScanner = {
                 `;
                 
                 document.getElementById('scanNewService').onclick = async () => {
-                    if (await ensureCustomer(ac)) window.router.navigate(`/services/add?ac_id=${ac.id}`);
+                    if (await ensureCustomer(ac)) window.router.navigate(`/services/add?ac_id=${ac.id}&from_scan=1`);
                 };
 
                 // Add accordion toggle logic after rendering

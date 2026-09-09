@@ -6,6 +6,7 @@ window.ServiceForm = {
 
         const urlSegments = window.location.pathname.split('/');
         const isEdit = urlSegments.includes('edit');
+        const scannedUnitLocked = !isEdit && urlParams.get('from_scan') === '1' && /^\d+$/.test(acIdQuery || '');
         const serviceId = isEdit ? urlSegments[urlSegments.length - 1] : null;
 
         let service = {};
@@ -67,6 +68,10 @@ window.ServiceForm = {
             const selectedAc = await window.api.get(`/ac-units/${service.ac_unit_id}`);
             if (selectedAc.success) acUnits.push(selectedAc.data);
         }
+        if (scannedUnitLocked) {
+            acUnits = acUnits.filter(ac => String(ac.id) === acIdQuery);
+        }
+
         const acOptions = acUnits.map(ac =>
             `<option value="${ac.id}" ${service.ac_unit_id == ac.id ? 'selected' : ''}>${ac.ac_code} - ${ac.customer ? ac.customer.full_name : ''}</option>`
         ).join('');
@@ -110,12 +115,13 @@ window.ServiceForm = {
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <label style="font-weight: 500; font-size: 14px; color: var(--text-main);">AC Unit <span style="color: red;">*</span></label>
-                                <button type="button" onclick="document.getElementById('addAcModal').style.display='flex'; window.ServiceForm.loadAcCode();" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
+                                ${scannedUnitLocked ? '' : `<button type="button" onclick="document.getElementById('addAcModal').style.display='flex'; window.ServiceForm.loadAcCode();" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>`}
                             </div>
-                            <select id="acSelect" name="ac_unit_id" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
-                                <option value="">Select AC Unit</option>
+                            <select id="acSelect" name="ac_unit_id" ${scannedUnitLocked ? 'disabled aria-disabled="true"' : ''} required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                                ${scannedUnitLocked ? '' : '<option value="">Select AC Unit</option>'}
                                 ${acOptions}
                             </select>
+                            ${scannedUnitLocked ? `<input type="hidden" name="ac_unit_id" value="${acUnits[0]?.id || ''}">` : ''}
                             <div id="err_ac_unit_id" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                         </div>
 
@@ -329,7 +335,7 @@ window.ServiceForm = {
 
         setTimeout(() => {
             if (window.Choices) {
-                window.acChoices = new Choices(document.getElementById('acSelect'), {
+                window.acChoices = scannedUnitLocked ? null : new Choices(document.getElementById('acSelect'), {
                     searchEnabled: true,
                     itemSelectText: '',
                     shouldSort: false
