@@ -2,6 +2,9 @@ window.AcUnitList = {
     render: async (container) => {
 
         let state = {
+            selectAll: false,
+            selectedIds: new Set(),
+            excludedIds: new Set(),
             search: '',
             filterAcUnitId: '',
             filterCustomerId: '',
@@ -33,16 +36,32 @@ window.AcUnitList = {
             }
         };
 
+        const isSelected = id => state.selectAll
+            ? !state.excludedIds.has(String(id))
+            : state.selectedIds.has(String(id));
+
+        const updateSelection = () => {
+            const checkbox = document.getElementById('selectAllAcUnits');
+            checkbox.checked = state.selectAll && state.excludedIds.size === 0;
+            checkbox.indeterminate = state.selectAll ? state.excludedIds.size > 0 : state.selectedIds.size > 0;
+            document.querySelectorAll('.ac-select-row').forEach(input => {
+                input.checked = isSelected(input.value);
+            });
+            const partial = state.selectAll ? state.excludedIds.size > 0 : state.selectedIds.size > 0;
+            document.getElementById('printAcLabelsText').textContent = partial ? 'Print Selected' : 'Print All';
+        };
+
         const renderTable = () => {
             const codeType = window.appSettings?.code_type || 'qr';
             const codeText = codeType === 'barcode' ? 'Barcode' : 'QR';
             
             if (!state.acUnits.length) {
-                return `<tr><td colspan="6" style="padding: 16px; text-align: center; color: var(--text-muted);">No AC Units found</td></tr>`;
+                return `<tr><td colspan="8" style="padding: 16px; text-align: center; color: var(--text-muted);">No AC Units found</td></tr>`;
             }
 
             return state.acUnits.map(ac => `
                 <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <td style="padding: 16px; width: 40px;"><input type="checkbox" class="ac-select-row" value="${ac.id}" aria-label="Select AC unit ${ac.id}" ${isSelected(ac.id) ? 'checked' : ''} style="width: 16px; height: 16px; cursor: pointer;"></td>
                     <td style="padding: 16px; font-size: 14px; font-weight: 600; color: var(--text-main);">${ac.ac_code}</td>
                     <td class="hide-on-mobile" style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.brand || '-'} ${ac.model || ''}</td>
                     <td style="padding: 16px; font-size: 14px; color: var(--text-muted);">${ac.customer ? ac.customer.full_name : '--'}</td>
@@ -65,7 +84,7 @@ window.AcUnitList = {
                     </td>
                 </tr>
                 <tr id="mobile-expand-${ac.id}" class="mobile-expanded-row">
-                    <td colspan="7" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
+                    <td colspan="8" style="padding: 16px; background: #f8fafc; border-bottom: 1px solid var(--border-glass);">
                         <div style="background: #ffffff; border-radius: 12px; border-left: 4px solid #0f172a; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: #0f172a;">
                                 <div><i class="fa-solid fa-user-plus" style="margin-right: 8px;"></i> CREATED BY :</div>
@@ -145,8 +164,8 @@ window.AcUnitList = {
                             
                         </div>
                         <div style="display: flex; gap: 12px;">
-                            <button onclick="window.AcUnitList.printAll(this)" title="Print all AC unit labels on A4 sheets" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap;">
-                                <i class="fa-solid fa-print"></i> Print All
+                            <button id="printAcLabels" title="Print selected labels, or all labels when nothing is selected" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap;">
+                                <i class="fa-solid fa-print"></i> <span id="printAcLabelsText">Print All</span>
                             </button>
                             <button class="hide-on-mobile" onclick="window.router.navigate('/scanner')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                                 <i class="fa-solid ${codeIcon}"></i> Scan ${codeType === 'barcode' ? 'Barcode' : 'QR'}
@@ -204,6 +223,7 @@ window.AcUnitList = {
                             <table style="width: 100%; border-collapse: collapse; text-align: left;">
                                 <thead>
                                     <tr style="border-bottom: 2px solid var(--border-glass); color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 700;">
+                                        <th style="padding: 12px 16px; width: 40px;"><input type="checkbox" id="selectAllAcUnits" aria-label="Select all AC units across all pages" title="Select all AC units across all pages" style="width: 16px; height: 16px; cursor: pointer;"></th>
                                         <th style="padding: 12px 16px;">Serial No</th>
                                         <th class="hide-on-mobile" style="padding: 12px 16px;">Brand/Model</th>
                                         <th style="padding: 12px 16px;">Customer</th>
@@ -229,6 +249,31 @@ window.AcUnitList = {
         };
 
         const attachEventListeners = () => {
+            document.getElementById('selectAllAcUnits').addEventListener('change', e => {
+                state.selectAll = e.target.checked;
+                state.selectedIds.clear();
+                state.excludedIds.clear();
+                updateSelection();
+            });
+            document.getElementById('acTableBody').addEventListener('change', e => {
+                if (!e.target.matches('.ac-select-row')) return;
+                const id = e.target.value;
+                if (state.selectAll) {
+                    if (e.target.checked) state.excludedIds.delete(id);
+                    else state.excludedIds.add(id);
+                } else {
+                    if (e.target.checked) state.selectedIds.add(id);
+                    else state.selectedIds.delete(id);
+                }
+                updateSelection();
+            });
+            document.getElementById('printAcLabels').addEventListener('click', e => {
+                window.AcUnitList.printAll(e.currentTarget, {
+                    selectAll: state.selectAll,
+                    selectedIds: new Set(state.selectedIds),
+                    excludedIds: new Set(state.excludedIds)
+                });
+            });
             const searchInput = document.getElementById('searchInput');
             let searchTimeout;
             if (searchInput) {
@@ -346,7 +391,7 @@ window.AcUnitList = {
         const updateDOM = () => {
             document.getElementById('acTableBody').innerHTML = renderTable();
             document.getElementById('acPagination').innerHTML = renderPagination();
-            // Need to reattach any row-specific event listeners here if not using inline onclick
+            updateSelection();
         };
 
         // Initial Load
@@ -403,7 +448,7 @@ window.AcUnitList = {
         }
     },
 
-    printAll: async (button) => {
+    printAll: async (button, selection = null) => {
         const printWindow = window.open('', '_blank');
         if (!printWindow) {
             window.showToast('Please allow popups to print', 'warning');
@@ -430,7 +475,14 @@ window.AcUnitList = {
                 page += 1;
             } while (page <= lastPage);
 
-            const printable = units.filter(ac => ac.qr_code?.token);
+            let selectedUnits = selection?.selectAll
+                ? units.filter(ac => !selection.excludedIds.has(String(ac.id)))
+                : selection?.selectedIds.size
+                    ? units.filter(ac => selection.selectedIds.has(String(ac.id)))
+                    : units;
+            // Unchecking every row has the same meaning as an empty selection.
+            if (selection?.selectAll && !selectedUnits.length) selectedUnits = units;
+            const printable = selectedUnits.filter(ac => ac.qr_code?.token);
             if (!printable.length) {
                 printWindow.close();
                 window.showToast('No labels available to print', 'warning');
@@ -499,8 +551,8 @@ window.AcUnitList = {
                 const scale = Math.min(1, slot.clientHeight / card.offsetHeight);
                 if (scale < 1) card.style.transform = `scale(${scale})`;
             });
-            if (units.length > printable.length) {
-                window.showToast(`${units.length - printable.length} AC units without codes were skipped`, 'warning');
+            if (selectedUnits.length > printable.length) {
+                window.showToast(`${selectedUnits.length - printable.length} AC units without codes were skipped`, 'warning');
             }
             const saveButton = printWindow.document.getElementById('save-pdf');
             const printButton = printWindow.document.getElementById('print-labels');
