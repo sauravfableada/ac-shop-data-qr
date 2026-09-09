@@ -743,16 +743,16 @@ body.light-mode {
     }
 }
 
-/* AC unit Add/Edit: thirds for details, halves for the two type fields. */
+/* AC unit Add/Edit: thirds for details, quarters for model, capacity and types. */
 @media (min-width: 769px) {
     #acMainStep1,
     #acMainStep2 > .grid-2-col {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-template-columns: repeat(12, minmax(0, 1fr));
     }
 
     #acMainStep1 > .form-group,
     #acMainStep2 > .grid-2-col > .form-group {
-        grid-column: span 2;
+        grid-column: span 4;
         min-width: 0;
     }
 
