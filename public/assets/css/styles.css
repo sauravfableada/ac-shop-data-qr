@@ -842,3 +842,19 @@ input[type="date"]::-webkit-datetime-edit {
 .swal2-container.swal-on-top {
     z-index: 99999 !important;
 }
+
+/* Service Add/Edit billing rows: three fields, then two half-width fields. */
+@media (min-width: 769px) {
+    #serviceMainStep2 > .grid-2-col {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    #serviceMainStep2 > .grid-2-col > .form-group {
+        grid-column: span 2;
+        min-width: 0;
+    }
+
+    #serviceMainStep2 > .grid-2-col > .billing-half-width {
+        grid-column: span 3;
+    }
+}
