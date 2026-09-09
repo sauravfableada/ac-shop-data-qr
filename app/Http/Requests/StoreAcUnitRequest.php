@@ -24,7 +24,7 @@ class StoreAcUnitRequest extends FormRequest
     {
         return [
             'ac_code' => 'required|string|unique:ac_units,ac_code',
-            'customer_id' => 'required|exists:customers,id',
+            'customer_id' => 'nullable|exists:customers,id',
             'brand' => 'nullable|string|max:100',
             'model' => 'nullable|string|max:100',
             'serial_number' => 'nullable|string|max:100',

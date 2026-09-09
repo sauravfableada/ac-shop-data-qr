@@ -88,10 +88,10 @@ window.AcUnitForm = {
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Customer <span style="color: red;">*</span></label>
+                            <label style="font-weight: 500; font-size: 14px; color: #334155;">Customer</label>
                             <button type="button" onclick="document.getElementById('addCustomerModal').style.display='flex'; window.AcUnitForm.loadCustomerCode();" style="background: #0f172a; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;"><i class="fa-solid fa-plus"></i> Add New</button>
                         </div>
-                        <select id="customerSelect" name="customer_id" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
+                        <select id="customerSelect" name="customer_id" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit; font-size: 14px;">
                             <option value="">Select Customer</option>
                             ${customerOptions}
                         </select>
@@ -277,7 +277,7 @@ window.AcUnitForm = {
         }
         codeEl.style.borderColor = 'var(--border-glass)';
 
-        if (!custEl.value) {
+        if (false && !custEl.value) {
             if (custEl.parentElement.querySelector('.choices')) {
                 custEl.parentElement.querySelector('.choices').style.border = '1px solid #ef4444';
             } else {
