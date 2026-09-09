@@ -792,7 +792,7 @@ window.ServiceForm = {
 
             if (res.success) {
                 const serviceType = data.service_type || 'Maintenance';
-                if (window.addNotification && !editId) {
+                if (window.addNotification) {
                     window.addNotification(
                         isEdit ? 'Service Record Updated' : 'Service Record Created',
                         `Service record for "${serviceType}" was successfully ${isEdit ? 'updated' : 'created'}.`,
