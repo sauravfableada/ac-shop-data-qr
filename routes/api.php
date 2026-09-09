@@ -24,6 +24,8 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/customers/{customer}', [\App\Http\Controllers\CustomerController::class, 'update'])->middleware('permission:customer.edit');
     Route::delete('/customers/{customer}', [\App\Http\Controllers\CustomerController::class, 'destroy'])->middleware('permission:customer.delete');
 
+    Route::post('/ac-units/{ac_unit}/customer', [\App\Http\Controllers\AcUnitController::class, 'assignCustomer'])
+        ->middleware(['permission:qr.view', 'permission:customer.create', 'permission:ac.edit']);
     // AC Units
     Route::get('/ac-units/next-code', [\App\Http\Controllers\AcUnitController::class, 'getNextCode']);
     Route::get('/ac-units', [\App\Http\Controllers\AcUnitController::class, 'index'])->middleware('permission:ac.view');

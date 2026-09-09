@@ -13,6 +13,42 @@ class AcUnitController extends Controller
 {
     use ApiResponse;
 
+    public function assignCustomer(Request $request, AcUnit $ac_unit)
+    {
+        $request->merge([
+            'full_name' => trim((string) $request->input('full_name')),
+            'mobile' => trim((string) $request->input('mobile')),
+        ]);
+        $data = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'mobile' => ['required', 'string', 'max:20', 'regex:/^\+?[0-9][0-9\s()\-]{5,19}$/'],
+        ]);
+
+        $unit = \Illuminate\Support\Facades\DB::transaction(function () use ($request, $ac_unit, $data) {
+            $unit = AcUnit::whereKey($ac_unit->id)->lockForUpdate()->firstOrFail();
+            // Never replace a customer assigned by another scan or a concurrent edit.
+            if (!$unit->customer_id) {
+                $customer = \App\Models\Customer::firstOrCreate(['mobile' => $data['mobile']], [
+                    'customer_code' => 'CUST-' . Str::uuid(),
+                    'full_name' => $data['full_name'],
+                    'created_by' => $request->user()->id,
+                    'updated_by' => $request->user()->id,
+                    'assign_staff' => $request->user()->roles()->where('name', 'admin')->exists() ? null : $request->user()->id,
+                    'status' => 'active',
+                ]);
+                $unit->update(['customer_id' => $customer->id, 'updated_by' => $request->user()->id]);
+                \App\Models\UserLog::create([
+                    'user_id' => $request->user()->id,
+                    'module' => 'AC Unit',
+                    'action' => 'UPDATE',
+                    'message' => 'Linked customer ' . $customer->full_name . ' to ' . $unit->ac_code,
+                ]);
+            }
+            return $unit->load('customer');
+        });
+
+        return $this->success($unit, 'Customer saved for this AC unit.');
+    }
     public function getNextCode()
     {
         $lastAc = AcUnit::withTrashed()->orderBy('id', 'desc')->first();
