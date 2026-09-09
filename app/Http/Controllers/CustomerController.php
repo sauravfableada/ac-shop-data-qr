@@ -116,7 +116,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        $customer->load(['acUnits', 'creator']);
+        $customer->load(['acUnits', 'creator', 'assignedStaff']);
         return $this->success($customer, 'Customer retrieved successfully.');
     }
 

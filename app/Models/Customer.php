@@ -26,6 +26,11 @@ class Customer extends Model
         return $this->hasMany(ServiceRecord::class);
     }
 
+    public function assignedStaff()
+    {
+        return $this->belongsTo(User::class, 'assign_staff');
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
