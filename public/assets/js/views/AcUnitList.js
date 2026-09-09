@@ -145,6 +145,9 @@ window.AcUnitList = {
                             
                         </div>
                         <div style="display: flex; gap: 12px;">
+                            <button onclick="window.AcUnitList.printAll(this)" title="Print all AC unit labels on A4 sheets" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #0f172a; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap;">
+                                <i class="fa-solid fa-print"></i> Print All
+                            </button>
                             <button class="hide-on-mobile" onclick="window.router.navigate('/scanner')" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: transparent; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
                                 <i class="fa-solid ${codeIcon}"></i> Scan ${codeType === 'barcode' ? 'Barcode' : 'QR'}
                             </button>
@@ -400,6 +403,108 @@ window.AcUnitList = {
         }
     },
 
+    printAll: async (button) => {
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            window.showToast('Please allow popups to print', 'warning');
+            return;
+        }
+        if (button) button.disabled = true;
+        printWindow.document.body.textContent = 'Preparing all labels...';
+        try {
+            let codeType = window.appSettings?.code_type || 'qr';
+            const settings = await window.api.get('/settings');
+            if (settings.success && settings.data) codeType = settings.data.code_type || codeType;
+
+            const units = [];
+            let page = 1;
+            let lastPage = 1;
+            do {
+                if (printWindow.closed) return;
+                const response = await window.api.get(`/ac-units?per_page=100&page=${page}`);
+                if (!response.success || !Array.isArray(response.data?.data)) {
+                    throw new Error('Could not load all AC units. Please try again.');
+                }
+                units.push(...response.data.data);
+                lastPage = response.data.meta.last_page;
+                page += 1;
+            } while (page <= lastPage);
+
+            const printable = units.filter(ac => ac.qr_code?.token);
+            if (!printable.length) {
+                printWindow.close();
+                window.showToast('No labels available to print', 'warning');
+                return;
+            }
+            const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[char]);
+            const cards = printable.map(ac => {
+                const token = ac.qr_code.token;
+                const src = codeType === 'barcode'
+                    ? `https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(ac.ac_code)}&includetext&guardwhitespace`
+                    : `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(token)}`;
+                return `<div class="slot"><div class="card">
+                    <img src="${escapeHtml(src)}" alt="${escapeHtml(ac.ac_code)}">
+                    <div class="ac-code">${escapeHtml(ac.ac_code)}</div>
+                    ${ac.customer?.full_name ? `<div class="customer">${escapeHtml(ac.customer.full_name)}</div>` : ''}
+                    ${ac.brand ? `<div class="brand">${escapeHtml(ac.brand)} ${escapeHtml(ac.model)}</div>` : ''}
+                    <div class="message">Scan this code for AC service history &amp; support</div>
+                    <div class="token">${escapeHtml(token)}</div>
+                </div></div>`;
+            });
+            const sheets = [];
+            for (let index = 0; index < cards.length; index += 9) {
+                sheets.push(`<section class="sheet">${cards.slice(index, index + 9).join('')}</section>`);
+            }
+            if (printWindow.closed) return;
+            printWindow.document.open();
+            printWindow.document.write(`<!DOCTYPE html><html><head>
+                <title>All ${codeType === 'barcode' ? 'Barcodes' : 'QR Codes'}</title>
+                <style>
+                    * { box-sizing: border-box; margin: 0; padding: 0; }
+                    @page { size: A4 portrait; margin: 0; }
+                    body { font-family: 'Segoe UI', sans-serif; background: white; }
+                    .sheet { width: 210mm; height: 296mm; padding: 10mm; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: max-content; align-content: start; gap: 2mm; break-after: page; }
+                    .sheet:last-child { break-after: auto; }
+                    .slot { display: flex; justify-content: center; align-items: flex-start; min-height: 0; max-height: 90mm; break-inside: avoid; }
+                    .card { width: 100%; padding: 5mm 4mm; border: 1px dashed #e2e8f0; border-radius: 4mm; text-align: center; overflow-wrap: anywhere; transform-origin: top center; }
+                    img { display: block; width: ${codeType === 'barcode' ? '50mm' : '40mm'}; height: ${codeType === 'barcode' ? '20mm' : '40mm'}; max-width: 100%; object-fit: contain; margin: 0 auto 3mm; }
+                    .ac-code { font-size: 14px; font-weight: 800; letter-spacing: .5px; color: #0f172a; margin-bottom: 1.5mm; }
+                    .customer { font-size: 12px; font-weight: 700; color: #1e293b; }
+                    .brand { font-size: 10px; color: #64748b; margin-top: 1mm; }
+                    .message { border-top: 1px solid #e2e8f0; margin: 2mm auto 0; padding-top: 2mm; max-width: 40mm; font-size: 9px; line-height: 1.4; color: #475569; }
+                    .token { font-size: 7px; color: #94a3b8; margin-top: 2mm; }
+                    @media screen { body { padding: 10mm; background: #f1f5f9; } .sheet { background: white; margin: 0 auto 10mm; } }
+                </style></head><body>${sheets.join('')}</body></html>`);
+            printWindow.document.close();
+            await Promise.all(Array.from(printWindow.document.images, img => new Promise((resolve, reject) => {
+                const timeout = setTimeout(() => reject(new Error('Code images took too long to load. Please try again.')), 60000);
+                const loaded = () => { clearTimeout(timeout); resolve(); };
+                const failed = () => { clearTimeout(timeout); reject(new Error('A code image could not load. Please try again.')); };
+                img.onload = loaded;
+                img.onerror = failed;
+                if (img.complete) img.naturalWidth ? loaded() : failed();
+            })));
+            if (printWindow.closed) return;
+            // Keep unusually long customer/model text inside its label slot.
+            printWindow.document.querySelectorAll('.slot').forEach(slot => {
+                const card = slot.firstElementChild;
+                const scale = Math.min(1, slot.clientHeight / card.offsetHeight);
+                if (scale < 1) card.style.transform = `scale(${scale})`;
+            });
+            if (units.length > printable.length) {
+                window.showToast(`${units.length - printable.length} AC units without codes were skipped`, 'warning');
+            }
+            printWindow.focus();
+            printWindow.print();
+        } catch (err) {
+            if (!printWindow.closed) printWindow.close();
+            window.showToast(err.message || 'Could not prepare labels for printing', 'error');
+        } finally {
+            if (button) button.disabled = false;
+        }
+    },
     printAcUnit: async (id) => {
         // Open window synchronously to avoid iOS popup blocker
         const printWindow = window.open('', '_blank');
