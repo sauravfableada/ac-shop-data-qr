@@ -42,12 +42,12 @@ window.StaffForm = {
                     <form id="staffForm" novalidate>
                         <div class="grid-2-col" style="margin-bottom: 20px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Full Name *</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-user" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Full Name *</label>
                                 <input type="text" id="name" value="${staff.name || ''}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                 <div id="err_name" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Email Address *</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-envelope" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Email Address *</label>
                                 <input type="email" id="email" value="${staff.email || ''}" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                 <div id="err_email" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
@@ -55,12 +55,12 @@ window.StaffForm = {
 
                         <div class="grid-2-col" style="margin-bottom: 20px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Phone Number</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-phone" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Phone Number <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 <input type="text" id="phone" value="${staff.phone || ''}" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                 <div id="err_phone" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">${isEdit ? 'Password (leave blank to keep current)' : 'Password *'}</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-lock" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Password ${isEdit ? '<span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span> (leave blank to keep current)' : '*'}</label>
                                 <input type="password" id="password" ${!isEdit ? 'required' : ''} style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                 <div id="err_password" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
@@ -68,13 +68,13 @@ window.StaffForm = {
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Profile Image</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-camera" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Profile Image <span style="font-size: 12px; font-weight: 700; color: #374151;">(Optional)</span></label>
                                 ${staff.profile_image ? `<div style="margin-bottom: 12px;"><img src="${staff.profile_image}" style="height: 64px; border-radius: 8px; border: 1px solid var(--border-glass); object-fit: cover;"></div>` : ''}
                                 <input type="file" id="profile_image" accept="image/*" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none;">
                                 <div id="err_profile_image" style="color: #ef4444; font-size: 12px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Status *</label>
+                                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;"><i class="fa-solid fa-flag" aria-hidden="true" style="color:#64748b;margin-right:6px;width:14px;text-align:center;"></i>Status *</label>
                                 <select id="status" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent; color: var(--text-main); outline: none; font-family: inherit;">
                                     <option value="active" ${staff.status === 'active' ? 'selected' : ''}>Active</option>
                                     <option value="inactive" ${staff.status === 'inactive' ? 'selected' : ''}>Inactive</option>
